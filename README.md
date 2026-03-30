@@ -1,50 +1,119 @@
-# BitoGuard：智慧合規風險雷達
+<h1 align="center">BitoGuard：智慧合規風險雷達</h1>
 
-> **BitoGroup × AWS 黑名單用戶偵測競賽**
->
-> 針對加密貨幣交易所 77 萬筆交易紀錄，建構 GNN + Stacking Ensemble 混合模型，
-> 識別人頭戶並以 SHAP 可解釋性分析提供逐案風險歸因與公平性審計。
+<p align="center">
+  <strong>AI 驅動的加密貨幣黑名單偵測系統 — 基於 GNN + Stacking Ensemble 混合模型</strong>
+</p>
 
----
-
-## 目錄
-
-- [專案簡介](#專案簡介)
-- [系統架構](#系統架構)
-- [專案結構](#專案結構)
-- [資料集概覽](#資料集概覽)
-- [技術棧](#技術棧)
-- [完整 Pipeline](#完整-pipeline)
-  - [Step 1：資料載入與驗證](#step-1資料載入與驗證)
-  - [Step 2：特徵工程（81 維 → 65 維）](#step-2特徵工程81-維--65-維)
-  - [Step 3：異常偵測特徵](#step-3異常偵測特徵)
-  - [Step 4：圖神經網路 (GNN)](#step-4圖神經網路-gnn)
-  - [Step 5：Stacking Ensemble 集成學習](#step-5stacking-ensemble-集成學習)
-  - [Step 6：SHAP 可解釋性分析](#step-6shap-可解釋性分析)
-  - [Step 7：公平性審計](#step-7公平性審計)
-- [互動式風險儀表板](#互動式風險儀表板)
-- [模型成果](#模型成果)
-- [快速開始](#快速開始)
-- [評分標準](#評分標準)
+<p align="center">
+  <a href="https://timwei0801.github.io/Bio_AWS_Workshop/"><img src="https://img.shields.io/badge/Live_Demo-GitHub_Pages-blue?logo=github" alt="Live Demo"></a>
+  <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/Python-3.9+-blue.svg?logo=python" alt="Python"></a>
+  <a href="https://pytorch.org/"><img src="https://img.shields.io/badge/PyTorch-GNN-orange.svg?logo=pytorch" alt="PyTorch"></a>
+  <a href="https://reactjs.org/"><img src="https://img.shields.io/badge/React-18-blue.svg?logo=react" alt="React"></a>
+  <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-5-blue.svg?logo=typescript" alt="TypeScript"></a>
+  <img src="https://img.shields.io/badge/🏆_BitoGroup_×_AWS-黑名單偵測競賽-gold" alt="Competition">
+</p>
 
 ---
 
-## 專案簡介
+## Demo
 
-加密貨幣交易所面臨嚴重的人頭戶（黑名單用戶）問題——這些帳戶被用於洗錢、詐騙資金流轉等非法活動。傳統規則式偵測難以應對日益複雜的犯罪手法，本專案以**機器學習 + 圖神經網路**雙軌策略，從用戶行為、交易模式與鏈上資金流向三個維度，建構端到端的風險偵測系統。
+<p align="center">
+  <img src="assets/demo.gif" alt="BitoGuard Dashboard Demo" width="800">
+</p>
 
-**核心亮點：**
-
-- **異質圖神經網路 (HeteroSAGE + GAT)**：捕捉用戶與錢包地址間的風險傳播路徑
-- **三模型 Stacking Ensemble**：XGBoost + LightGBM (Focal Loss) + CatBoost，各自採用不同損失函數最大化模型多樣性
-- **81 維特徵工程 → 65 維篩選**：涵蓋 KYC 行為、法幣/虛幣交易、IP 風險、圖拓撲、AML 紅旗指標等 10 大類特徵
-- **SHAP 全方位可解釋性**：Global 重要性 + Local 歸因 + 反事實建議 + SSR 穩定性驗證 + 自然語言風險報告
-- **公平性審計**：檢測性別、年齡、職業、收入四維度公平性，主動識別並建議緩解偏差
-- **互動式 3D 儀表板**：React + Three.js 視覺化交易網路圖譜與風險分數
+> 互動式 3D 風險儀表板 — 即時視覺化交易網路圖譜、節點風險分數與 SHAP 可解釋性分析
 
 ---
 
-## 系統架構
+## Overview
+
+<table>
+<tr>
+<td width="60%">
+
+加密貨幣交易所面臨嚴重的**人頭戶（黑名單用戶）**問題——這些帳戶被用於洗錢、詐騙資金流轉等非法活動。
+
+本專案針對 **77 萬筆交易紀錄**，以雙軌策略建構端到端風險偵測系統：
+
+- **異質圖神經網路**：HeteroSAGE + GAT 捕捉風險傳播路徑
+- **三模型 Stacking Ensemble**：XGBoost + LightGBM (Focal Loss) + CatBoost
+- **SHAP 全方位可解釋性**：逐案風險歸因 + 反事實建議
+- **公平性審計**：性別、年齡、職業、收入四維度偏差檢測
+
+</td>
+<td width="40%">
+
+<img src="assets/architecture.svg" alt="系統架構圖" width="100%">
+
+</td>
+</tr>
+</table>
+
+---
+
+## 活動紀錄
+
+本專案參加 **BitoGroup × AWS 黑名單用戶偵測競賽**，並於 **Taiwan AI EXPO 2026** 展示成果。
+
+<table>
+<tr>
+<td width="50%">
+<p align="center">
+  <img src="assets/ai-expo-2026.jpeg" alt="Taiwan AI EXPO 2026" width="100%">
+</p>
+<p align="center"><sub><b>Taiwan AI EXPO 2026</b> — 團隊於會場展示 BitoGuard 系統</sub></p>
+</td>
+<td width="50%">
+<p align="center">
+  <img src="assets/hackathon-team.jpeg" alt="Agent for Truth Hackathon" width="100%">
+</p>
+<p align="center"><sub><b>Agent for Truth — Disinformation Defense Hackathon</b> — 競賽活動現場</sub></p>
+</td>
+</tr>
+</table>
+
+---
+
+## Key Features
+
+| | | | |
+|:---:|:---:|:---:|:---:|
+| **81 維特徵工程** | **異質圖神經網路** | **三模型 Stacking** | **SHAP 可解釋性** |
+| 10 大類特徵，65 維篩選 | HeteroSAGE + GAT | XGB + LGB + CAT | Global + Local + 反事實 |
+
+| | | | |
+|:---:|:---:|:---:|:---:|
+| **公平性審計** | **互動式 3D 儀表板** | **半監督學習** | **異常偵測** |
+| 四維度偏差檢測 | React + Three.js | Pseudo-Labeling | IF / HBOS / LOF |
+
+---
+
+## Performance
+
+<table>
+<tr>
+<td width="25%" align="center">
+<h3>0.861</h3>
+<sub>AUC-ROC</sub>
+</td>
+<td width="25%" align="center">
+<h3>0.307</h3>
+<sub>AUC-PR</sub>
+</td>
+<td width="25%" align="center">
+<h3>0.463</h3>
+<sub>Recall</sub>
+</td>
+<td width="25%" align="center">
+<h3>0.357</h3>
+<sub>F1-Score</sub>
+</td>
+</tr>
+</table>
+
+---
+
+## System Architecture
 
 <p align="center">
   <img src="assets/architecture.svg" alt="系統架構圖" width="100%"/>
@@ -52,80 +121,11 @@
 
 ---
 
-## 專案結構
+## 完整 Pipeline
 
-<p align="center">
-  <img src="assets/project-structure.svg" alt="專案結構圖" width="100%"/>
-</p>
-
-```
-Bio_AWS_Workshop/
-├── RawData/                            # 原始資料（7 張 CSV 表）
-├── adjust_data/                        # 前處理後資料（train/test 切分）
-│
-├── Wei_model/                          # 核心 ML Pipeline
-│   ├── model/
-│   │   ├── main.py                    # 主訓練流程入口（12 步驟）
-│   │   ├── Feature_engineering.py     # 特徵工程（10 大類 81 維特徵）
-│   │   ├── feature_selection.py       # 特徵篩選（81 → 65）
-│   │   ├── anomaly_detection.py       # 無監督異常偵測（IF / HBOS / LOF）
-│   │   ├── Gnn_model.py              # 異質圖神經網路（HeteroSAGE + GAT）
-│   │   ├── ensemble.py               # Stacking Ensemble（XGB + LGB + CAT）
-│   │   ├── shap_explainer.py         # SHAP 可解釋性 + SSR 穩定性 + 反事實
-│   │   ├── fairness_audit.py         # 四維度公平性審計
-│   │   └── pseudo_labeling.py        # 半監督 Pseudo-Labeling
-│   ├── output/                        # 模型輸出結果
-│   │   ├── metrics.json              # 效能指標
-│   │   ├── fairness_summary.json     # 公平性審計報告
-│   │   ├── shap_all_features.csv     # 80 特徵 SHAP 重要性排名
-│   │   ├── user_risk_scores.csv      # 全部用戶風險分數
-│   │   ├── risk_reports.txt          # Top 5 高風險用戶報告
-│   │   ├── waterfall/               # 50+ SHAP Waterfall 圖（訓練集）
-│   │   ├── waterfall_predict/       # 20+ SHAP Waterfall 圖（預測集）
-│   │   └── all_user_risk_scores.xlsx # 合併 train + predict 分數
-│   └── test_pipeline.py              # 消融實驗框架
-│
-├── frontend/                           # React 互動式儀表板
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── layout/               # Dashboard 佈局
-│   │   │   ├── stats/                # 統計面板 + 風險分布圖
-│   │   │   ├── graph/                # 2D/3D 交易網路圖譜
-│   │   │   ├── fpfn/                 # FP/FN 誤判分析 + SHAP Waterfall
-│   │   │   └── predict/              # 預測結果檢視
-│   │   ├── api/                      # API Client 模組
-│   │   ├── context/                  # React Context 狀態管理
-│   │   └── types/                    # TypeScript 型別定義
-│   ├── output/                        # 前端讀取的 CSV 資料
-│   └── dist/                          # 生產環境建置輸出
-│
-├── le_model/                           # 替代模型實驗
-├── ARM-GraphSAGE/                      # GraphSAGE 變體實驗
-└── output/                             # 各版本輸出存檔
-```
-
----
-
-## 技術棧
-
-| 層級 | 技術 |
-|------|------|
-| **機器學習** | XGBoost, CatBoost, LightGBM (Focal Loss), Scikit-learn |
-| **深度學習** | PyTorch, PyTorch Geometric (Heterogeneous GNN) |
-| **不平衡處理** | Borderline-SMOTE (30%), scale_pos_weight, Focal Loss |
-| **特徵篩選** | 相關性篩選 (≥0.95), LightGBM 重要性篩選 |
-| **異常偵測** | Isolation Forest, HBOS, LOF |
-| **可解釋性** | SHAP (TreeExplainer), SSR 穩定性評估, 反事實分析 |
-| **公平性** | Demographic Parity, Equalized Odds, Disparate Impact |
-| **半監督** | Pseudo-Labeling（高信心樣本擴增） |
-| **前端框架** | React 18 + TypeScript + Vite 5 |
-| **視覺化** | react-force-graph-2d/3d, Three.js, Recharts |
-| **樣式** | Tailwind CSS 3 |
-
----
 ### Step 1：資料載入與驗證
 
-從 5 張交易表 + 用戶資訊表載入資料，執行嚴格的欄位型態轉換（datetime / int / float / str），缺失值統計報告，並驗證黑名單比例一致性。
+從 5 張交易表 + 用戶資訊表載入資料，執行嚴格的欄位型態轉換，缺失值統計報告，並驗證黑名單比例一致性。
 
 ### Step 2：特徵工程（81 維 → 65 維）
 
@@ -133,27 +133,29 @@ Bio_AWS_Workshop/
 
 | # | 特徵類別 | 數量 | 代表特徵 | 偵測意圖 |
 |---|----------|------|----------|----------|
-| 1 | **用戶人口特徵** | 15 | `kyc_speed_sec`, `account_age_days`, `is_female`, `reg_hour`, `reg_is_night` | KYC 異常（秒級完成暗示自動化）、深夜註冊、性別/職業風險 |
-| 2 | **法幣交易行為** | 14 | `twd_dep_sum`, `twd_net_flow`, `twd_withdraw_ratio`, `twd_smurf_flag` | 淨流出、入金/提領比異常、Smurfing 偵測 |
-| 3 | **虛幣交易行為** | 15 | `crypto_wit_sum`, `crypto_wallet_hash_nunique`, `crypto_protocol_diversity` | 多錢包分散提領、跨鏈移轉 |
-| 4 | **掛單/一鍵買賣** | 9 | `trading_buy_ratio`, `swap_sum`, `trading_market_order_ratio`, `total_trading_volume` | 單向購買、市價單洗量 |
-| 5 | **IP & 資金流速** | 5 | `ip_unique_count`, `ip_night_ratio`, `ip_max_shared`, `fund_stay_sec` | 多 IP 切換、深夜操作、資金快進快出 |
-| 6 | **交易圖拓撲** | 5 | `pagerank_score`, `connected_component_size`, `betweenness_centrality` | 資金樞紐、詐騙集團聚集 |
-| 7 | **跨表衍生** | 4 | `total_tx_count`, `weekend_tx_ratio`, `velocity_ratio_7d_vs_30d` | 近期活動加速 |
-| 8 | **AML 紅旗指標** | 6 | `twd_to_crypto_out_ratio`, `same_day_in_out_count`, `tx_amount_cv` | 法幣入→幣出漏斗、Smurfing 拆單 |
-| 9 | **時序模式** | 7 | `tx_interval_mean`, `tx_interval_min`, `amount_p90_p10_ratio`, `active_days` | 規律性操作偵測、爆發交易 |
-| 10 | **複合風險分數** | 1 | `composite_risk_score` | 多維度風險加權綜合 |
+| 1 | **用戶人口特徵** | 15 | `kyc_speed_sec`, `account_age_days`, `reg_hour` | KYC 異常、深夜註冊 |
+| 2 | **法幣交易行為** | 14 | `twd_dep_sum`, `twd_net_flow`, `twd_smurf_flag` | 淨流出、Smurfing |
+| 3 | **虛幣交易行為** | 15 | `crypto_wit_sum`, `crypto_wallet_hash_nunique` | 多錢包分散提領 |
+| 4 | **掛單/一鍵買賣** | 9 | `trading_buy_ratio`, `swap_sum` | 單向購買、市價單洗量 |
+| 5 | **IP & 資金流速** | 5 | `ip_unique_count`, `ip_night_ratio`, `fund_stay_sec` | 多 IP 切換、快進快出 |
+| 6 | **交易圖拓撲** | 5 | `pagerank_score`, `connected_component_size` | 資金樞紐、集團聚集 |
+| 7 | **跨表衍生** | 4 | `total_tx_count`, `weekend_tx_ratio` | 近期活動加速 |
+| 8 | **AML 紅旗指標** | 6 | `twd_to_crypto_out_ratio`, `same_day_in_out_count` | 法幣入→幣出漏斗 |
+| 9 | **時序模式** | 7 | `tx_interval_mean`, `amount_p90_p10_ratio` | 規律性操作、爆發交易 |
+| 10 | **複合風險分數** | 1 | `composite_risk_score` | 多維度加權綜合 |
 
-> 異常偵測分數（3 維）與 GNN 嵌入（16 維）於後續步驟加入（65 + 3 + 16 = 84 維），再經公平性審計移除 `is_female`、`age`，最終模型輸入為 **82 維**。
+<details>
+<summary><b>特徵篩選流程（81 → 65 維）</b></summary>
 
-**特徵篩選流程**（81 → 65 維）：
 1. **零方差移除**：`has_kyc_level2`（1 個）
-2. **高相關性移除**（閾值 ≥ 0.95）：`graph_out_degree`, `kyc_gap_days`, `trading_sum`, `ip_total_count`, `crypto_external_wit_count`, `tx_burst_count`, `crypto_dep_sum`, `trading_count`, `total_trading_volume`, `twd_wit_mean`, `twd_wit_sum`, `graph_in_degree`, `composite_risk_score`（13 個）
+2. **高相關性移除**（閾值 ≥ 0.95）：13 個高度共線性特徵
 3. **零重要性移除**：`betweenness_centrality`, `velocity_ratio_7d_vs_30d`（2 個）
 
-### Step 3：異常偵測特徵
+> 異常偵測分數（3 維）與 GNN 嵌入（16 維）於後續步驟加入，再經公平性審計移除 `is_female`、`age`，最終模型輸入為 **82 維**。
 
-在 Ensemble 訓練前，先以三種無監督演算法計算每位用戶的異常分數，作為額外特徵注入模型：
+</details>
+
+### Step 3：異常偵測特徵
 
 | 演算法 | 輸出特徵 | 原理 |
 |--------|----------|------|
@@ -163,7 +165,7 @@ Bio_AWS_Workshop/
 
 ### Step 4：圖神經網路 (GNN)
 
-利用 `crypto_transfer` 表中的鏈上錢包地址，建構**異質圖 (Heterogeneous Graph)**，捕捉傳統表格特徵無法表達的**風險傳播關係**。
+利用鏈上錢包地址，建構**異質圖 (Heterogeneous Graph)**，捕捉傳統表格特徵無法表達的**風險傳播關係**。
 
 <p align="center">
   <img src="assets/gnn-architecture.svg" alt="GNN 架構圖" width="100%"/>
@@ -177,14 +179,16 @@ Bio_AWS_Workshop/
   <img src="assets/stacking-ensemble.svg" alt="Stacking Ensemble 架構圖" width="100%"/>
 </p>
 
-**不平衡處理策略**：
+<details>
+<summary><b>不平衡處理策略</b></summary>
+
 - **Focal Loss**（LightGBM）：α=0.75, γ=2.0，自動增加邊界樣本的損失權重
 - **scale_pos_weight=50**（XGBoost / CatBoost）：正負比例加權
 - **Borderline-SMOTE**（可選）：僅對邊界少數類過採樣 30%
 
-### Step 6：SHAP 可解釋性分析
+</details>
 
-使用 SHAP TreeExplainer 對 XGBoost 模型進行全方位解釋：
+### Step 6：SHAP 可解釋性分析
 
 **Global 解釋** — Top 10 特徵重要性：
 
@@ -201,41 +205,37 @@ Bio_AWS_Workshop/
 | 9 | `tx_interval_mean` | 交易間隔均值 | 2.68% | 37.32% |
 | 10 | `reg_hour` | 註冊時段 | 2.41% | 39.73% |
 
-> GNN 嵌入特徵（`gnn_emb_*`）合計貢獻約 **12.8%**，驗證圖結構資訊的有效性。
-> 異常偵測分數（`if_score`, `lof_score`, `hbos_score`）合計貢獻約 **3.0%**。
+> GNN 嵌入特徵合計貢獻約 **12.8%**，異常偵測分數合計貢獻約 **3.0%**。
 
-**Local 解釋**（個案分析）：
-- 每位用戶的 SHAP Waterfall Plot：base value → 各特徵推/拉 → 最終預測
-- 訓練集產出 50+ 張、預測集產出 20+ 張 Waterfall 圖
+<details>
+<summary><b>Local 解釋 + 反事實分析 + SSR 穩定性</b></summary>
 
-**反事實分析（Counterfactual）**：
-- 自動建議哪些特徵調整可降低風險
+**Local 解釋**：每位用戶的 SHAP Waterfall Plot — base value → 各特徵推/拉 → 最終預測
+
+**反事實分析（Counterfactual）**：自動建議哪些特徵調整可降低風險
 - 範例：「若將 KYC 完成速度從 54,799 秒調整至 0，風險分數可降低 0.014」
 
-**SSR 穩定性驗證**：
-- 以 ε = 0.05 ~ 0.20 擾動特徵值，驗證 SHAP 排名在擾動下的一致性
-- 確保解釋結果對微小資料變動具有穩健性
+**SSR 穩定性驗證**：以 ε = 0.05 ~ 0.20 擾動特徵值，驗證 SHAP 排名的穩健性
+
+</details>
 
 ### Step 7：公平性審計
 
-對四個受保護屬性進行全面公平性檢測：
-
 | 受保護屬性 | 檢測結果 | DPD | TPR Gap | FPR Gap | DIR |
 |-----------|---------|-----|---------|---------|-----|
-| **性別 (Gender)** | **FAIL** | 0.078 ⚠️ | 0.185 ❌ | 0.054 ⚠️ | 0.281 ❌ |
-| **年齡 (Age)** | **FAIL** | 0.079 ⚠️ | 0.094 ⚠️ | 0.067 ⚠️ | 0.239 ❌ |
-| **職業風險 (Career)** | **PASS** | 0.009 ✅ | 0.028 ✅ | 0.008 ✅ | 0.849 ✅ |
-| **收入來源 (Income)** | **FAIL** | 0.022 ✅ | 0.088 ⚠️ | 0.017 ✅ | 0.587 ❌ |
+| **性別 (Gender)** | **FAIL** | 0.078 | 0.185 | 0.054 | 0.281 |
+| **年齡 (Age)** | **FAIL** | 0.079 | 0.094 | 0.067 | 0.239 |
+| **職業風險 (Career)** | **PASS** | 0.009 | 0.028 | 0.008 | 0.849 |
+| **收入來源 (Income)** | **FAIL** | 0.022 | 0.088 | 0.017 | 0.587 |
 
-> **指標說明**：DPD = Demographic Parity Diff, TPR Gap = True Positive Rate 差距, DIR = Disparate Impact Ratio (0.8~1.25 為公平)
+<details>
+<summary><b>關鍵發現與建議</b></summary>
 
-**關鍵發現**：
 - 女性用戶 TPR 54.7% vs 男性 36.2%（女性被標記率為男性 1.51 倍）
 - 30-50 歲群組 TPR 49.7% 顯著高於其他年齡段
+- **建議**：移除 `is_female` + `age`（無反洗錢業務正當性），保留 `is_high_risk_career` + `is_high_risk_income`（有法規依據）
 
-**建議緩解措施**：
-- 移除 `is_female` + `age` 特徵（無反洗錢業務正當性）
-- 保留 `is_high_risk_career` + `is_high_risk_income`（有法規依據，且通過公平性檢測）
+</details>
 
 ---
 
@@ -243,42 +243,15 @@ Bio_AWS_Workshop/
 
 使用 React + TypeScript + Vite 建構，支援三種檢視模式：
 
-### Fraud Mode（預設）
-- **左側面板**：統計 KPI（總節點數、詐騙比例、風險分布）+ 高風險用戶清單
-- **右側主區**：2D / 3D 力導向圖（Force-Directed Graph），視覺化用戶與錢包的交易網路
-- **節點詳情**：點選節點查看用戶資訊 + Top SHAP 因子
-
-### FP/FN Mode（誤判分析）
-- 分析 False Positive（誤報）與 False Negative（漏報）案例
-- 每個案例附帶 SHAP Waterfall 圖，解釋模型為何判斷錯誤
-
-### Predict Mode（預測結果）
-- 展示 12,753 筆未標記用戶的預測風險分數
-- 每位用戶顯示 Top SHAP 特徵貢獻
-
-**技術實現**：
-- **狀態管理**：React Context API (DashboardContext)
-- **圖譜渲染**：react-force-graph-2d/3d + Three.js
-- **圖表**：Recharts（風險分數直方圖、關係統計）
-- **資料流**：前端直接讀取 `frontend/output/*.csv`，經 Vite 中間件提供 CSV 服務
+| 模式 | 功能 |
+|------|------|
+| **Fraud Mode** | 2D/3D 力導向交易網路圖譜、統計 KPI、高風險用戶清單、節點 SHAP 分析 |
+| **FP/FN Mode** | 誤判案例分析 + SHAP Waterfall 圖，解釋模型判斷錯誤原因 |
+| **Predict Mode** | 12,753 筆未標記用戶的預測風險分數 + Top SHAP 特徵貢獻 |
 
 ---
 
-## 模型成果
-
-### 效能指標
-
-| 指標 | 數值 | 說明 |
-|------|------|------|
-| **AUC-ROC** | 0.861 | 整體判別能力優秀 |
-| **AUC-PR** | 0.307 | 在高度不平衡下的精確率-召回率表現 |
-| **F1-Score** | 0.357 | 精確率與召回率的調和平均 |
-| **Precision** | 0.291 | 預測為黑名單中，真正是黑名單的比例 |
-| **Recall** | 0.463 | 實際黑名單中，被成功偵測的比例 |
-| **OOF Threshold** | 0.860 | Out-of-Fold 最佳閾值 |
-| **Test Threshold** | 0.841 | 測試集 PR-Curve 最佳 F1 閾值 |
-
-### 風險報告範例
+## 風險報告範例
 
 ```
 ╔══════════════════════════════════════════╗
@@ -301,39 +274,25 @@ Bio_AWS_Workshop/
   • 若將「法幣提領比率」從 10.0 調整至 0，風險分數可降低 0.012
 ```
 
-### 產出檔案一覽
+---
 
-| 檔案 | 說明 |
+## 技術棧
+
+| 層級 | 技術 |
 |------|------|
-| `metrics.json` | 模型效能指標 (AUC-ROC / AUC-PR / F1 / Precision / Recall) |
-| `ensemble_model.joblib` | 訓練好的集成模型 + 最佳閾值 + 特徵名稱 |
-| `user_risk_scores.csv` | 51,017 位用戶風險分數 + 風險等級 |
-| `all_user_risk_scores.xlsx` | 合併 train + predict 全量分數（63,770 人） |
-| `blacklist_analysis.xlsx` | 黑名單分析（TP / FP / FN / Predict 分群 + SHAP） |
-| `shap_all_features.csv` | 全特徵 SHAP 重要性排名（含累積百分比） |
-| `shap_top20_all_users.csv` | 全量用戶 SHAP Top 20 特徵摘要 |
-| `shap_top20_blacklist.csv` | 黑名單用戶 SHAP Top 20 特徵摘要 |
-| `shap_values_all.csv` | 全量用戶 SHAP 值（63,770 人） |
-| `shap_top10_by_group.xlsx` | 分群 SHAP Top-10（TP / FP / FN / Predict） |
-| `risk_reports.txt` | Top 5 高風險用戶自然語言報告 |
-| `fairness_summary.json` | 四維度公平性審計完整報告 |
-| `fairness_report.csv` | 公平性指標量化數據 |
-| `feature_selection_report.json` | 特徵篩選過程記錄 |
-| `gnn_node_list.csv` | GNN 圖節點清單（用戶 + 錢包，含風險分數） |
-| `gnn_edge_list.csv` | GNN 圖邊清單（交易關係） |
-| `waterfall/*.png` | 50+ 張 SHAP Waterfall 圖（訓練集） |
-| `waterfall_predict/*.png` | 20+ 張 SHAP Waterfall 圖（預測集） |
-| `gnn_model.pt` | 訓練好的 GNN 模型權重 |
+| **機器學習** | XGBoost, CatBoost, LightGBM (Focal Loss), Scikit-learn |
+| **深度學習** | PyTorch, PyTorch Geometric (Heterogeneous GNN) |
+| **不平衡處理** | Borderline-SMOTE, scale_pos_weight, Focal Loss |
+| **異常偵測** | Isolation Forest, HBOS, LOF |
+| **可解釋性** | SHAP (TreeExplainer), SSR 穩定性, 反事實分析 |
+| **公平性** | Demographic Parity, Equalized Odds, Disparate Impact |
+| **前端框架** | React 18 + TypeScript + Vite 5 |
+| **視覺化** | react-force-graph-2d/3d, Three.js, Recharts |
+| **樣式** | Tailwind CSS 3 |
 
 ---
 
-## 快速開始
-
-### 環境需求
-
-- Python 3.9+
-- Node.js 18+
-- CUDA（選用，加速 GNN 訓練）
+## Quick Start
 
 ### 模型訓練
 
@@ -353,14 +312,60 @@ python main.py --data_dir ../../adjust_data/train --output ../output --skip_gnn
 
 ```bash
 cd frontend
-
-# 安裝依賴
 npm install
-
-# 開發模式（http://localhost:5173）
-npm run dev
-
-# 生產環境建置
-npm run build
+npm run dev        # 開發模式（http://localhost:5173）
+npm run build      # 生產環境建置
 ```
 
+---
+
+## 專案結構
+
+<details>
+<summary><b>展開完整目錄</b></summary>
+
+```
+Bio_AWS_Workshop/
+├── Wei_model/                          # 核心 ML Pipeline
+│   ├── model/
+│   │   ├── main.py                    # 主訓練流程入口（12 步驟）
+│   │   ├── Feature_engineering.py     # 特徵工程（10 大類 81 維特徵）
+│   │   ├── feature_selection.py       # 特徵篩選（81 → 65）
+│   │   ├── anomaly_detection.py       # 無監督異常偵測（IF / HBOS / LOF）
+│   │   ├── Gnn_model.py              # 異質圖神經網路（HeteroSAGE + GAT）
+│   │   ├── ensemble.py               # Stacking Ensemble（XGB + LGB + CAT）
+│   │   ├── shap_explainer.py         # SHAP 可解釋性 + SSR + 反事實
+│   │   ├── fairness_audit.py         # 四維度公平性審計
+│   │   └── pseudo_labeling.py        # 半監督 Pseudo-Labeling
+│   └── output/                        # 模型輸出結果
+│
+├── Yu_model/                          # 資金追溯模型
+│   └── trace_back_model/             # 詐騙資金鏈追蹤
+│
+├── frontend/                           # React 互動式儀表板
+│   ├── src/
+│   │   ├── components/               # UI 元件
+│   │   ├── utils/                    # 資料處理與圖譜邏輯
+│   │   └── types/                    # TypeScript 型別
+│   └── output/                        # 前端讀取的 CSV 資料
+│
+├── assets/                            # 架構圖與媒體素材
+└── docs/                              # 文件
+```
+
+</details>
+
+---
+
+<p align="center">
+  <a href="https://github.com/timwei0801/Bio_AWS_Workshop">
+    <img src="https://img.shields.io/github/stars/timwei0801/Bio_AWS_Workshop.svg?style=social" alt="GitHub Stars">
+  </a>
+  <a href="https://github.com/timwei0801/Bio_AWS_Workshop/fork">
+    <img src="https://img.shields.io/github/forks/timwei0801/Bio_AWS_Workshop.svg?style=social" alt="GitHub Forks">
+  </a>
+</p>
+
+<p align="center">
+  <sub>BitoGuard — AI-Powered AML Risk Detection for Cryptocurrency Exchanges</sub>
+</p>
