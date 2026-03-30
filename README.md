@@ -6,11 +6,16 @@
 
 <p align="center">
   <a href="https://timwei0801.github.io/Bio_AWS_Workshop/"><img src="https://img.shields.io/badge/Live_Demo-GitHub_Pages-blue?logo=github" alt="Live Demo"></a>
+  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
   <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/Python-3.9+-blue.svg?logo=python" alt="Python"></a>
   <a href="https://pytorch.org/"><img src="https://img.shields.io/badge/PyTorch-GNN-orange.svg?logo=pytorch" alt="PyTorch"></a>
   <a href="https://reactjs.org/"><img src="https://img.shields.io/badge/React-18-blue.svg?logo=react" alt="React"></a>
   <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-5-blue.svg?logo=typescript" alt="TypeScript"></a>
-  <img src="https://img.shields.io/badge/🏆_BitoGroup_×_AWS-黑名單偵測競賽-gold" alt="Competition">
+  <img src="https://img.shields.io/badge/🏆_去偽存真黑客松-Agent_for_Truth-gold" alt="Hackathon">
+</p>
+
+<p align="center">
+  <a href="README.md">中文</a> | <a href="README_EN.md">English</a>
 </p>
 
 ---
@@ -51,9 +56,18 @@
 
 ---
 
-## 活動紀錄
+## 競賽與活動
 
-本專案參加 **BitoGroup × AWS 黑名單用戶偵測競賽**，並於 **Taiwan AI EXPO 2026** 展示成果。
+本專案為 [**去偽存真：全民偵查黑客松 (Agent for Truth: Disinformation Defense Hackathon)**](https://www.ai-expo.tw/kiro_hackathon_2026/) 的參賽作品，選擇**幣託科技 (BitoPro) — 虛擬貨幣交易安全**賽題。
+
+| 項目 | 說明 |
+|------|------|
+| **競賽名稱** | 去偽存真：全民偵查黑客松 (Agent for Truth) |
+| **主辦單位** | DIGITIMES × 國發會 × AWS |
+| **合作企業** | 幣託科技 (BitoPro)、Gogolook |
+| **競賽日期** | 2026 年 3 月 26–27 日 |
+| **競賽地點** | AWS 南山辦公室 / 圓山花博爭豔館（Taiwan AI EXPO 2026） |
+| **賽題** | 虛擬貨幣交易安全 — 偵測人頭戶與詐騙交易 |
 
 <table>
 <tr>
@@ -67,7 +81,7 @@
 <p align="center">
   <img src="assets/hackathon-team.jpeg" alt="Agent for Truth Hackathon" width="100%">
 </p>
-<p align="center"><sub><b>Agent for Truth — Disinformation Defense Hackathon</b> — 競賽活動現場</sub></p>
+<p align="center"><sub><b>去偽存真黑客松</b> — 競賽活動現場（花博爭豔館未來舞台）</sub></p>
 </td>
 </tr>
 </table>
@@ -354,6 +368,12 @@ Bio_AWS_Workshop/
 ```
 
 </details>
+
+---
+
+## License
+
+This project is licensed under the MIT License - see [LICENSE](LICENSE) for details.
 
 ---
 
