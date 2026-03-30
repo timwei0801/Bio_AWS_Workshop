@@ -41,6 +41,7 @@ function serveOutputPlugin() {
 }
 
 export default defineConfig({
+  base: '/Bio_AWS_Workshop/',
   plugins: [react(), serveOutputPlugin()],
   test: {
     globals: true,

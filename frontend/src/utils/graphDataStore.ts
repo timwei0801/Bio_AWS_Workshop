@@ -180,9 +180,11 @@ let shapMap: Map<number, Record<string, string>> | null = null;
 
 // ── Loaders ───────────────────────────────────────────────────────────────────
 
-async function fetchCsv(path: string): Promise<string> {
-  const res = await fetch(path);
-  if (!res.ok) throw new Error(`Failed to fetch ${path}: ${res.status}`);
+async function fetchCsv(csvPath: string): Promise<string> {
+  const base = import.meta.env.BASE_URL ?? '/';
+  const url = `${base.replace(/\/$/, '')}${csvPath}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Failed to fetch ${url}: ${res.status}`);
   return res.text();
 }
 
