@@ -29,18 +29,17 @@ plot/
 catboost_info/
 Wei_model/model/catboost_info/
 
-# Model output (large files)
-.env
-Wei_model/output/
-!Wei_model/output/gnn_edge_list.csv
-!Wei_model/output/gnn_node_list.csv
-!Wei_model/output/blacklist_analysis.xlsx
-!Wei_model/output/shap_top10_by_group.xlsx
-!Wei_model/output/shap_values_test.csv
-!Wei_model/output/shap_values_all.csv
-!Wei_model/output/shap_values_all_top10.csv
-!Wei_model/output/all_user_risk_scores.xlsx
-!Wei_model/output/predict_detail.csv
-!Wei_model/output/shap_top20_all_users.csv
-!Wei_model/output/shap_top20_blacklist.csv
+# === Sensitive data (official competition data — must not be public) ===
+# Raw data
+RawData/
+adjust_data/
 
+# Model outputs (contain user_id, risk scores, etc.)
+Wei_model/output/
+Yu_model/trace_back_model/output/
+
+# Frontend xlsx (cannot be anonymized easily)
+frontend/output/*.xlsx
+
+# Anonymization script (utility, not needed in repo)
+anonymize_data.py
