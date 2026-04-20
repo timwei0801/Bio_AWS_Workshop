@@ -281,6 +281,13 @@
     "en": "English",
     "zh": "繁體中文"
   },
+  "featuresStats": {
+    "title":       "Dataset Summary",
+    "totalNodes":  "Total nodes",
+    "fraudNodes":  "Fraud nodes",
+    "normalNodes": "Normal nodes",
+    "fraudRatio":  "Fraud ratio"
+  },
   "featureCat": {
     "user":       "User demographics",
     "userDesc":   "KYC anomalies (second-level = bot), late-night registration, gender/occupation risk. e.g. kyc_speed_sec, account_age_days, is_female, reg_hour",

@@ -875,11 +875,18 @@ let shapTop20BlacklistCache: ShapTop20Entry[] | null = null;
 
 function parseShapTop20(text: string): ShapTop20Entry[] {
   const records = parseCsvRecords(text);
+  // Check active locale once per parse — CSV has a pre-translated 中文名稱
+  // column, but we must only use it when the UI is in Chinese.
+  const lang = (typeof localStorage !== 'undefined' && localStorage.getItem('bitoguard.lang')) || 'en';
+  const isZh = lang.startsWith('zh');
   return records.map(r => {
     const feat = r['feature'] ?? '';
     const csvLabel = r['中文名稱'] ?? '';
-    // CSV 中文名稱若與英文相同或為空，則用 zhFeatureName 翻譯
-    const label = (csvLabel && csvLabel !== feat) ? csvLabel : zhFeatureName(feat);
+    // In English: always show the snake_case feature key.
+    // In Chinese: prefer CSV's hand-picked label, fall back to zhFeatureName map.
+    const label = isZh
+      ? (csvLabel && csvLabel !== feat ? csvLabel : zhFeatureName(feat))
+      : feat;
     return {
       rank:    parseInt(r['排名'] ?? '0', 10),
       feature: feat,

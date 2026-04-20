@@ -281,6 +281,13 @@
     "en": "English",
     "zh": "繁體中文"
   },
+  "featuresStats": {
+    "title":       "資料集摘要",
+    "totalNodes":  "總節點數",
+    "fraudNodes":  "詐騙節點",
+    "normalNodes": "正常節點",
+    "fraudRatio":  "詐騙比例"
+  },
   "featureCat": {
     "user":       "用戶人口特徵",
     "userDesc":   "KYC 異常（秒級完成暗示自動化）、深夜註冊、性別/職業風險。代表特徵：kyc_speed_sec, account_age_days, is_female, reg_hour",
