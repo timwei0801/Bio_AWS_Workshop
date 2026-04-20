@@ -10,11 +10,31 @@
     "fraud": "黑名單",
     "fp": "FP 誤判",
     "fn": "FN 漏判",
-    "predict": "Predict"
+    "predict": "Predict",
+    "compare": "對比"
+  },
+  "compare": {
+    "title": "雙用戶 SHAP 對比",
+    "subtitle": "挑選兩位用戶，觀察模型對兩者決策邏輯的異同。",
+    "leftLabel": "用戶 A",
+    "rightLabel": "用戶 B",
+    "pickPrompt": "請先選擇上方的 User ID",
+    "pickPlaceholder": "搜尋 user_id…",
+    "insightTitle": "特徵重疊分析",
+    "sharedFeatures": "共同重要特徵",
+    "leftOnly": "僅用戶 A",
+    "rightOnly": "僅用戶 B"
   },
   "overview": {
     "heroTitle": "偵測總覽",
     "heroSubtitle": "模型效能、風險分佈、公平性檢測一頁掌握。",
+    "architecture": "異構 GNN（HeteroSAGE + GAT）+ XGBoost / LightGBM / CatBoost 堆疊集成 — 82 維特徵",
+    "tickerUsers":     "總用戶",
+    "tickerFraud":     "黑名單",
+    "tickerFraudPct":  "詐騙比例",
+    "tickerEdges":     "圖邊數",
+    "tickerThreshold": "判定閾值",
+    "lastUpdated":     "更新時間 {{time}}",
     "kpi": {
       "auc_roc":  { "label": "AUC-ROC",  "hint": "跨閾值的排序品質" },
       "auc_pr":   { "label": "AUC-PR",   "hint": "Precision–Recall 曲線下面積（不平衡資料適用）" },
@@ -50,7 +70,8 @@
       "samples": "樣本數",
       "pass":    "PASS",
       "warn":    "WARNING",
-      "fail":    "FAIL"
+      "fail":    "FAIL",
+      "footnote": "根據 {{date}} 的 holdout 切分計算。完整推導見 {{notebook}}。"
     }
   },
   "risk": {
@@ -127,7 +148,8 @@
       "reset":   "重置視角",
       "center":  "設為中心"
     },
-    "sparseHint": "此用戶鄰居稀疏，這也是模型難以判斷的原因之一。"
+    "sparseTitle": "鄰居稀疏",
+    "sparseHint": "此用戶鄰居數極少，GNN 訊息傳遞幾乎無信號可以聚合；這正是模型信心度下降、誤判容易集中於孤立節點的原因之一。"
   },
   "detail": {
     "title": "節點詳細資訊",
@@ -275,6 +297,21 @@
     "predValue":  "預測值",
     "baseValueLabel": "E[f(x)] = {{value}}",
     "predValueLabel": "f(x) = {{value}}"
+  },
+  "export": {
+    "label": "匯出",
+    "csv":   "下載 CSV",
+    "json":  "下載 JSON"
+  },
+  "palette": {
+    "title":        "命令面板",
+    "placeholder":  "跳至區塊或搜尋 user_id…",
+    "empty":        "無符合結果",
+    "kindSection":  "分頁",
+    "kindUser":     "用戶",
+    "hintMove":     "切換",
+    "hintSelect":   "選取",
+    "hintShortcut": "⌘/Ctrl + K"
   },
   "lang": {
     "switch": "語言",

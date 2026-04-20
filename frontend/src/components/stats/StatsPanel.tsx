@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { useStats } from '../../hooks/useStats';
 import { useDashboard } from '../../context/DashboardContext';
 import { useFraudNodes } from '../../hooks/useFraudNodes';
-import { Spinner } from '../common/Spinner';
+import { Skeleton } from '../common/Skeleton';
 import { ErrorMessage } from '../common/ErrorMessage';
 import { RelationStats } from './RelationStats';
 import { RiskNodeList } from './RiskNodeList';
@@ -21,7 +21,18 @@ export function StatsPanel() {
   const { loadStats } = useDashboard();
   const { fraudNodes } = useFraudNodes();
 
-  if (loading && !stats) return <Spinner />;
+  if (loading && !stats) {
+    return (
+      <div className="space-y-4">
+        <Skeleton className="w-24" />
+        <div className="grid grid-cols-2 gap-2">
+          {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} variant="card" className="h-16" />)}
+        </div>
+        <Skeleton variant="card" className="h-28" />
+        <Skeleton variant="list" rows={5} />
+      </div>
+    );
+  }
   if (error) return <ErrorMessage message={error} onRetry={loadStats} />;
   if (!stats) return null;
 

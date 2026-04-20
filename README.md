@@ -302,8 +302,31 @@ python main.py --data_dir ../../adjust_data/train --output ../output --skip_gnn
 ```bash
 cd frontend
 npm install
-npm run dev        # Dev mode (http://localhost:5173)
-npm run build      # Production build
+npm run dev          # Dev mode (http://localhost:5173)
+npm run build        # Production build
+npm test             # Run unit tests (vitest)
+```
+
+**Keyboard shortcuts**
+
+| Key | Action |
+|-----|--------|
+| `1`–`7` | Jump to Overview / Features / Blacklist / FP / FN / Predict / Compare |
+| `⌘/Ctrl + K` | Open command palette (search sections & user IDs) |
+| `/` | Focus the search input |
+| `Shift + P` | Toggle print-friendly mode |
+
+**Deep links**
+
+Every page exposes its state in the URL hash: `#/fp?user=226`, `#/predict?user=124785`, etc. These can be bookmarked or shared.
+
+### Deployment (GitHub Pages)
+
+Deployment is fully automated. Pushing to `main` with any change under `frontend/` triggers the `Deploy frontend to GitHub Pages` workflow (see `.github/workflows/deploy-pages.yml`), which builds with `npm ci && npm run build` and publishes to Pages via `actions/deploy-pages`. No manual build / gh-pages branch maintenance needed.
+
+```bash
+git push origin main
+gh run watch           # optional — follow the deploy
 ```
 
 ---

@@ -107,10 +107,10 @@ export interface PredictNode {
   shap_features: ShapFeature[];  // top-10 SHAP from predict_detail.csv
 }
 
-export type DashboardMode = 'overview' | 'fraud' | 'fp' | 'fn' | 'predict' | 'features';
+export type DashboardMode = 'overview' | 'fraud' | 'fp' | 'fn' | 'predict' | 'features' | 'compare';
 export type FpFnMode = 'fp' | 'fn';
 
-export const ALL_DASHBOARD_MODES: DashboardMode[] = ['overview', 'features', 'fraud', 'fp', 'fn', 'predict'];
+export const ALL_DASHBOARD_MODES: DashboardMode[] = ['overview', 'features', 'fraud', 'fp', 'fn', 'predict', 'compare'];
 
 // Global dashboard state (DashboardContext)
 export interface DashboardState {

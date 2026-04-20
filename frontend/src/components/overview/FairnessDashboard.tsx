@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { FAIRNESS_CHECKS, FAIRNESS_STATUS_STYLE } from '../../constants/fairness';
+import { FAIRNESS_CHECKS, FAIRNESS_STATUS_STYLE, FAIRNESS_SOURCE } from '../../constants/fairness';
 import type { FairnessCheck } from '../../constants/fairness';
 
 export function FairnessDashboard() {
@@ -22,6 +22,10 @@ export function FairnessDashboard() {
           <FairnessCard key={check.id} check={check} />
         ))}
       </div>
+
+      <p className="mt-4 text-[10px] text-slate-500 leading-relaxed">
+        {t('overview.fairness.footnote', { date: FAIRNESS_SOURCE.runDate, notebook: FAIRNESS_SOURCE.notebook })}
+      </p>
     </div>
   );
 }

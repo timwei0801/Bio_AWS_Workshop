@@ -39,7 +39,7 @@ function renderAnalysis(text: string) {
 }
 
 export function LLM_Model() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { state } = useDashboard();
   const { shapWaterfall, selectedUserId, dashboardMode } = state;
   const fpFnMode = dashboardMode === 'fn' ? 'fn' : dashboardMode === 'fp' ? 'fp' : state.fpFnMode;
@@ -60,8 +60,9 @@ export function LLM_Model() {
     abortRef.current = new AbortController();
     setLoading(true); setError(null); setAnalysis(null);
     try {
+      const locale: 'en' | 'zh' = (i18n.resolvedLanguage ?? i18n.language ?? 'en').startsWith('zh') ? 'zh' : 'en';
       const result = await analyzeMisclassification(
-        { mode: fpFnMode, userId: selectedUserId, riskScore, features: shapWaterfall.features, baseValue: shapWaterfall.base_value },
+        { mode: fpFnMode, userId: selectedUserId, riskScore, features: shapWaterfall.features, baseValue: shapWaterfall.base_value, locale },
         abortRef.current.signal,
       );
       setAnalysis(result);

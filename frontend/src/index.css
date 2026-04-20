@@ -106,3 +106,62 @@ body::after {
     @apply inline-block w-2 h-2 rounded-full;
   }
 }
+
+/* ── Print-friendly mode (?print=true sets data-print-mode on <html>) ──── */
+html[data-print-mode="true"] body::before,
+html[data-print-mode="true"] body::after,
+html[data-print-mode="true"] #root::before {
+  display: none !important;
+}
+
+html[data-print-mode="true"] {
+  background: #ffffff !important;
+}
+
+html[data-print-mode="true"] body {
+  background: #ffffff !important;
+  color: #111827 !important;
+  overflow: visible !important;
+}
+
+html[data-print-mode="true"] .card-glass,
+html[data-print-mode="true"] [class*="bg-slate"],
+html[data-print-mode="true"] [class*="bg-gradient"] {
+  background: #ffffff !important;
+  color: #111827 !important;
+  box-shadow: 0 0 0 1px #d1d5db !important;
+  backdrop-filter: none !important;
+}
+
+html[data-print-mode="true"] [class*="text-white"],
+html[data-print-mode="true"] [class*="text-slate"],
+html[data-print-mode="true"] [class*="text-sky"],
+html[data-print-mode="true"] [class*="text-violet"],
+html[data-print-mode="true"] [class*="text-emerald"],
+html[data-print-mode="true"] [class*="text-amber"],
+html[data-print-mode="true"] [class*="text-cyan"],
+html[data-print-mode="true"] [class*="text-indigo"],
+html[data-print-mode="true"] [class*="text-yellow"],
+html[data-print-mode="true"] [class*="text-purple"],
+html[data-print-mode="true"] [class*="text-pink"],
+html[data-print-mode="true"] [class*="text-teal"],
+html[data-print-mode="true"] [class*="text-rose"] {
+  color: #111827 !important;
+}
+
+html[data-print-mode="true"] svg text {
+  fill: #111827 !important;
+}
+
+html[data-print-mode="true"] [class*="text-red"] { color: #b91c1c !important; }
+html[data-print-mode="true"] [class*="text-orange"] { color: #c2410c !important; }
+
+html[data-print-mode="true"] canvas,
+html[data-print-mode="true"] .no-print {
+  display: none !important;
+}
+
+html[data-print-mode="true"] * {
+  animation: none !important;
+  transition: none !important;
+}

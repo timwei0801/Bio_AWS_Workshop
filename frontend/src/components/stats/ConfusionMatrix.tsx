@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { getConfusionMatrix } from '../../utils/graphDataStore';
 import type { ConfusionMatrixData } from '../../utils/graphDataStore';
+import { Skeleton } from '../common/Skeleton';
 
 function pct(v: number) { return `${(v * 100).toFixed(1)}%`; }
 function fmt(v: number) { return v.toLocaleString(); }
@@ -14,9 +15,12 @@ export function ConfusionMatrix() {
 
   if (!data) {
     return (
-      <div className="flex items-center gap-2 py-4 justify-center text-xs text-slate-500">
-        <span className="w-2.5 h-2.5 rounded-full bg-sky-400 animate-pulse" aria-hidden />
-        {t('common.loading')}
+      <div className="space-y-3">
+        <Skeleton className="w-32" />
+        <div className="grid grid-cols-2 gap-1.5">
+          {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} variant="card" className="h-16" />)}
+        </div>
+        <Skeleton variant="list" rows={3} />
       </div>
     );
   }

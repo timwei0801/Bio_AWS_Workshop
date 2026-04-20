@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import type { ShapWaterfallFeature, ShapFeature } from '../../types/index';
 import { useTranslation } from 'react-i18next';
 
@@ -48,10 +49,16 @@ export function ShapWaterfall({
   const xLo = xMin - xPad;
   const xHi = xMax + xPad;
 
+  // Widen label column when labels are long (snake_case English names
+  // tend to be longer than the Chinese equivalents). Estimate from the
+  // longest label actually rendered.
+  const maxNameChars = useMemo(() =>
+    Math.max(8, ...sorted.map(f => (f.feature_name ?? '').length))
+  , [sorted]);
   const ROW_H   = 26;
   const BAR_H   = 14;
-  const LABEL_W = 200;
-  const TOTAL_W = 600;
+  const LABEL_W = Math.min(260, Math.max(200, maxNameChars * 7 + 20));
+  const TOTAL_W = 640;
   const BAR_AREA = TOTAL_W - LABEL_W - 6;
   const PAD_T = showEndpoints ? 28 : 8;
   const PAD_B = showEndpoints ? 28 : 8;

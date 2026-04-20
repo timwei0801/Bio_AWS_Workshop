@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useDashboard } from '../../context/DashboardContext';
 import type { FpFnNode } from '../../types/index';
 import { Spinner } from '../common/Spinner';
+import { ExportButton } from '../common/ExportButton';
 import { hasGraphData } from '../../utils/graphDataStore';
 
 export function getFilteredFpFnNodes(nodes: FpFnNode[], keyword: string): FpFnNode[] {
@@ -42,7 +43,10 @@ export function FpFnNodeSelector() {
     <div>
       <div className="flex items-center gap-2 mb-1 flex-wrap">
         <span className={`text-xs font-bold uppercase tracking-wider ${accentClass}`}>{title}</span>
-        <span className="ml-auto text-xs text-slate-500">{t('fraud.resultCount', { count: filtered.length })}</span>
+        <span className="text-xs text-slate-500">{t('fraud.resultCount', { count: filtered.length })}</span>
+        <span className="ml-auto">
+          <ExportButton rows={filtered.map(n => ({ ...n }))} filename={isFp ? 'fp-nodes' : 'fn-nodes'} size="xs" />
+        </span>
       </div>
       <p className="text-[10px] text-slate-500 mb-2">{desc}</p>
 

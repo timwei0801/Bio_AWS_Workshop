@@ -17,6 +17,7 @@
  */
 
 import { parseCsvRecords } from './csvParser';
+import { FEATURE_NAME_EN } from '../constants/featureNames';
 import type { StatsResponse, FraudNode, FpFnNode, PredictNode, SubgraphResponse, SubgraphNode, SubgraphEdge, NodeDetailResponse, NeighborPeer, ShapWaterfallResponse, ShapWaterfallFeature, ShapFeature } from '../types/index';
 
 // ── 特徵英文 → 中文對照表 ──────────────────────────────────────────────────────
@@ -139,12 +140,12 @@ const FEATURE_NAME_ZH: Record<string, string> = {
  */
 function zhFeatureName(eng: string): string {
   try {
-    const lang = (typeof localStorage !== 'undefined' && localStorage.getItem('bitoguard.lang')) || '';
-    if (!lang.startsWith('zh')) return eng;
+    const lang = (typeof localStorage !== 'undefined' && localStorage.getItem('bitoguard.lang')) || 'en';
+    if (lang.startsWith('zh')) return FEATURE_NAME_ZH[eng] ?? eng;
+    return FEATURE_NAME_EN[eng] ?? eng;
   } catch {
-    // localStorage unavailable — fall through to ZH default.
+    return FEATURE_NAME_EN[eng] ?? eng;
   }
-  return FEATURE_NAME_ZH[eng] ?? eng;
 }
 
 // ── Internal types ────────────────────────────────────────────────────────────
@@ -876,17 +877,16 @@ let shapTop20BlacklistCache: ShapTop20Entry[] | null = null;
 function parseShapTop20(text: string): ShapTop20Entry[] {
   const records = parseCsvRecords(text);
   // Check active locale once per parse — CSV has a pre-translated 中文名稱
-  // column, but we must only use it when the UI is in Chinese.
+  // column, but we must only use it when the UI is in Chinese. In English
+  // we prefer the human-readable FEATURE_NAME_EN map.
   const lang = (typeof localStorage !== 'undefined' && localStorage.getItem('bitoguard.lang')) || 'en';
   const isZh = lang.startsWith('zh');
   return records.map(r => {
     const feat = r['feature'] ?? '';
     const csvLabel = r['中文名稱'] ?? '';
-    // In English: always show the snake_case feature key.
-    // In Chinese: prefer CSV's hand-picked label, fall back to zhFeatureName map.
     const label = isZh
       ? (csvLabel && csvLabel !== feat ? csvLabel : zhFeatureName(feat))
-      : feat;
+      : (FEATURE_NAME_EN[feat] ?? feat);
     return {
       rank:    parseInt(r['排名'] ?? '0', 10),
       feature: feat,

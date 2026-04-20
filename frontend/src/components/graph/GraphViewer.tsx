@@ -172,7 +172,9 @@ export function GraphViewer() {
     return undefined;
   }, []);
 
-  const isSparse = (subgraph?.nodes?.length ?? 0) > 0 && (subgraph?.nodes?.length ?? 0) < 3;
+  const nodeCount = subgraph?.nodes?.length ?? 0;
+  const edgeCount = subgraph?.edges?.length ?? 0;
+  const isSparse = nodeCount > 0 && nodeCount < 3;
 
   return (
     <div className="flex flex-col h-full gap-2">
@@ -189,8 +191,10 @@ export function GraphViewer() {
         )}
 
         {isSparse && (
-          <div className="absolute top-3 left-3 z-10 bg-sky-900/70 text-sky-200 border border-sky-600/50 text-xs px-2.5 py-1 rounded-md shadow-sm backdrop-blur-sm max-w-[300px]">
-            ⓘ {t('graph.sparseHint')}
+          <div className="absolute bottom-3 left-3 z-10 max-w-[360px] bg-slate-900/85 text-slate-200 border border-sky-600/50 text-[11px] px-3 py-2 rounded-lg shadow-xl backdrop-blur-sm leading-relaxed">
+            <p className="font-semibold text-sky-300 text-xs mb-1">{t('graph.sparseTitle')}</p>
+            <p className="text-slate-300 mb-1">{t('graph.sparseHint')}</p>
+            <p className="text-[10px] text-slate-500 font-mono">nodes = {nodeCount} · edges = {edgeCount}</p>
           </div>
         )}
 

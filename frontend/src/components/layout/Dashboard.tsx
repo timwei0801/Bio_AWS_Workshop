@@ -12,9 +12,11 @@ import { PredictDetailPanel } from '../predict/PredictDetailPanel';
 import { FeatureInfoPanel } from '../features/FeatureInfoPanel';
 import { FeaturesStatsPanel } from '../features/FeaturesStatsPanel';
 import { OverviewPage } from '../overview/OverviewPage';
+import { CompareUsersPage } from '../compare/CompareUsersPage';
 import { DashboardHeader } from './DashboardHeader';
 import { ModeNav } from './ModeNav';
 import { GlassCard } from '../common/GlassCard';
+import { CommandPalette } from '../common/CommandPalette';
 import { useUrlState } from '../../hooks/useUrlState';
 import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts';
 
@@ -29,8 +31,9 @@ export function Dashboard() {
   const isPredictMode = dashboardMode === 'predict';
   const isFeaturesMode = dashboardMode === 'features';
   const isOverviewMode = dashboardMode === 'overview';
+  const isCompareMode  = dashboardMode === 'compare';
 
-  const showLeftPanel = !isOverviewMode;
+  const showLeftPanel = !isOverviewMode && !isCompareMode;
 
   const renderLeftPanel = () => {
     if (isOverviewMode) return null;
@@ -42,6 +45,7 @@ export function Dashboard() {
 
   const renderRightContent = () => {
     if (isOverviewMode) return <OverviewPage />;
+    if (isCompareMode)  return <CompareUsersPage />;
     if (isFeaturesMode) return <FeatureInfoPanel />;
 
     if (isPredictMode) {
@@ -117,6 +121,8 @@ export function Dashboard() {
         )}
         {renderRightContent()}
       </div>
+
+      <CommandPalette />
     </div>
   );
 }

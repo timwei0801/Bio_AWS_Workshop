@@ -17,6 +17,7 @@ const MODES: ModeDef[] = [
   { mode: 'fp',       i18nKey: 'nav.fp',       icon: '⚠',  accent: 'amber',   kbd: '4' },
   { mode: 'fn',       i18nKey: 'nav.fn',       icon: '🔍', accent: 'emerald', kbd: '5' },
   { mode: 'predict',  i18nKey: 'nav.predict',  icon: '🎯', accent: 'violet',  kbd: '6' },
+  { mode: 'compare',  i18nKey: 'nav.compare',  icon: '⚖️', accent: 'violet',  kbd: '7' },
 ];
 
 const ACTIVE: Record<ModeDef['accent'], string> = {

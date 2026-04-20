@@ -10,11 +10,31 @@
     "fraud": "Blacklist",
     "fp": "False Positives",
     "fn": "False Negatives",
-    "predict": "Predict"
+    "predict": "Predict",
+    "compare": "Compare"
+  },
+  "compare": {
+    "title": "Two-User SHAP Compare",
+    "subtitle": "Pick two users to see where the model's reasoning aligns and where it diverges.",
+    "leftLabel": "User A",
+    "rightLabel": "User B",
+    "pickPrompt": "Pick a user ID above",
+    "pickPlaceholder": "Search user_id…",
+    "insightTitle": "Feature overlap",
+    "sharedFeatures": "Shared top features",
+    "leftOnly": "Only in User A",
+    "rightOnly": "Only in User B"
   },
   "overview": {
     "heroTitle": "Detection Overview",
     "heroSubtitle": "Model performance, risk distribution, and fairness audit at a glance.",
+    "architecture": "Heterogeneous GNN (HeteroSAGE + GAT) + XGBoost / LightGBM / CatBoost stacking — 82 feature dimensions",
+    "tickerUsers":     "Users",
+    "tickerFraud":     "Blacklist",
+    "tickerFraudPct":  "Fraud ratio",
+    "tickerEdges":     "Graph edges",
+    "tickerThreshold": "Decision threshold",
+    "lastUpdated":     "Updated {{time}}",
     "kpi": {
       "auc_roc":  { "label": "AUC-ROC",  "hint": "Ranking quality across all thresholds" },
       "auc_pr":   { "label": "AUC-PR",   "hint": "Precision–Recall area (imbalanced data)" },
@@ -50,7 +70,8 @@
       "samples": "Samples",
       "pass":    "PASS",
       "warn":    "WARNING",
-      "fail":    "FAIL"
+      "fail":    "FAIL",
+      "footnote": "Computed from the holdout split on {{date}}. See {{notebook}} for the full derivation."
     }
   },
   "risk": {
@@ -127,7 +148,8 @@
       "reset":   "Reset view",
       "center":  "Set as center"
     },
-    "sparseHint": "This user has very few neighbours — part of why classifiers struggle here."
+    "sparseTitle": "Sparse neighbourhood",
+    "sparseHint": "This user has very few neighbours, so GNN message passing has little signal to aggregate. This is one reason the model's confidence drops and misclassifications cluster around isolated nodes."
   },
   "detail": {
     "title": "Node Details",
@@ -275,6 +297,21 @@
     "predValue":  "Predicted",
     "baseValueLabel": "E[f(x)] = {{value}}",
     "predValueLabel": "f(x) = {{value}}"
+  },
+  "export": {
+    "label": "Export",
+    "csv":   "Download CSV",
+    "json":  "Download JSON"
+  },
+  "palette": {
+    "title":        "Command palette",
+    "placeholder":  "Jump to a section or search user_id…",
+    "empty":        "No matches",
+    "kindSection":  "Section",
+    "kindUser":     "User",
+    "hintMove":     "navigate",
+    "hintSelect":   "select",
+    "hintShortcut": "⌘/Ctrl + K"
   },
   "lang": {
     "switch": "Language",

@@ -9,6 +9,7 @@ const MAP: Record<string, DashboardMode> = {
   '4': 'fp',
   '5': 'fn',
   '6': 'predict',
+  '7': 'compare',
 };
 
 export function useKeyboardShortcuts() {

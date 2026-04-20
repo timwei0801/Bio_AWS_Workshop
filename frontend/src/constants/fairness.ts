@@ -1,7 +1,19 @@
 /**
- * Fairness audit results — from docs/FAIRNESS_AUDIT.
- * Shown on the Overview page.
+ * Fairness audit results.
+ *
+ * Numbers are derived from the model's holdout-set predictions
+ * grouped by protected attributes; the raw computation lives in
+ * `notebooks/fairness_audit.ipynb` and is summarised here for the
+ * dashboard. Samples count reflects the holdout split, not full
+ * training data. Source: model run 2026-04-18 (commit hash in
+ * project_fairness_audit_results.md).
  */
+export const FAIRNESS_SOURCE = {
+  notebook: 'notebooks/fairness_audit.ipynb',
+  runDate:  '2026-04-18',
+  split:    'holdout',
+};
+
 
 export type FairnessStatus = 'PASS' | 'WARNING' | 'FAIL';
 

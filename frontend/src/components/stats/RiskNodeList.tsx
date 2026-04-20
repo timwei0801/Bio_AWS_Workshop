@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useDashboard } from '../../context/DashboardContext';
 import { hasGraphData } from '../../utils/graphDataStore';
 import { RISK_THRESHOLD } from '../../constants/risk';
+import { ExportButton } from '../common/ExportButton';
 import type { FraudNode } from '../../types/index';
 
 type RiskTab = 'high' | 'mid' | 'low';
@@ -42,6 +43,7 @@ export function RiskNodeList({ nodes }: Props) {
       <h3 className="text-xs uppercase tracking-wider text-slate-400 mb-2 flex items-center gap-1.5">
         <span className="w-0.5 h-3.5 bg-sky-500 rounded-full inline-block" />
         {t('risk.nodeList')}
+        <span className="ml-auto"><ExportButton rows={filtered.map(n => ({ ...n }))} filename={`risk-${tab}`} size="xs" /></span>
       </h3>
 
       <div className="flex gap-1 mb-2">

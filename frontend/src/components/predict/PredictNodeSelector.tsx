@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDashboard } from '../../context/DashboardContext';
 import { Spinner } from '../common/Spinner';
+import { ExportButton } from '../common/ExportButton';
 import { hasGraphData } from '../../utils/graphDataStore';
 import { RiskBadge } from '../common/RiskBadge';
 
@@ -44,7 +45,10 @@ export function PredictNodeSelector() {
     <div>
       <div className="flex items-center gap-2 mb-1 flex-wrap">
         <span className="text-xs font-bold uppercase tracking-wider text-violet-400">{t('predict.title')}</span>
-        <span className="ml-auto text-xs text-slate-500">{t('fraud.resultCount', { count: filtered.length })}</span>
+        <span className="text-xs text-slate-500">{t('fraud.resultCount', { count: filtered.length })}</span>
+        <span className="ml-auto">
+          <ExportButton rows={filtered.map(n => ({ user_id: n.user_id, risk_score: n.risk_score, is_blacklist: n.is_blacklist }))} filename={`predict-${filterMode}`} size="xs" />
+        </span>
       </div>
       <p className="text-[10px] text-slate-500 mb-2">{t('predict.subtitle')}</p>
 
