@@ -47,7 +47,7 @@ const initialState: DashboardState = {
   subgraph: null,
   selectedNode: null,
   subgraphCache: new Map(),
-  dashboardMode: 'fraud',
+  dashboardMode: 'overview',
   fpFnMode: 'fp',
   fpNodes: [],
   fnNodes: [],
@@ -117,8 +117,12 @@ function dashboardReducer(state: DashboardState, action: Action): DashboardState
     case 'SET_NODE_DETAIL_ERROR':
       return { ...state, loading: { ...state.loading, nodeDetail: false }, error: { ...state.error, nodeDetail: action.error } };
 
-    case 'SET_DASHBOARD_MODE':
-      return { ...state, dashboardMode: action.mode, selectedUserId: null, selectedWalletId: null, subgraph: null, selectedNode: null };
+    case 'SET_DASHBOARD_MODE': {
+      // When entering fp / fn, auto-sync fpFnMode so legacy code still works.
+      const next: Partial<DashboardState> = { dashboardMode: action.mode, selectedUserId: null, selectedWalletId: null, subgraph: null, selectedNode: null };
+      if (action.mode === 'fp' || action.mode === 'fn') next.fpFnMode = action.mode;
+      return { ...state, ...next };
+    }
     case 'SET_FPFN_MODE':
       return { ...state, fpFnMode: action.mode, selectedUserId: null, selectedWalletId: null, subgraph: null, selectedNode: null };
 

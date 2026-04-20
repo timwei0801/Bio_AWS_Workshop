@@ -1,0 +1,319 @@
+{
+  "app": {
+    "title": "BitoGuard Fraud Detection",
+    "subtitle": "Real-time Transaction Graph Analytics",
+    "status": { "online": "System online" }
+  },
+  "nav": {
+    "overview": "Overview",
+    "features": "Features",
+    "fraud": "Blacklist",
+    "fp": "False Positives",
+    "fn": "False Negatives",
+    "predict": "Predict"
+  },
+  "overview": {
+    "heroTitle": "Detection Overview",
+    "heroSubtitle": "Model performance, risk distribution, and fairness audit at a glance.",
+    "kpi": {
+      "auc_roc":  { "label": "AUC-ROC",  "hint": "Ranking quality across all thresholds" },
+      "auc_pr":   { "label": "AUC-PR",   "hint": "Precision–Recall area (imbalanced data)" },
+      "recall":   { "label": "Recall",   "hint": "Fraction of frauds caught (sensitivity)" },
+      "f1":       { "label": "F1 Score", "hint": "Harmonic mean of precision and recall" },
+      "precision":{ "label": "Precision","hint": "Fraction of alerts that are true frauds" },
+      "accuracy": { "label": "Accuracy", "hint": "Overall correctness across all classes" },
+      "specificity": { "label": "Specificity", "hint": "Fraction of normal users correctly passed" }
+    },
+    "confusion": {
+      "title": "Confusion Matrix",
+      "thresholdAt": "Threshold {{value}}",
+      "actualFraud":  "Actual: Fraud",
+      "actualNormal": "Actual: Normal",
+      "predFraud":    "Predicted: Fraud",
+      "predNormal":   "Predicted: Normal",
+      "tp": { "tag": "TP", "caption": "Correct hit" },
+      "fp": { "tag": "FP", "caption": "False alert" },
+      "fn": { "tag": "FN", "caption": "Missed fraud" },
+      "tn": { "tag": "TN", "caption": "Correct pass" }
+    },
+    "riskDist": {
+      "title": "Risk Score Distribution",
+      "thresholdLabel": "Threshold {{value}}",
+      "fraudCut": "≥ {{value}} fraud decision"
+    },
+    "fairness": {
+      "title": "Fairness Dashboard",
+      "subtitle": "Disparate impact ratio — groups below 0.80 fail the 80% rule.",
+      "diRatio": "Disparate Impact",
+      "fpr":     "FPR",
+      "fnr":     "FNR",
+      "samples": "Samples",
+      "pass":    "PASS",
+      "warn":    "WARNING",
+      "fail":    "FAIL"
+    }
+  },
+  "risk": {
+    "distribution": "Risk Distribution",
+    "tier": {
+      "critical": "Critical",
+      "high":     "High",
+      "mid":      "Medium",
+      "midlow":   "Medium-Low",
+      "low":      "Low"
+    },
+    "nodeList": "Risk Node List",
+    "noMatch":  "No matching nodes",
+    "relationStats": "Relation Statistics",
+    "performance": "Model Performance"
+  },
+  "fairness": {
+    "attr": {
+      "gender": "Gender",
+      "age":    "Age Group",
+      "career": "Occupation Risk",
+      "income": "Income Tier"
+    },
+    "group": {
+      "female":        "Female",
+      "male":          "Male",
+      "under30":       "Under 30",
+      "age30_50":      "30 – 50",
+      "over50":        "Over 50",
+      "career_low":    "Low-risk occupation",
+      "career_high":   "High-risk occupation",
+      "income_low":    "Low income",
+      "income_medium": "Medium income",
+      "income_high":   "High income"
+    },
+    "summary": {
+      "gender": "Female users have lower false-positive rate but higher miss rate — potential under-protection.",
+      "age":    "Users under 30 show highest false-positive rate — possible age-based over-flagging.",
+      "career": "High-risk occupation groups flagged ~18% more often — within warning zone.",
+      "income": "Cross-income FPR variance under 1%, meets the 80% rule."
+    }
+  },
+  "fraud": {
+    "selectTitle": "Select Fraud Node",
+    "searchUserPlaceholder": "Search user_id…",
+    "searchWalletPlaceholder": "Search wallet id (e.g. abc123)…",
+    "searchMode": { "user": "User ID", "wallet": "Wallet ID" },
+    "resultCount": "{{count}} results",
+    "hasGraph": "Has graph data",
+    "noGraph":  "No graph data",
+    "tierExtreme": "Extreme",
+    "inflow":  "Inflow",
+    "outflow": "Outflow"
+  },
+  "graph": {
+    "legend": "Legend",
+    "fraudNode": "Fraud node",
+    "highRisk":  "High risk",
+    "normal":    "Normal",
+    "wallet":    "Wallet",
+    "relation": {
+      "r1": "Wallet → User",
+      "r2": "User → User",
+      "r3": "User → Wallet"
+    },
+    "placeholder": "Select a node to load its relation graph",
+    "placeholderHint": "1-hop and 2-hop neighbours supported",
+    "empty": "No graph data for this node",
+    "emptyHint": "This user id is not part of the GNN graph (missing in gnn_node_list / gnn_edge_list). Pick a node marked with ● to load its graph.",
+    "downgraded": "Graph exceeds 200 nodes — downgraded to 1-hop view",
+    "controls": {
+      "zoomIn":  "Zoom in",
+      "zoomOut": "Zoom out",
+      "reset":   "Reset view",
+      "center":  "Set as center"
+    },
+    "sparseHint": "This user has very few neighbours — part of why classifiers struggle here."
+  },
+  "detail": {
+    "title": "Node Details",
+    "userId": "User ID",
+    "riskScore": "Risk Score",
+    "status": "Status",
+    "fraud": "Fraud",
+    "normal": "Normal",
+    "neighborCount": "Neighbours",
+    "shapTitle": "SHAP Waterfall — Feature Contribution",
+    "shapLegendPos": "Positive (increases fraud risk)",
+    "shapLegendNeg": "Negative (reduces fraud risk)",
+    "shapUnavailable": "SHAP data unavailable",
+    "neighborsHeader": "Neighbour Relations",
+    "neighbors": {
+      "r1": "Wallet → User",
+      "r2": "User → User",
+      "r3": "User → Wallet",
+      "r2_out": "Transfers out",
+      "r2_in":  "Transfers in",
+      "sourceWallets": "Source wallets",
+      "targetWallets": "Target wallets",
+      "txCount": "Tx count",
+      "empty": "No connected nodes"
+    },
+    "selectPrompt": "Click a node in the graph to view details"
+  },
+  "fpfn": {
+    "title": "Misclassification Analysis",
+    "fp": {
+      "title": "False Positives",
+      "subtitle": "Normal users predicted as fraud",
+      "listTitle": "False Positive nodes (white → black)"
+    },
+    "fn": {
+      "title": "False Negatives",
+      "subtitle": "Fraud users missed by the model",
+      "listTitle": "False Negative nodes (black → white)"
+    },
+    "shapFP": "FP SHAP Waterfall — why were these misclassified?",
+    "shapFN": "FN SHAP Waterfall — why did these slip through?",
+    "insight": "Model insight",
+    "insightFP": "Main false-alert drivers: {{positive}}. Risk-reducing signals: {{negative}}. Consider post-processing rules on high-SHAP features to cut false positives.",
+    "insightFN": "Features masking fraud: {{negative}}. Detected risk signals: {{positive}}. Strengthen monitoring of these feature combinations.",
+    "groupAverage": "Group average",
+    "perUser":      "User {{id}}",
+    "llm": {
+      "title": "LLM Misclassification Analysis",
+      "run":   "Run LLM analysis",
+      "rerun": "Re-analyze",
+      "clear": "Clear",
+      "loading": "Analyzing…",
+      "modeFP": "FP misclass",
+      "modeFN": "FN missed",
+      "modelTag": "Llama-3.3-70B output"
+    }
+  },
+  "predict": {
+    "title": "Predict · users",
+    "subtitle": "Model prediction: blacklist / normal",
+    "summary": {
+      "total": "Total users",
+      "blacklist": "Predicted blacklist",
+      "normal": "Predicted normal",
+      "ratio": "Blacklist ratio"
+    },
+    "filter": {
+      "all":       "All ({{count}})",
+      "blacklist": "Blacklist ({{count}})",
+      "normal":    "Normal ({{count}})"
+    },
+    "selectPrompt": "Click a user in the list to view details",
+    "chipBlacklist": "Predicted blacklist",
+    "chipNormal":    "Predicted normal",
+    "result":        "Prediction",
+    "resultBlacklist": "Blacklist",
+    "resultNormal":    "Normal",
+    "overflow": "Showing first 200 — refine search to narrow"
+  },
+  "features": {
+    "heroTitle": "Model Feature Reference",
+    "heroBody": "Feature engineering produced <strong>81 base features</strong>. After removing zero-variance (−1), highly-correlated >0.95 (−13), and LightGBM zero-importance (−2) we kept <strong>65</strong>. Adding anomaly-score features (+3) and GNN embeddings (+16), then dropping protected attributes is_female, age (−2), we feed <strong>82 dimensions</strong> into the XGBoost / LightGBM / CatBoost stacking ensemble.",
+    "stats": {
+      "categories": "Feature categories",
+      "baseCount":  "Base features",
+      "afterFilter":"After filtering",
+      "finalDim":   "Final input"
+    },
+    "unit": {
+      "category": "cats",
+      "dim":      "dim"
+    },
+    "tab": {
+      "all":        "Overall importance",
+      "blacklist":  "Blacklist importance",
+      "fp":         "FP drivers",
+      "fn":         "FN drivers",
+      "compare":    "Compare",
+      "categories": "Categories"
+    },
+    "chart": {
+      "allTitle":       "Top 20 feature importance (all users)",
+      "blacklistTitle": "Top 20 feature importance (blacklist users)",
+      "fpTitle":        "Top 3 feature importance (FP — white predicted as black)",
+      "fnTitle":        "Top 3 feature importance (FN — black predicted as white)",
+      "compareTitle":   "All users vs. blacklist — SHAP importance",
+      "compareSub":     "Difference in mean |SHAP| between overall (blue) and blacklist (red) users",
+      "cumulative":     "Top 20 cumulative share:",
+      "legendAll":      "All users",
+      "legendBlacklist":"Blacklist"
+    },
+    "tooltip": {
+      "meanShap":   "Mean |SHAP|",
+      "percent":    "Share of total",
+      "frequency":  "Frequency",
+      "frequencyUnit": "{{count}} users",
+      "cumulative": "Cumulative share",
+      "diff":       "Difference"
+    },
+    "pipeline": {
+      "title": "Training Pipeline",
+      "step1": "Feature engineering (81)",
+      "step2": "Filtering 81 → 65",
+      "step3": "Anomaly scores (+3)",
+      "step4": "GNN embeddings (+16)",
+      "step5": "Drop protected attrs (−2)",
+      "step6": "Final 82-dim",
+      "step7": "Stacking ensemble",
+      "step8": "SHAP explanation"
+    }
+  },
+  "relation": {
+    "r1": "Wallet → User",
+    "r2": "User → User",
+    "r3": "User → Wallet"
+  },
+  "common": {
+    "loading": "Loading…",
+    "loadingFeature": "Loading {{name}}…",
+    "retry": "Retry",
+    "close": "Close",
+    "search": "Search",
+    "threshold": "Threshold {{value}}",
+    "baseValue":  "Base value",
+    "predValue":  "Predicted",
+    "baseValueLabel": "E[f(x)] = {{value}}",
+    "predValueLabel": "f(x) = {{value}}"
+  },
+  "lang": {
+    "switch": "Language",
+    "en": "English",
+    "zh": "繁體中文"
+  },
+  "featureCat": {
+    "user":       "User demographics",
+    "userDesc":   "KYC anomalies (second-level = bot), late-night registration, gender/occupation risk. e.g. kyc_speed_sec, account_age_days, is_female, reg_hour",
+    "fiat":       "Fiat transactions",
+    "fiatDesc":   "Net outflow, deposit/withdraw ratio anomalies, smurfing detection. e.g. twd_dep_sum, twd_net_flow, twd_smurf_flag",
+    "crypto":     "Crypto transactions",
+    "cryptoDesc": "Multi-wallet dispersion, cross-chain movement. e.g. crypto_wit_sum, crypto_wallet_hash_nunique, crypto_protocol_diversity",
+    "trading":    "Trading / swap",
+    "tradingDesc":"One-way buys, market-order wash trading. e.g. trading_buy_ratio, swap_sum, trading_market_order_ratio",
+    "ipFlow":     "IP & fund velocity",
+    "ipFlowDesc": "IP switching, late-night operations, fast fund in-and-out. e.g. ip_unique_count, ip_night_ratio, fund_stay_sec",
+    "topology":   "Graph topology",
+    "topologyDesc":"Fund hubs, fraud-ring clustering. e.g. pagerank_score, connected_component_size, betweenness_centrality",
+    "derived":    "Cross-table derived",
+    "derivedDesc":"Recent activity acceleration. e.g. total_tx_count, weekend_tx_ratio, velocity_ratio_7d_vs_30d",
+    "aml":        "AML red flags",
+    "amlDesc":    "Fiat-in → crypto-out funnel, smurfing. e.g. twd_to_crypto_out_ratio, same_day_in_out_count, tx_amount_cv",
+    "temporal":   "Temporal patterns",
+    "temporalDesc":"Regular-pattern detection, burst trading. e.g. tx_interval_mean, tx_interval_min, active_days",
+    "composite":  "Composite risk",
+    "compositeDesc":"Multi-dimensional weighted risk score. e.g. composite_risk_score",
+    "anomaly":    "Anomaly scores",
+    "anomalyDesc":"Isolation Forest, HBOS, LOF — three unsupervised anomaly scores (added downstream).",
+    "gnn":        "GNN embeddings",
+    "gnnDesc":    "HeteroSAGE + GAT learns node representations on the user–wallet heterogeneous graph, PCA-reduced to 16 dims."
+  },
+  "a11y": {
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "resetView": "Reset view",
+    "centerNode": "Center on selected node",
+    "switchLang": "Switch language"
+  }
+}

@@ -3,7 +3,6 @@ import { StatsPanel } from '../stats/StatsPanel';
 import { NodeSelector } from '../graph/NodeSelector';
 import { GraphViewer } from '../graph/GraphViewer';
 import { NodeDetailPanel } from '../graph/NodeDetailPanel';
-import { DashboardSwitcher } from '../fpfn/DashboardSwitcher';
 import { FpFnStatsPanel } from '../fpfn/FpFnStatsPanel';
 import { FpFnNodeSelector } from '../fpfn/FpFnNodeSelector';
 import { ShapPanel } from '../fpfn/ShapPanel';
@@ -12,14 +11,29 @@ import { PredictNodeSelector } from '../predict/PredictNodeSelector';
 import { PredictDetailPanel } from '../predict/PredictDetailPanel';
 import { FeatureInfoPanel } from '../features/FeatureInfoPanel';
 import { FeaturesStatsPanel } from '../features/FeaturesStatsPanel';
+import { OverviewPage } from '../overview/OverviewPage';
+import { DashboardHeader } from './DashboardHeader';
+import { ModeNav } from './ModeNav';
+import { GlassCard } from '../common/GlassCard';
+import { useUrlState } from '../../hooks/useUrlState';
+import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts';
 
 export function Dashboard() {
+  useUrlState();
+  useKeyboardShortcuts();
+
   const { state } = useDashboard();
-  const isFpFnMode = state.dashboardMode === 'fp-fn';
-  const isPredictMode = state.dashboardMode === 'predict';
-  const isFeaturesMode = state.dashboardMode === 'features';
+  const { dashboardMode } = state;
+
+  const isFpFnMode = dashboardMode === 'fp' || dashboardMode === 'fn';
+  const isPredictMode = dashboardMode === 'predict';
+  const isFeaturesMode = dashboardMode === 'features';
+  const isOverviewMode = dashboardMode === 'overview';
+
+  const showLeftPanel = !isOverviewMode;
 
   const renderLeftPanel = () => {
+    if (isOverviewMode) return null;
     if (isFeaturesMode) return <FeaturesStatsPanel />;
     if (isPredictMode) return <PredictStatsPanel />;
     if (isFpFnMode) return <FpFnStatsPanel />;
@@ -27,18 +41,19 @@ export function Dashboard() {
   };
 
   const renderRightContent = () => {
+    if (isOverviewMode) return <OverviewPage />;
     if (isFeaturesMode) return <FeatureInfoPanel />;
 
     if (isPredictMode) {
       return (
-        <main className="flex-1 overflow-y-auto min-w-0 min-h-0">
+        <main className="flex-1 overflow-y-auto min-w-0 min-h-0 animate-fade-in">
           <div className="flex flex-col gap-4">
-            <div className="bg-slate-800/50 backdrop-blur-sm ring-1 ring-slate-700/60 rounded-xl shadow-2xl p-4 flex flex-col">
+            <GlassCard padding="md">
               <PredictNodeSelector />
-            </div>
-            <div className="bg-slate-800/50 backdrop-blur-sm ring-1 ring-slate-700/60 rounded-xl shadow-2xl px-4 py-3">
+            </GlassCard>
+            <GlassCard padding="sm">
               <PredictDetailPanel />
-            </div>
+            </GlassCard>
           </div>
         </main>
       );
@@ -46,69 +61,60 @@ export function Dashboard() {
 
     if (isFpFnMode) {
       return (
-        <main className="flex-1 overflow-y-auto min-w-0 min-h-0">
+        <main className="flex-1 overflow-y-auto min-w-0 min-h-0 animate-fade-in">
           <div className="flex flex-col gap-4">
-            <div className="bg-slate-800/50 backdrop-blur-sm ring-1 ring-slate-700/60 rounded-xl shadow-2xl p-4 flex flex-col">
+            <GlassCard padding="md" className="flex flex-col">
               <FpFnNodeSelector />
-              <div className="mt-3" style={{ height: '500px' }} onWheel={e => e.stopPropagation()}>
+              <div className="mt-3 h-[420px] lg:h-[500px]" onWheel={e => e.stopPropagation()}>
                 <GraphViewer />
               </div>
-            </div>
-            <div className="bg-slate-800/50 backdrop-blur-sm ring-1 ring-slate-700/60 rounded-xl shadow-2xl px-4 py-3">
+            </GlassCard>
+            <GlassCard padding="sm">
               <ShapPanel />
-            </div>
+            </GlassCard>
           </div>
         </main>
       );
     }
 
+    // Fraud mode
     return (
-      <main className="flex-1 overflow-y-auto min-w-0 min-h-0">
+      <main className="flex-1 overflow-y-auto min-w-0 min-h-0 animate-fade-in">
         <div className="flex flex-col gap-4">
-          <div className="bg-slate-800/50 backdrop-blur-sm ring-1 ring-slate-700/60 rounded-xl shadow-2xl p-4 flex flex-col">
+          <GlassCard padding="md" className="flex flex-col">
             <NodeSelector />
-            <div className="mt-3" style={{ height: '500px' }} onWheel={e => e.stopPropagation()}>
+            <div className="mt-3 h-[420px] lg:h-[500px]" onWheel={e => e.stopPropagation()}>
               <GraphViewer />
             </div>
-          </div>
-          <div className="bg-slate-800/50 backdrop-blur-sm ring-1 ring-slate-700/60 rounded-xl shadow-2xl px-4 py-3">
+          </GlassCard>
+          <GlassCard padding="sm">
             <NodeDetailPanel />
-          </div>
+          </GlassCard>
         </div>
       </main>
     );
   };
 
   return (
-    <div className="flex flex-col h-screen text-slate-200 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
-      <header className="bg-slate-900/80 backdrop-blur-md shadow-xl px-6 py-4 z-20 border-b border-slate-700/60">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-sky-500/20 border border-sky-500/40 text-sky-400 text-lg">
-              &#128737;
-            </div>
-            <div>
-              <h1 className="text-lg font-bold text-sky-400 leading-tight">BitoGuard 詐騙偵測儀表板</h1>
-              <p className="text-xs text-slate-500 leading-tight">即時交易圖分析平台</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2 text-xs text-slate-400">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse inline-block"></span>
-            系統運行中
-          </div>
-        </div>
-      </header>
+    <div className="flex flex-col min-h-screen xl:h-screen text-slate-200 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+      <DashboardHeader />
 
-      <div className="flex-1 flex flex-col lg:flex-row gap-4 p-4 overflow-hidden min-h-0">
-        {/* Left Panel */}
-        <aside className="w-full lg:w-96 bg-slate-800/50 backdrop-blur-sm ring-1 ring-slate-700/60 rounded-xl shadow-2xl overflow-y-auto flex-shrink-0">
-          <div className="p-4 space-y-4">
-            <DashboardSwitcher />
-            {renderLeftPanel()}
-          </div>
-        </aside>
+      {/* Top nav (tabs) */}
+      <div className="bg-slate-900/60 backdrop-blur-md border-b border-slate-700/50 px-3 sm:px-6 py-2 flex-shrink-0">
+        <ModeNav orientation="horizontal" />
+      </div>
 
-        {/* Right Content */}
+      <div className="flex-1 flex flex-col lg:flex-row gap-4 p-3 sm:p-4 min-h-0">
+        {showLeftPanel && (
+          <aside
+            className="w-full lg:w-80 xl:w-96 card-glass overflow-y-auto flex-shrink-0"
+            aria-label="Sidebar stats"
+          >
+            <div className="p-4 space-y-4">
+              {renderLeftPanel()}
+            </div>
+          </aside>
+        )}
         {renderRightContent()}
       </div>
     </div>

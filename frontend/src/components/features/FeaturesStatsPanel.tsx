@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useStats } from '../../hooks/useStats';
 import { useDashboard } from '../../context/DashboardContext';
 import { Spinner } from '../common/Spinner';
@@ -7,6 +8,7 @@ import { RiskBarChart } from '../stats/RiskBarChart';
 import { ConfusionMatrix } from '../stats/ConfusionMatrix';
 
 export function FeaturesStatsPanel() {
+  const { t } = useTranslation();
   const { stats, loading, error } = useStats();
   const { loadStats } = useDashboard();
 
@@ -16,25 +18,24 @@ export function FeaturesStatsPanel() {
 
   return (
     <div className="space-y-4">
-      {/* 統計摘要 */}
       <div className="flex items-center gap-2 pb-3 border-b border-slate-700">
-        <span className="text-slate-400">&#128202;</span>
-        <h2 className="text-sm font-bold text-slate-100 uppercase tracking-wider">統計摘要</h2>
+        <span className="w-1 h-5 bg-sky-500 rounded-full" aria-hidden />
+        <h2 className="text-sm font-bold text-slate-100 uppercase tracking-wider">
+          {t('overview.heroTitle')}
+        </h2>
       </div>
 
       <div className="grid grid-cols-2 gap-2">
-        <StatCard title="總節點數" value={stats.total_nodes}                          accentColor="sky"     icon="&#9679;" />
-        <StatCard title="詐騙節點" value={stats.fraud_nodes}                          accentColor="red"     icon="&#9888;" />
-        <StatCard title="正常節點" value={stats.normal_nodes}                         accentColor="emerald" icon="&#10003;" />
-        <StatCard title="詐騙比例" value={`${(stats.fraud_ratio * 100).toFixed(1)}%`} accentColor="orange"  icon="&#128308;" />
+        <StatCard title={t('overview.confusion.actualNormal').replace(/:.*/, '')}  value={stats.total_nodes}  accentColor="sky"     icon="●" />
+        <StatCard title={t('detail.fraud')}  value={stats.fraud_nodes}              accentColor="red"     icon="⚠" />
+        <StatCard title={t('detail.normal')} value={stats.normal_nodes}             accentColor="emerald" icon="✓" />
+        <StatCard title={t('overview.fairness.fpr')} value={`${(stats.fraud_ratio * 100).toFixed(1)}%`} accentColor="orange"  icon="●" />
       </div>
 
-      {/* 風險分布 */}
       <div className="bg-slate-800/40 rounded-lg p-3 ring-1 ring-slate-700/50">
         <RiskBarChart data={stats.risk_distribution} />
       </div>
 
-      {/* 混淆矩陣摘要 */}
       <div className="bg-slate-800/40 rounded-lg p-3 ring-1 ring-slate-700/50">
         <ConfusionMatrix />
       </div>

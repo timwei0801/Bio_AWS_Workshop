@@ -1,43 +1,43 @@
+import { useTranslation } from 'react-i18next';
 import { useDashboard } from '../../context/DashboardContext';
-import type { FpFnMode } from '../../types/index';
 
 export function FpFnStatsPanel() {
-  const { state, dispatch } = useDashboard();
-  const { fpNodes, fnNodes } = state;
+  const { t } = useTranslation();
+  const { state } = useDashboard();
+  const isFp = state.dashboardMode === 'fp' || state.fpFnMode === 'fp';
+  const nodes = isFp ? state.fpNodes : state.fnNodes;
+  const count = nodes.length;
 
-  const fpCount = fpNodes.length;
-  const fnCount = fnNodes.length;
-
-  const TABS: { mode: FpFnMode; label: string; count: number; desc: string }[] = [
-    { mode: 'fp', label: 'FP', count: fpCount, desc: '白→黑 誤判' },
-    { mode: 'fn', label: 'FN', count: fnCount, desc: '黑→白 漏判' },
-  ];
+  const titleKey = isFp ? 'fpfn.fp.title'    : 'fpfn.fn.title';
+  const descKey  = isFp ? 'fpfn.fp.subtitle' : 'fpfn.fn.subtitle';
+  const accent   = isFp
+    ? 'bg-amber-500/10 ring-amber-500/30 text-amber-300'
+    : 'bg-emerald-500/10 ring-emerald-500/30 text-emerald-300';
 
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2 pb-3 border-b border-slate-700">
-        <span className="text-slate-400">&#9878;</span>
-        <h2 className="text-sm font-bold text-slate-100 uppercase tracking-wider">誤判分析</h2>
+        <span className="w-1 h-5 rounded-full bg-slate-500" aria-hidden />
+        <h2 className="text-sm font-bold text-slate-100 uppercase tracking-wider">
+          {t('fpfn.title')}
+        </h2>
       </div>
 
-      <div className="flex gap-2">
-        {TABS.map(tab => (
-          <button
-            key={tab.mode}
-            onClick={() => dispatch({ type: 'SET_FPFN_MODE', mode: tab.mode })}
-            className={`flex-1 py-3 rounded-lg text-center transition-colors focus:outline-none ring-1
-              ${state.fpFnMode === tab.mode
-                ? tab.mode === 'fp'
-                  ? 'bg-orange-500/20 text-orange-300 ring-orange-500/50'
-                  : 'bg-red-500/20 text-red-300 ring-red-500/50'
-                : 'bg-slate-700/40 text-slate-400 ring-slate-600/40 hover:bg-slate-700/70'
-              }`}
-          >
-            <p className="text-base font-bold">{tab.count.toLocaleString()}</p>
-            <p className="text-[10px] font-semibold uppercase tracking-wide mt-0.5">{tab.label}</p>
-            <p className="text-[10px] opacity-70 mt-0.5">{tab.desc}</p>
-          </button>
-        ))}
+      <div className={`rounded-lg ring-1 p-4 text-center ${accent}`}>
+        <p className="text-3xl font-bold text-white">{count.toLocaleString()}</p>
+        <p className="text-xs font-semibold uppercase tracking-wider mt-1">{t(titleKey)}</p>
+        <p className="text-[11px] opacity-80 mt-0.5">{t(descKey)}</p>
+      </div>
+
+      <div className="bg-slate-900/40 ring-1 ring-slate-700/50 rounded-lg p-3">
+        <p className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold mb-1.5">
+          {isFp ? 'FP' : 'FN'} · {t('detail.riskScore')}
+        </p>
+        <p className="text-xs text-slate-300 leading-relaxed">
+          {isFp
+            ? t('fpfn.fp.subtitle')
+            : t('fpfn.fn.subtitle')}
+        </p>
       </div>
     </div>
   );

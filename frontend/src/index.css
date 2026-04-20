@@ -3,11 +3,19 @@
 @tailwind utilities;
 
 /* ── Base ─────────────────────────────────────────────────── */
-body {
+html, body {
   background-color: #050a14;
-  min-height: 100vh;
   margin: 0;
-  overflow: hidden;
+  min-height: 100vh;
+}
+
+/* Allow vertical scroll on small viewports; layout shell handles desktop overflow. */
+body {
+  overflow-x: hidden;
+}
+
+@media (min-width: 1280px) {
+  body { overflow: hidden; }
 }
 
 /* ── Corner ambient glows ─────────────────────────────────── */
@@ -49,25 +57,52 @@ body::after {
   100% { transform: translate(3vw, -4vw) scale(1.06); }
 }
 
-/* ── Scanline overlay ─────────────────────────────────────── */
-#root::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
-  background: repeating-linear-gradient(
-    to bottom,
-    transparent 0px,
-    transparent 3px,
-    rgba(0,0,0,0.06) 3px,
-    rgba(0,0,0,0.06) 4px
-  );
+/* ── Scanline overlay (desktop only, subtle) ─────────────── */
+@media (min-width: 1024px) {
+  #root::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 3px,
+      rgba(0,0,0,0.04) 3px,
+      rgba(0,0,0,0.04) 4px
+    );
+  }
 }
 
 /* ── App shell sits above canvas (z-index 0) ─────────────── */
 #root {
   position: relative;
   z-index: 2;
-  height: 100vh;
+  min-height: 100vh;
+}
+
+/* ── Reduced motion ──────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── Focus-visible default ──────────────────────────────── */
+:focus-visible {
+  outline: 2px solid rgb(56 189 248 / 0.75);
+  outline-offset: 2px;
+}
+
+/* ── Utility: card glass ────────────────────────────────── */
+@layer components {
+  .card-glass {
+    @apply bg-slate-800/50 backdrop-blur-sm ring-1 ring-slate-700/60 rounded-xl shadow-2xl;
+  }
+  .chip-dot {
+    @apply inline-block w-2 h-2 rounded-full;
+  }
 }

@@ -1,9 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDashboard } from '../../context/DashboardContext';
 import { useFraudNodes } from '../../hooks/useFraudNodes';
 import type { FraudNode } from '../../types/index';
 import { Spinner } from '../common/Spinner';
 import { hasGraphData, findUsersByWalletId, type WalletSearchResult } from '../../utils/graphDataStore';
+import { RiskBadge } from '../common/RiskBadge';
 
 type SearchMode = 'node' | 'wallet';
 
@@ -12,6 +14,7 @@ export function getFilteredNodes(nodes: FraudNode[], keyword: string): FraudNode
 }
 
 export function NodeSelector() {
+  const { t } = useTranslation();
   const { fraudNodes, loading } = useFraudNodes();
   const { state, dispatch, loadSubgraph, loadNodeDetail } = useDashboard();
 
@@ -21,143 +24,112 @@ export function NodeSelector() {
   const [walletResults, setWalletResults] = useState<WalletSearchResult[]>([]);
   const [walletLoading, setWalletLoading] = useState(false);
 
-  // 300ms debounce
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedKeyword(keyword), 300);
     return () => clearTimeout(timer);
   }, [keyword]);
 
-  // Wallet search when debounced keyword changes and mode is wallet
   useEffect(() => {
     if (mode !== 'wallet') return;
-    if (!debouncedKeyword.trim()) {
-      setWalletResults([]);
-      return;
-    }
+    if (!debouncedKeyword.trim()) { setWalletResults([]); return; }
     setWalletLoading(true);
     findUsersByWalletId(debouncedKeyword)
-      .then(results => setWalletResults(results))
+      .then(setWalletResults)
       .catch(() => setWalletResults([]))
       .finally(() => setWalletLoading(false));
   }, [debouncedKeyword, mode]);
 
   const handleModeChange = useCallback((next: SearchMode) => {
-    setMode(next);
-    setKeyword('');
-    setDebouncedKeyword('');
-    setWalletResults([]);
+    setMode(next); setKeyword(''); setDebouncedKeyword(''); setWalletResults([]);
   }, []);
 
   const handleSelect = useCallback((userId: number) => {
     dispatch({ type: 'SELECT_USER', userId });
     loadNodeDetail(userId);
-    if (!state.subgraphCache.has(userId)) {
-      loadSubgraph(userId, 2);
-    }
+    if (!state.subgraphCache.has(userId)) loadSubgraph(userId, 2);
   }, [dispatch, loadSubgraph, loadNodeDetail, state.subgraphCache]);
 
   const handleSelectWallet = useCallback((walletId: string, userId: number) => {
     dispatch({ type: 'SELECT_WALLET', walletId, userId });
     loadNodeDetail(userId);
-    if (!state.subgraphCache.has(userId)) {
-      loadSubgraph(userId, 2);
-    }
+    if (!state.subgraphCache.has(userId)) loadSubgraph(userId, 2);
   }, [dispatch, loadSubgraph, loadNodeDetail, state.subgraphCache]);
-
-  const getRiskBadge = (score: number) => {
-    if (score > 0.9) return { cls: 'bg-red-900/60 text-red-300 ring-1 ring-red-500/50',    label: '極高' };
-    if (score > 0.7) return { cls: 'bg-orange-900/60 text-orange-300 ring-1 ring-orange-500/50', label: '高' };
-    return              { cls: 'bg-yellow-900/60 text-yellow-300 ring-1 ring-yellow-500/50', label: '中' };
-  };
 
   const filteredNodes = getFilteredNodes(fraudNodes, debouncedKeyword);
   const resultCount = mode === 'node' ? filteredNodes.length : walletResults.length;
 
   return (
     <div>
-      {/* Header */}
-      <div className="flex items-center gap-2 mb-2">
-        <span className="text-slate-400 text-xs">&#9741;</span>
+      <div className="flex items-center gap-2 mb-2 flex-wrap">
+        <span className="text-slate-400 text-xs" aria-hidden>☰</span>
         <label className="text-xs font-bold uppercase tracking-wider text-slate-300">
-          選擇詐騙節點
+          {t('fraud.selectTitle')}
         </label>
-        <span className="ml-auto text-xs text-slate-500">{resultCount} 筆</span>
+        <span className="ml-auto text-xs text-slate-500">{t('fraud.resultCount', { count: resultCount })}</span>
       </div>
 
-      {/* Mode toggle */}
       <div className="flex mb-2 rounded-lg overflow-hidden ring-1 ring-slate-600/60 bg-slate-800/60">
         <button
           onClick={() => handleModeChange('node')}
-          className={`flex-1 py-1.5 text-xs font-medium transition-colors focus:outline-none
-            ${mode === 'node'
-              ? 'bg-indigo-600/70 text-indigo-100'
-              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/40'}`}
+          aria-pressed={mode === 'node'}
+          className={`flex-1 py-1.5 text-xs font-medium transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-sky-500
+            ${mode === 'node' ? 'bg-indigo-600/70 text-indigo-100' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/40'}`}
         >
-          節點 user_id
+          {t('fraud.searchMode.user')}
         </button>
         <button
           onClick={() => handleModeChange('wallet')}
-          className={`flex-1 py-1.5 text-xs font-medium transition-colors focus:outline-none
-            ${mode === 'wallet'
-              ? 'bg-indigo-600/70 text-indigo-100'
-              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/40'}`}
+          aria-pressed={mode === 'wallet'}
+          className={`flex-1 py-1.5 text-xs font-medium transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-sky-500
+            ${mode === 'wallet' ? 'bg-indigo-600/70 text-indigo-100' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/40'}`}
         >
-          錢包 ID
+          {t('fraud.searchMode.wallet')}
         </button>
       </div>
 
-      {/* Search input */}
       <div className="relative mb-2">
-        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none">&#128269;</span>
+        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none" aria-hidden>🔍</span>
         <input
           id="node-search"
           type="text"
-          placeholder={mode === 'node' ? '搜尋 user_id...' : '搜尋錢包 ID（如 abc123）...'}
+          placeholder={mode === 'node' ? t('fraud.searchUserPlaceholder') : t('fraud.searchWalletPlaceholder')}
           value={keyword}
           onChange={e => setKeyword(e.target.value)}
+          aria-label={t('common.search')}
           className="w-full pl-8 pr-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-sm shadow-sm placeholder-slate-500 text-slate-200
                      focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
         />
       </div>
 
-      {/* Results list */}
-      <div className="max-h-44 overflow-y-auto ring-1 ring-slate-700 rounded-lg">
+      <div className="max-h-56 sm:max-h-44 overflow-y-auto ring-1 ring-slate-700 rounded-lg">
         {mode === 'node' ? (
-          /* ── Node search results ── */
           loading ? (
-            <div className="flex items-center justify-center h-16">
-              <Spinner />
-            </div>
+            <div className="flex items-center justify-center h-16"><Spinner /></div>
           ) : filteredNodes.length === 0 ? (
             <div className="flex items-center justify-center gap-2 h-10 text-center">
-              <span className="text-slate-600">&#128269;</span>
-              <p className="text-xs text-slate-500">無符合條件的詐騙節點</p>
+              <span className="text-slate-600" aria-hidden>🔍</span>
+              <p className="text-xs text-slate-500">{t('risk.noMatch')}</p>
             </div>
           ) : (
             <ul className="divide-y divide-slate-700/40">
-              {filteredNodes.map(n => {
-                const badge = getRiskBadge(n.risk_score);
+              {filteredNodes.slice(0, 300).map(n => {
                 const isSelected = state.selectedUserId === n.user_id;
                 return (
                   <li key={n.user_id}>
                     <button
                       onClick={() => handleSelect(n.user_id)}
-                      className={`w-full text-left px-3 py-1.5 focus:outline-none transition-colors
-                                  ${isSelected
-                                    ? 'bg-indigo-500/25 border-l-2 border-indigo-400'
-                                    : 'border-l-2 border-transparent hover:bg-slate-700/40'}`}
+                      className={`w-full text-left px-3 py-1.5 focus:outline-none focus-visible:ring-1 focus-visible:ring-sky-500 transition-colors
+                        ${isSelected ? 'bg-indigo-500/25 border-l-2 border-indigo-400' : 'border-l-2 border-transparent hover:bg-slate-700/40'}`}
                     >
                       <div className="flex justify-between items-center">
                         <span className="font-semibold text-sky-400 text-xs flex items-center gap-1.5">
                           ID: {n.user_id}
                           <span className="text-slate-500 font-normal">{n.risk_score.toFixed(3)}</span>
-                          {hasGraphData(n.user_id)
-                            ? <span title="有圖形資料" className="text-emerald-400 text-[10px]">&#9679;</span>
-                            : <span title="無圖形資料" className="text-slate-600 text-[10px]">&#9675;</span>}
+                          <span title={hasGraphData(n.user_id) ? t('fraud.hasGraph') : t('fraud.noGraph')} aria-hidden className={hasGraphData(n.user_id) ? 'text-emerald-400 text-[10px]' : 'text-slate-600 text-[10px]'}>
+                            {hasGraphData(n.user_id) ? '●' : '○'}
+                          </span>
                         </span>
-                        <span className={`px-2 py-0.5 text-xs font-semibold rounded-full ${badge.cls}`}>
-                          {badge.label} {(n.risk_score * 100).toFixed(0)}%
-                        </span>
+                        <RiskBadge score={n.risk_score} showPercent />
                       </div>
                     </button>
                   </li>
@@ -166,57 +138,42 @@ export function NodeSelector() {
             </ul>
           )
         ) : (
-          /* ── Wallet search results ── */
           walletLoading ? (
-            <div className="flex items-center justify-center h-16">
-              <Spinner />
-            </div>
+            <div className="flex items-center justify-center h-16"><Spinner /></div>
           ) : !debouncedKeyword.trim() ? (
             <div className="flex items-center justify-center gap-2 h-10 text-center">
-              <span className="text-slate-600">&#128176;</span>
-              <p className="text-xs text-slate-500">輸入錢包 ID 以搜尋關聯節點</p>
+              <span aria-hidden>💰</span>
+              <p className="text-xs text-slate-500">{t('fraud.searchWalletPlaceholder')}</p>
             </div>
           ) : walletResults.length === 0 ? (
             <div className="flex items-center justify-center gap-2 h-10 text-center">
-              <span className="text-slate-600">&#128269;</span>
-              <p className="text-xs text-slate-500">找不到符合的錢包 ID</p>
+              <span aria-hidden>🔍</span>
+              <p className="text-xs text-slate-500">{t('risk.noMatch')}</p>
             </div>
           ) : (
             <ul className="divide-y divide-slate-700/40">
               {walletResults.map((r, i) => {
-                const badge = getRiskBadge(r.riskScore);
                 const isSelected = state.selectedWalletId === r.walletId;
-                const relLabel = r.relationType === 'R1' ? '資金流入' : '資金流出';
+                const relLabel = r.relationType === 'R1' ? t('fraud.inflow') : t('fraud.outflow');
                 const relCls   = r.relationType === 'R1' ? 'text-emerald-400' : 'text-orange-400';
                 return (
                   <li key={`${r.walletId}-${r.userId}-${i}`}>
                     <button
                       onClick={() => handleSelectWallet(r.walletId, r.userId)}
-                      className={`w-full text-left px-3 py-2 focus:outline-none transition-colors
-                                  ${isSelected
-                                    ? 'bg-amber-500/20 border-l-2 border-amber-400'
-                                    : 'border-l-2 border-transparent hover:bg-slate-700/40'}`}
+                      className={`w-full text-left px-3 py-2 focus:outline-none focus-visible:ring-1 focus-visible:ring-amber-500 transition-colors
+                        ${isSelected ? 'bg-amber-500/20 border-l-2 border-amber-400' : 'border-l-2 border-transparent hover:bg-slate-700/40'}`}
                     >
-                      {/* Wallet ID row */}
                       <div className="flex items-center gap-1.5 mb-0.5">
-                        <span className="text-slate-500 text-[10px]">&#128176;</span>
-                        <span className="text-[10px] text-slate-400 font-mono truncate max-w-[160px]">
-                          {r.walletId}
-                        </span>
+                        <span aria-hidden>💰</span>
+                        <span className="text-[10px] text-slate-400 font-mono truncate max-w-[160px]">{r.walletId}</span>
                         <span className={`text-[10px] font-medium ${relCls}`}>{relLabel}</span>
                       </div>
-                      {/* User node row */}
                       <div className="flex justify-between items-center">
                         <span className="font-semibold text-sky-400 text-xs flex items-center gap-1.5">
                           ID: {r.userId}
                           <span className="text-slate-500 font-normal">{r.riskScore.toFixed(3)}</span>
-                          {hasGraphData(r.userId)
-                            ? <span title="有圖形資料" className="text-emerald-400 text-[10px]">&#9679;</span>
-                            : <span title="無圖形資料" className="text-slate-600 text-[10px]">&#9675;</span>}
                         </span>
-                        <span className={`px-2 py-0.5 text-xs font-semibold rounded-full ${badge.cls}`}>
-                          {badge.label} {(r.riskScore * 100).toFixed(0)}%
-                        </span>
+                        <RiskBadge score={r.riskScore} showPercent />
                       </div>
                     </button>
                   </li>

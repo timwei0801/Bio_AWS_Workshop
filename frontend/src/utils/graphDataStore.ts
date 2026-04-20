@@ -129,8 +129,21 @@ const FEATURE_NAME_ZH: Record<string, string> = {
   gnn_emb_14: 'GNN 嵌入 14', gnn_emb_15: 'GNN 嵌入 15',
 };
 
-/** 將英文特徵名轉為中文，找不到則回傳原名 */
+/**
+ * Localize a feature name. When the active language is Chinese we look up
+ * the hand-curated translation; in English (or any other locale) we return
+ * the original snake_case identifier so feature names stay stable.
+ *
+ * The language is read from localStorage (same key react-i18next writes)
+ * so callers don't need to inject i18n — the store stays framework-free.
+ */
 function zhFeatureName(eng: string): string {
+  try {
+    const lang = (typeof localStorage !== 'undefined' && localStorage.getItem('bitoguard.lang')) || '';
+    if (!lang.startsWith('zh')) return eng;
+  } catch {
+    // localStorage unavailable — fall through to ZH default.
+  }
   return FEATURE_NAME_ZH[eng] ?? eng;
 }
 
@@ -992,4 +1005,22 @@ export async function getFeatureImportanceSummary(): Promise<FeatureImportanceEn
       avg_shap: parseFloat((sum / count).toFixed(5)),
     }))
     .sort((a, b) => b.avg_abs_shap - a.avg_abs_shap);
+}
+
+/**
+ * Drop caches that hold translated feature labels. Called from i18n layer
+ * on language change so next read re-parses with the new locale.
+ */
+export function resetFeatureCaches() {
+  shapMap = null;
+  featuresMap = null;
+  shapTop20AllCache = null;
+  shapTop20BlacklistCache = null;
+  shapTop10FPCache = null;
+  shapTop10FNCache = null;
+}
+
+if (typeof window !== 'undefined') {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (window as any).__graphDataStore = { resetFeatureCaches };
 }

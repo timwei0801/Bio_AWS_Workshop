@@ -1,0 +1,319 @@
+{
+  "app": {
+    "title": "BitoGuard 詐騙偵測儀表板",
+    "subtitle": "即時交易圖分析平台",
+    "status": { "online": "系統運行中" }
+  },
+  "nav": {
+    "overview": "總覽",
+    "features": "特徵說明",
+    "fraud": "黑名單",
+    "fp": "FP 誤判",
+    "fn": "FN 漏判",
+    "predict": "Predict"
+  },
+  "overview": {
+    "heroTitle": "偵測總覽",
+    "heroSubtitle": "模型效能、風險分佈、公平性檢測一頁掌握。",
+    "kpi": {
+      "auc_roc":  { "label": "AUC-ROC",  "hint": "跨閾值的排序品質" },
+      "auc_pr":   { "label": "AUC-PR",   "hint": "Precision–Recall 曲線下面積（不平衡資料適用）" },
+      "recall":   { "label": "Recall",   "hint": "抓到詐騙的比例（靈敏度）" },
+      "f1":       { "label": "F1 Score", "hint": "Precision 與 Recall 的調和平均" },
+      "precision":{ "label": "Precision","hint": "警示中真正詐騙的比例" },
+      "accuracy": { "label": "Accuracy", "hint": "整體判斷正確比例" },
+      "specificity": { "label": "Specificity", "hint": "正常用戶正確放行的比例" }
+    },
+    "confusion": {
+      "title": "混淆矩陣",
+      "thresholdAt": "閾值 {{value}}",
+      "actualFraud":  "實際：詐騙",
+      "actualNormal": "實際：正常",
+      "predFraud":    "預測：詐騙",
+      "predNormal":   "預測：正常",
+      "tp": { "tag": "TP", "caption": "正確偵測" },
+      "fp": { "tag": "FP", "caption": "誤報為詐騙" },
+      "fn": { "tag": "FN", "caption": "漏報詐騙" },
+      "tn": { "tag": "TN", "caption": "正確放行" }
+    },
+    "riskDist": {
+      "title": "風險分數分佈",
+      "thresholdLabel": "閾值 {{value}}",
+      "fraudCut": "≥ {{value}} 詐騙判定"
+    },
+    "fairness": {
+      "title": "公平性儀表盤",
+      "subtitle": "Disparate Impact 比率 — 低於 0.80 視為違反 80% 規則。",
+      "diRatio": "Disparate Impact",
+      "fpr":     "FPR",
+      "fnr":     "FNR",
+      "samples": "樣本數",
+      "pass":    "PASS",
+      "warn":    "WARNING",
+      "fail":    "FAIL"
+    }
+  },
+  "risk": {
+    "distribution": "風險分佈",
+    "tier": {
+      "critical": "極高",
+      "high":     "高",
+      "mid":      "中",
+      "midlow":   "中低",
+      "low":      "低"
+    },
+    "nodeList": "風險節點列表",
+    "noMatch":  "無符合節點",
+    "relationStats": "關係類型統計",
+    "performance": "模型效能"
+  },
+  "fairness": {
+    "attr": {
+      "gender": "性別",
+      "age":    "年齡層",
+      "career": "職業風險",
+      "income": "收入級別"
+    },
+    "group": {
+      "female":        "女性",
+      "male":          "男性",
+      "under30":       "30 歲以下",
+      "age30_50":      "30 – 50 歲",
+      "over50":        "50 歲以上",
+      "career_low":    "低風險職業",
+      "career_high":   "高風險職業",
+      "income_low":    "低收入",
+      "income_medium": "中等收入",
+      "income_high":   "高收入"
+    },
+    "summary": {
+      "gender": "女性用戶誤判率較低，但漏判率顯著較高，可能造成保護不足。",
+      "age":    "30 歲以下用戶誤判率最高，可能存在年齡過度警示。",
+      "career": "高風險職業族群警示率高約 18%，落入警告區間。",
+      "income": "跨收入族群 FPR 差異低於 1%，符合 80% 規則。"
+    }
+  },
+  "fraud": {
+    "selectTitle": "選擇詐騙節點",
+    "searchUserPlaceholder": "搜尋 user_id...",
+    "searchWalletPlaceholder": "搜尋錢包 ID（如 abc123）...",
+    "searchMode": { "user": "節點 user_id", "wallet": "錢包 ID" },
+    "resultCount": "{{count}} 筆",
+    "hasGraph": "有圖形資料",
+    "noGraph":  "無圖形資料",
+    "tierExtreme": "極高",
+    "inflow":  "資金流入",
+    "outflow": "資金流出"
+  },
+  "graph": {
+    "legend": "圖例",
+    "fraudNode": "詐騙節點",
+    "highRisk":  "高風險",
+    "normal":    "正常",
+    "wallet":    "錢包節點",
+    "relation": {
+      "r1": "錢包→帳戶",
+      "r2": "帳戶→帳戶",
+      "r3": "帳戶→錢包"
+    },
+    "placeholder": "選擇節點以載入關係圖",
+    "placeholderHint": "支援 1-hop 和 2-hop 鄰居展開",
+    "empty": "此節點無圖形資料",
+    "emptyHint": "此用戶 ID 未包含於 GNN 圖結構中（未出現在 gnn_node_list 或 gnn_edge_list）。請選擇列表中標有 ● 的用戶以查看圖形。",
+    "downgraded": "節點數超過 200，已自動降級為 1-hop 顯示",
+    "controls": {
+      "zoomIn":  "放大",
+      "zoomOut": "縮小",
+      "reset":   "重置視角",
+      "center":  "設為中心"
+    },
+    "sparseHint": "此用戶鄰居稀疏，這也是模型難以判斷的原因之一。"
+  },
+  "detail": {
+    "title": "節點詳細資訊",
+    "userId": "User ID",
+    "riskScore": "風險分數",
+    "status": "狀態",
+    "fraud": "詐騙",
+    "normal": "正常",
+    "neighborCount": "鄰居數量",
+    "shapTitle": "SHAP 瀑布圖 — 特徵貢獻分析",
+    "shapLegendPos": "正向貢獻（增加詐騙機率）",
+    "shapLegendNeg": "負向貢獻（降低詐騙機率）",
+    "shapUnavailable": "SHAP 資料不可用",
+    "neighborsHeader": "鄰居關係",
+    "neighbors": {
+      "r1": "錢包→帳戶",
+      "r2": "帳戶→帳戶",
+      "r3": "帳戶→錢包",
+      "r2_out": "轉出對象",
+      "r2_in":  "轉入來源",
+      "sourceWallets": "來源錢包",
+      "targetWallets": "目標錢包",
+      "txCount": "交易次數",
+      "empty": "無連接節點"
+    },
+    "selectPrompt": "點擊圖中節點以查看詳細資訊"
+  },
+  "fpfn": {
+    "title": "誤判分析",
+    "fp": {
+      "title": "FP 誤判",
+      "subtitle": "正常用戶被預測為詐騙",
+      "listTitle": "FP 誤判節點（白→黑）"
+    },
+    "fn": {
+      "title": "FN 漏判",
+      "subtitle": "詐騙用戶未被模型發現",
+      "listTitle": "FN 漏判節點（黑→白）"
+    },
+    "shapFP": "FP SHAP 瀑布圖 — 為何誤判為詐騙?",
+    "shapFN": "FN SHAP 瀑布圖 — 為何漏判詐騙?",
+    "insight": "模型分析",
+    "insightFP": "主要誤判因素：{{positive}}。降低風險的特徵：{{negative}}。建議針對高 SHAP 貢獻特徵設計後處理規則以降低 FP。",
+    "insightFN": "掩蓋詐騙的特徵：{{negative}}。偵測到的風險信號：{{positive}}。建議加強對這些特徵組合的監控。",
+    "groupAverage": "群體平均",
+    "perUser":      "User {{id}}",
+    "llm": {
+      "title": "LLM 誤判原因分析",
+      "run":   "開始 LLM 分析",
+      "rerun": "重新分析",
+      "clear": "清除",
+      "loading": "分析中…",
+      "modeFP": "FP 誤判",
+      "modeFN": "FN 漏判",
+      "modelTag": "LLaMA-3.3-70B 分析結果"
+    }
+  },
+  "predict": {
+    "title": "Predict 預測節點",
+    "subtitle": "模型預測結果：黑名單 / 正常用戶",
+    "summary": {
+      "total": "總用戶",
+      "blacklist": "預測黑名單",
+      "normal": "預測正常",
+      "ratio": "黑名單比例"
+    },
+    "filter": {
+      "all":       "全部 ({{count}})",
+      "blacklist": "黑名單 ({{count}})",
+      "normal":    "正常 ({{count}})"
+    },
+    "selectPrompt": "點擊列表中的用戶以查看詳細資訊",
+    "chipBlacklist": "預測黑名單",
+    "chipNormal":    "預測正常",
+    "result":        "預測結果",
+    "resultBlacklist": "黑名單",
+    "resultNormal":    "正常",
+    "overflow": "顯示前 200 筆，請搜尋縮小範圍"
+  },
+  "features": {
+    "heroTitle": "模型特徵說明",
+    "heroBody": "特徵工程產出 <strong>81 個基礎特徵</strong>，經零方差移除（−1）、高相關去重 >0.95（−13）、LightGBM 零重要性篩選（−2）後剩 <strong>65 個</strong>，再加入異常偵測分數（+3）與 GNN 嵌入（+16），移除受保護屬性 is_female、age（−2），最終以 <strong>82 維特徵</strong>輸入 XGBoost / LightGBM / CatBoost Stacking 集成。",
+    "stats": {
+      "categories": "特徵類別",
+      "baseCount":  "基礎特徵數",
+      "afterFilter":"篩選後",
+      "finalDim":   "最終輸入"
+    },
+    "unit": {
+      "category": "大類",
+      "dim":      "維"
+    },
+    "tab": {
+      "all":        "整體重要性",
+      "blacklist":  "黑名單重要性",
+      "fp":         "FP 誤判特徵",
+      "fn":         "FN 漏判特徵",
+      "compare":    "對比分析",
+      "categories": "特徵類別"
+    },
+    "chart": {
+      "allTitle":       "Top 20 特徵重要性（全體用戶）",
+      "blacklistTitle": "Top 20 特徵重要性（黑名單用戶）",
+      "fpTitle":        "Top 3 特徵重要性（FP：白預測成黑）",
+      "fnTitle":        "Top 3 特徵重要性（FN：黑預測成白）",
+      "compareTitle":   "整體 vs 黑名單 SHAP 重要性對比",
+      "compareSub":     "同一特徵在全體用戶（藍）與黑名單用戶（紅）的平均 |SHAP| 值差異",
+      "cumulative":     "Top 20 累積佔比：",
+      "legendAll":      "整體用戶",
+      "legendBlacklist":"黑名單"
+    },
+    "tooltip": {
+      "meanShap":   "平均 |SHAP|",
+      "percent":    "佔總重要性",
+      "frequency":  "出現頻率",
+      "frequencyUnit": "{{count}} 人",
+      "cumulative": "累積佔比",
+      "diff":       "差異"
+    },
+    "pipeline": {
+      "title": "模型訓練流程",
+      "step1": "特徵工程 (81)",
+      "step2": "篩選 81→65",
+      "step3": "異常偵測 (+3)",
+      "step4": "GNN 嵌入 (+16)",
+      "step5": "移除受保護屬性 (−2)",
+      "step6": "最終 82 維",
+      "step7": "Stacking 集成",
+      "step8": "SHAP 解釋"
+    }
+  },
+  "relation": {
+    "r1": "錢包→帳戶",
+    "r2": "帳戶→帳戶",
+    "r3": "帳戶→錢包"
+  },
+  "common": {
+    "loading": "載入中…",
+    "loadingFeature": "載入 {{name}} 中…",
+    "retry": "重試",
+    "close": "關閉",
+    "search": "搜尋",
+    "threshold": "閾值 {{value}}",
+    "baseValue":  "基準值",
+    "predValue":  "預測值",
+    "baseValueLabel": "E[f(x)] = {{value}}",
+    "predValueLabel": "f(x) = {{value}}"
+  },
+  "lang": {
+    "switch": "語言",
+    "en": "English",
+    "zh": "繁體中文"
+  },
+  "featureCat": {
+    "user":       "用戶人口特徵",
+    "userDesc":   "KYC 異常（秒級完成暗示自動化）、深夜註冊、性別/職業風險。代表特徵：kyc_speed_sec, account_age_days, is_female, reg_hour",
+    "fiat":       "法幣交易行為",
+    "fiatDesc":   "淨流出、入金/提領比異常、Smurfing 偵測。代表特徵：twd_dep_sum, twd_net_flow, twd_smurf_flag",
+    "crypto":     "虛幣交易行為",
+    "cryptoDesc": "多錢包分散提領、跨鏈移轉。代表特徵：crypto_wit_sum, crypto_wallet_hash_nunique, crypto_protocol_diversity",
+    "trading":    "掛單/一鍵買賣",
+    "tradingDesc":"單向購買、市價單洗量。代表特徵：trading_buy_ratio, swap_sum, trading_market_order_ratio",
+    "ipFlow":     "IP & 資金流速",
+    "ipFlowDesc": "多 IP 切換、深夜操作、資金快進快出。代表特徵：ip_unique_count, ip_night_ratio, fund_stay_sec",
+    "topology":   "交易圖拓撲",
+    "topologyDesc":"資金樞紐、詐騙集團聚集。代表特徵：pagerank_score, connected_component_size, betweenness_centrality",
+    "derived":    "跨表衍生",
+    "derivedDesc":"近期活動加速。代表特徵：total_tx_count, weekend_tx_ratio, velocity_ratio_7d_vs_30d",
+    "aml":        "AML 紅旗指標",
+    "amlDesc":    "法幣入→幣出漏斗、Smurfing 拆單。代表特徵：twd_to_crypto_out_ratio, same_day_in_out_count, tx_amount_cv",
+    "temporal":   "時序模式",
+    "temporalDesc":"規律性操作偵測、爆發交易。代表特徵：tx_interval_mean, tx_interval_min, active_days",
+    "composite":  "複合風險分數",
+    "compositeDesc":"多維度風險加權綜合。代表特徵：composite_risk_score",
+    "anomaly":    "異常偵測分數",
+    "anomalyDesc":"Isolation Forest、HBOS、LOF 三種無監督方法產生的異常評分（後續步驟加入）",
+    "gnn":        "GNN 嵌入",
+    "gnnDesc":    "HeteroSAGE + GAT 在用戶–錢包異構圖上學習的節點表示，經 PCA 降維至 16 維（後續步驟加入）"
+  },
+  "a11y": {
+    "openMenu": "開啟選單",
+    "closeMenu": "關閉選單",
+    "zoomIn": "放大",
+    "zoomOut": "縮小",
+    "resetView": "重置視角",
+    "centerNode": "聚焦選取節點",
+    "switchLang": "切換語言"
+  }
+}
