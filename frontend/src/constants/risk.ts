@@ -4,15 +4,15 @@
  */
 
 export const RISK_THRESHOLD = {
-  FRAUD:     0.8415,   // Model decision threshold (precision-recall optimal).
-  EXTREME:   0.8743,   // Ranking cutoff for "極高" tier.
-  HIGH:      0.70,
-  MID_HIGH:  0.65,
-  MID:       0.45,
-  LOW:       0.20,
+  FRAUD:     0.9784,   // Model decision threshold (PR-optimal) with LOO toxicity.
+  EXTREME:   0.99,     // Ranking cutoff for "極高" tier.
+  HIGH:      0.90,
+  MID_HIGH:  0.80,
+  MID:       0.60,
+  LOW:       0.30,
 } as const;
 
-export const SHAP_BASE_VALUE = -2.885;
+export const SHAP_BASE_VALUE = -3.20;  // E[f(x)] on the new LOO-enabled model
 
 export interface RiskTier {
   id: 'critical' | 'high' | 'mid' | 'midlow' | 'low';
@@ -73,10 +73,12 @@ export function classifyRisk(score: number): RiskTier {
 }
 
 // ── Model metrics (reported) ────────────────────────────────────────────────
-// Source: final ensemble evaluation on holdout set.
+// Source: final ensemble evaluation on test set (2026-04-21), with LOO
+// Toxicity features ported from the BitoGuard 1st-place repo.
+// 10,204 test rows, 328 positives.
 export const MODEL_METRICS = [
-  { key: 'auc_roc', value: '0.8612', color: 'sky'     as const },
-  { key: 'auc_pr',  value: '0.3071', color: 'violet'  as const },
-  { key: 'recall',  value: '0.4634', color: 'emerald' as const },
-  { key: 'f1',      value: '0.3572', color: 'amber'   as const },
+  { key: 'auc_roc', value: '0.9778', color: 'sky'     as const },
+  { key: 'auc_pr',  value: '0.8600', color: 'violet'  as const },
+  { key: 'recall',  value: '0.7470', color: 'emerald' as const },
+  { key: 'f1',      value: '0.8277', color: 'amber'   as const },
 ];

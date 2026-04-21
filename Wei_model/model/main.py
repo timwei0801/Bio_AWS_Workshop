@@ -275,7 +275,11 @@ def main(
     print("[Step 2] 特徵工程")
     print("="*55)
 
-    feat_df  = build_all_features(user_info, twd, crypto, trading, swap)
+    train_label_df = user_info[["user_id", "status"]].copy()
+    feat_df  = build_all_features(
+        user_info, twd, crypto, trading, swap,
+        train_label=train_label_df,
+    )
     labels_s = user_info.set_index("user_id")["status"]
     feat_df  = feat_df.join(labels_s, how="left")
 
@@ -446,7 +450,21 @@ def main(
             print(f"  Predict 用戶: {len(pred_user)}")
             print(f"  特徵工程中 ...")
 
-            pred_feat = build_all_features(pred_user, pred_twd, pred_crypto, pred_trading, pred_swap)
+            # For LOO toxicity on predict users, we need train-user labels to
+            # compute wallet / IP blacklist rates. The graph must also include
+            # train-side edges so shared wallets show up. Merge both sides.
+            merged_user = pd.concat([user_info, pred_user], ignore_index=True)
+            merged_twd = pd.concat([twd, pred_twd], ignore_index=True)
+            merged_crypto = pd.concat([crypto, pred_crypto], ignore_index=True)
+            merged_trading = pd.concat([trading, pred_trading], ignore_index=True)
+            merged_swap = pd.concat([swap, pred_swap], ignore_index=True)
+            all_feat = build_all_features(
+                merged_user, merged_twd, merged_crypto,
+                merged_trading, merged_swap,
+                train_label=train_label_df,
+            )
+            # Slice out just the predict-user rows
+            pred_feat = all_feat.loc[pred_user["user_id"].unique()]
             pred_feat = pred_feat.replace([np.inf, -np.inf], np.nan).fillna(0)
 
             # 對齊欄位：用 train 的篩選後欄位
@@ -746,7 +764,12 @@ def main(
         for idx, wid in idx_to_wallet.items():
             node_rows.append({"node_id": f"wallet_{wid}", "node_type": "wallet",
                               "risk_score": None, "label": None})
-        pd.DataFrame(node_rows).to_csv(
+        node_df = pd.DataFrame(node_rows)
+        node_df.to_csv(
+            os.path.join(output_dir, "graph_node_list.csv"), index=False)
+        # Back-compat alias for Yu_model/trace_back and any other consumer
+        # still on the legacy name. Same content.
+        node_df.to_csv(
             os.path.join(output_dir, "gnn_node_list.csv"), index=False)
 
         # edge list
@@ -776,10 +799,15 @@ def main(
                     edge_rows.append({"source": src_id, "target": dst_id,
                                       "source_raw": src_raw, "target_raw": dst_raw,
                                       "edge_type": et_name})
-        pd.DataFrame(edge_rows).to_csv(
+        edge_df = pd.DataFrame(edge_rows)
+        edge_df.to_csv(
+            os.path.join(output_dir, "graph_edge_list.csv"), index=False)
+        edge_df.to_csv(
             os.path.join(output_dir, "gnn_edge_list.csv"), index=False)
-        print(f"    gnn_node_list.csv: {len(node_rows):,} 筆")
-        print(f"    gnn_edge_list.csv: {len(edge_rows):,} 筆")
+        print(f"    graph_node_list.csv: {len(node_rows):,} 筆 "
+              f"(+ gnn_node_list.csv back-compat alias)")
+        print(f"    graph_edge_list.csv: {len(edge_rows):,} 筆 "
+              f"(+ gnn_edge_list.csv back-compat alias)")
 
     # ── Step 10：Predict 資料預測 → 提交 CSV ─────
     print("\n" + "="*55)
@@ -796,8 +824,19 @@ def main(
 
         print(f"  Predict 用戶數: {len(pred_user):,}")
 
-        # 特徵工程
-        pred_feat = build_all_features(pred_user, pred_twd, pred_crypto, pred_trading, pred_swap)
+        # 特徵工程 — merge with train-side tables so LOO toxicity can use the
+        # full graph + train-label statistics.
+        merged_user = pd.concat([user_info, pred_user], ignore_index=True)
+        merged_twd = pd.concat([twd, pred_twd], ignore_index=True)
+        merged_crypto = pd.concat([crypto, pred_crypto], ignore_index=True)
+        merged_trading = pd.concat([trading, pred_trading], ignore_index=True)
+        merged_swap = pd.concat([swap, pred_swap], ignore_index=True)
+        all_feat = build_all_features(
+            merged_user, merged_twd, merged_crypto,
+            merged_trading, merged_swap,
+            train_label=train_label_df,
+        )
+        pred_feat = all_feat.loc[pred_user["user_id"].unique()]
         pred_feat = pred_feat.replace([np.inf, -np.inf], np.nan).fillna(0)
 
         # 對齊欄位（用 train 的篩選後欄位）

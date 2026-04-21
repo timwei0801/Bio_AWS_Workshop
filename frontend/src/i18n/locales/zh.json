@@ -140,7 +140,7 @@
     "placeholder": "選擇節點以載入關係圖",
     "placeholderHint": "支援 1-hop 和 2-hop 鄰居展開",
     "empty": "此節點無圖形資料",
-    "emptyHint": "此用戶 ID 未包含於 GNN 圖結構中（未出現在 gnn_node_list 或 gnn_edge_list）。請選擇列表中標有 ● 的用戶以查看圖形。",
+    "emptyHint": "此用戶 ID 未包含於關聯圖中（未出現在 graph_node_list 或 graph_edge_list）。請選擇列表中標有 ● 的用戶以查看圖形。",
     "downgraded": "節點數超過 200，已自動降級為 1-hop 顯示",
     "controls": {
       "zoomIn":  "放大",

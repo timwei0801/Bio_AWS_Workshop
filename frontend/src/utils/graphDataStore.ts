@@ -2,8 +2,10 @@
  * graphDataStore – loads and indexes all CSV data from /output/.
  *
  * CSV files (served by Vite plugin at /output/<file>.csv):
- *   gnn_node_list.csv   → node_id, node_type, risk_score, label
- *   gnn_edge_list.csv   → source, target, source_raw, target_raw, edge_type
+ *   graph_node_list.csv → node_id, node_type, risk_score, label
+ *   graph_edge_list.csv → source, target, source_raw, target_raw, edge_type
+ *   (these are plain user↔wallet graph exports — despite the legacy name,
+ *    they are NOT the output of a GNN model)
  *   blacklist_analysis.csv → user_id, risk_score  (confirmed blacklist, 黑名單 sheet, 328 rows)
  *   black_to_white.csv  → user_id, risk_score  (FP: 白預測成黑, 286 rows)
  *   white_to_black.csv  → user_id, risk_score  (FN: 黑預測成白, 193 rows)
@@ -128,6 +130,21 @@ const FEATURE_NAME_ZH: Record<string, string> = {
   gnn_emb_10: 'GNN 嵌入 10', gnn_emb_11: 'GNN 嵌入 11',
   gnn_emb_12: 'GNN 嵌入 12', gnn_emb_13: 'GNN 嵌入 13',
   gnn_emb_14: 'GNN 嵌入 14', gnn_emb_15: 'GNN 嵌入 15',
+  // LOO Toxicity (ported from BitoGuard)
+  w_tox_max:                '錢包毒性（最高）',
+  w_tox_mean:               '錢包毒性（平均）',
+  w_tox_std:                '錢包毒性（標準差）',
+  toxic_w_ratio:            '高毒錢包比例',
+  toxic_w_count:            '高毒錢包數',
+  ip_tox_mean:              'IP 毒性（平均）',
+  ip_tox_max:               'IP 毒性（最高）',
+  toxic_ip_count:           '高毒 IP 數',
+  relation_blacklist_ratio: '內轉對象黑名單比例',
+  relation_blacklist_count: '內轉對象黑名單數',
+  neighbor_tox_mean:        '鄰居毒性（平均）',
+  neighbor_tox_max:         '鄰居毒性（最高）',
+  toxic_neighbor_count:     '高毒鄰居數',
+  n_neighbors:              '鄰居總數',
 };
 
 /**
@@ -206,8 +223,8 @@ async function loadGraphData(): Promise<void> {
   if (nodeMap !== null) return; // already loaded
 
   const [nodeText, edgeText] = await Promise.all([
-    fetchCsv('/output/gnn_node_list.csv'),
-    fetchCsv('/output/gnn_edge_list.csv'),
+    fetchCsv('/output/graph_node_list.csv'),
+    fetchCsv('/output/graph_edge_list.csv'),
   ]);
 
   // Build node map
@@ -397,7 +414,7 @@ export async function getComputedStats(): Promise<StatsResponse> {
   const nm = nodeMap!;
   const edges = allEdges!;
 
-  const FRAUD_THRESHOLD = 0.8415;
+  const FRAUD_THRESHOLD = 0.9784;
 
   let fraudNodes = 0;
   let totalNodes = 0;
@@ -435,8 +452,8 @@ export async function getComputedStats(): Promise<StatsResponse> {
       { range: '[0, 0.2)',        count: riskBuckets[0] },
       { range: '[0.2, 0.4)',      count: riskBuckets[1] },
       { range: '[0.4, 0.6)',      count: riskBuckets[2] },
-      { range: '[0.6, 0.8415)',   count: riskBuckets[3] },
-      { range: '[0.8415, 1.0]',   count: riskBuckets[4] },
+      { range: '[0.6, 0.9784)',   count: riskBuckets[3] },
+      { range: '[0.9784, 1.0]',   count: riskBuckets[4] },
     ],
     relation_counts,
   };
@@ -472,7 +489,7 @@ export async function getFpFnData(): Promise<{ fp: FpFnNode[]; fn: FpFnNode[] }>
   const fp: FpFnNode[] = [];
   const fn: FpFnNode[] = [];
 
-  const THRESHOLD = 0.8415;
+  const THRESHOLD = 0.9784;
   for (const r of records) {
     const label = r['true_label']?.trim();
     if (label !== '0' && label !== '1') continue; // 跳過預測目標（空白）
@@ -802,7 +819,7 @@ export interface ConfusionMatrixData {
 }
 
 export async function getConfusionMatrix(): Promise<ConfusionMatrixData> {
-  const THRESHOLD = 0.8415;
+  const THRESHOLD = 0.9784;
 
   // ── 混淆矩陣：用全部資料（train+test）──
   const allText = await fetchCsv('/output/all_user_risk_scores.csv');
