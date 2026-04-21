@@ -708,6 +708,240 @@ def build_temporal_features(
 
 
 # ─────────────────────────────────────────────
+# 10.5 LOO (Leave-One-Out) Toxicity features
+#
+# Ported from the 1st-place BitoGuard repo (gttthuang/Bito) in full credit.
+# The core insight: look at the *neighbourhood* of each user in the shared-
+# wallet / shared-IP / direct-transfer graph, and compute what fraction of
+# that neighbourhood is already on the blacklist.
+#
+# Leave-One-Out (the "self" subtracted in the numerator) prevents target
+# leakage: a user's own label never enters their own toxicity score.
+# Smoothing (S=50) stabilises estimates on wallets / IPs with few users.
+# ─────────────────────────────────────────────
+
+def build_toxicity_features(
+    user_info: pd.DataFrame,
+    twd: pd.DataFrame,
+    crypto: pd.DataFrame,
+    trading: pd.DataFrame,
+    train_label: pd.DataFrame,
+    smoothing: int = 50,
+) -> pd.DataFrame:
+    """LOO toxicity signals. Requires a `train_label` DataFrame with columns
+    `user_id` and `status` (0/1). For users not in `train_label` (i.e. the
+    competition's predict set), the formula falls back to the no-LOO branch
+    since there is no self-label to subtract.
+
+    Output features (~14):
+      - w_tox_max / w_tox_mean / w_tox_std
+      - toxic_w_ratio / toxic_w_count
+      - ip_tox_mean / ip_tox_max / toxic_ip_count
+      - relation_blacklist_ratio / relation_blacklist_count
+      - neighbor_tox_mean / neighbor_tox_max / toxic_neighbor_count / n_neighbors
+    """
+    S = smoothing
+    global_bl_rate = float(train_label["status"].mean())
+    label_map = dict(zip(train_label["user_id"].values,
+                         train_label["status"].astype(int).values))
+    bl_set = set(train_label.loc[train_label["status"] == 1, "user_id"].values)
+    labeled_uids = set(train_label["user_id"].values)
+
+    all_uids = user_info[["user_id"]].drop_duplicates().copy()
+
+    # =================================================================
+    # 1. Wallet LOO toxicity (from crypto_transfer)
+    # =================================================================
+    uw = pd.DataFrame()
+    if len(crypto) > 0 and "from_wallet_hash" in crypto.columns:
+        fw = crypto[["user_id", "from_wallet_hash"]].dropna(
+            subset=["from_wallet_hash"])
+        fw = fw.rename(columns={"from_wallet_hash": "wallet"})
+        tw = crypto[["user_id", "to_wallet_hash"]].dropna(
+            subset=["to_wallet_hash"])
+        tw = tw.rename(columns={"to_wallet_hash": "wallet"})
+        uw = pd.concat([fw, tw], ignore_index=True).drop_duplicates()
+
+        # Per-wallet blacklist stats from *labeled* users only
+        uw_labeled = uw[uw["user_id"].isin(labeled_uids)].copy()
+        uw_labeled["is_bl"] = uw_labeled["user_id"].isin(bl_set).astype(int)
+        wallet_stats = uw_labeled.groupby("wallet")["is_bl"].agg(["sum", "count"])
+        wallet_stats.columns = ["bl_count", "total_count"]
+        wallet_stats_dict = wallet_stats.to_dict("index")
+
+        # Vectorised LOO: subtract self-label only when user is labeled
+        wallets_arr = uw["wallet"].values
+        users_arr = uw["user_id"].values
+        bl_c = np.zeros(len(uw), dtype=np.float64)
+        tot_c = np.zeros(len(uw), dtype=np.float64)
+        is_labeled = np.zeros(len(uw), dtype=bool)
+        is_self_bl = np.zeros(len(uw), dtype=np.float64)
+        for i, (u, w) in enumerate(zip(users_arr, wallets_arr)):
+            ws = wallet_stats_dict.get(w)
+            if ws is not None:
+                bl_c[i] = ws["bl_count"]
+                tot_c[i] = ws["total_count"]
+            if u in labeled_uids:
+                is_labeled[i] = True
+                is_self_bl[i] = label_map.get(u, 0)
+
+        numerator = np.where(
+            tot_c > 0,
+            np.where(is_labeled, bl_c - is_self_bl, bl_c) + S * global_bl_rate,
+            S * global_bl_rate,
+        )
+        denominator = np.where(
+            tot_c > 0,
+            np.where(is_labeled, tot_c - 1, tot_c) + S,
+            S,
+        )
+        uw["w_tox"] = numerator / denominator
+
+        # Aggregate per user
+        user_w_tox = uw.groupby("user_id")["w_tox"].agg(["max", "mean", "std"])
+        user_w_tox.columns = ["w_tox_max", "w_tox_mean", "w_tox_std"]
+        user_w_tox["w_tox_std"] = user_w_tox["w_tox_std"].fillna(0)
+
+        toxic_threshold = global_bl_rate * 2
+        uw["is_toxic_w"] = (uw["w_tox"] > toxic_threshold).astype(int)
+        toxic_w_ratio = uw.groupby("user_id")["is_toxic_w"].mean().rename(
+            "toxic_w_ratio")
+        toxic_w_count = uw.groupby("user_id")["is_toxic_w"].sum().rename(
+            "toxic_w_count")
+
+        wallet_feats = pd.concat([user_w_tox, toxic_w_ratio, toxic_w_count],
+                                  axis=1)
+        wallet_feats.index.name = "user_id"
+        all_uids = all_uids.merge(
+            wallet_feats.reset_index(), on="user_id", how="left")
+
+    # =================================================================
+    # 2. IP LOO toxicity
+    # =================================================================
+    INVALID_IP_HASHES = {
+        "cfcd208495d565ef66e7dff9f98764da",  # md5("0")
+        "d41d8cd98f00b204e9800998ecf8427e",  # md5("")
+    }
+    ip_frames = []
+    for tbl in (twd, crypto, trading):
+        if "source_ip_hash" in tbl.columns:
+            sub = tbl[["user_id", "source_ip_hash"]].dropna(
+                subset=["source_ip_hash"])
+            sub = sub[~sub["source_ip_hash"].isin(INVALID_IP_HASHES)]
+            ip_frames.append(sub.rename(columns={"source_ip_hash": "ip"}))
+
+    if ip_frames:
+        all_ip = pd.concat(ip_frames, ignore_index=True).drop_duplicates()
+
+        ip_labeled = all_ip[all_ip["user_id"].isin(labeled_uids)].copy()
+        ip_labeled["is_bl"] = ip_labeled["user_id"].isin(bl_set).astype(int)
+        ip_stats = ip_labeled.groupby("ip")["is_bl"].agg(["sum", "count"])
+        ip_stats.columns = ["bl_count", "total_count"]
+        ip_stats_dict = ip_stats.to_dict("index")
+
+        users_arr = all_ip["user_id"].values
+        ips_arr = all_ip["ip"].values
+        bl_c = np.zeros(len(all_ip), dtype=np.float64)
+        tot_c = np.zeros(len(all_ip), dtype=np.float64)
+        is_labeled = np.zeros(len(all_ip), dtype=bool)
+        is_self_bl = np.zeros(len(all_ip), dtype=np.float64)
+        for i, (u, ip) in enumerate(zip(users_arr, ips_arr)):
+            ips = ip_stats_dict.get(ip)
+            if ips is not None:
+                bl_c[i] = ips["bl_count"]
+                tot_c[i] = ips["total_count"]
+            if u in labeled_uids:
+                is_labeled[i] = True
+                is_self_bl[i] = label_map.get(u, 0)
+
+        numerator = np.where(
+            tot_c > 0,
+            np.where(is_labeled, bl_c - is_self_bl, bl_c) + S * global_bl_rate,
+            S * global_bl_rate,
+        )
+        denominator = np.where(
+            tot_c > 0,
+            np.where(is_labeled, tot_c - 1, tot_c) + S,
+            S,
+        )
+        all_ip["ip_tox"] = numerator / denominator
+
+        user_ip_tox = all_ip.groupby("user_id")["ip_tox"].agg(["mean", "max"])
+        user_ip_tox.columns = ["ip_tox_mean", "ip_tox_max"]
+
+        all_ip["is_toxic_ip"] = (all_ip["ip_tox"] > global_bl_rate * 2).astype(int)
+        toxic_ip_count = all_ip.groupby("user_id")["is_toxic_ip"].sum().rename(
+            "toxic_ip_count")
+
+        ip_feats = pd.concat([user_ip_tox, toxic_ip_count], axis=1)
+        ip_feats.index.name = "user_id"
+        all_uids = all_uids.merge(
+            ip_feats.reset_index(), on="user_id", how="left")
+
+    # =================================================================
+    # 3. Relation blacklist ratio (internal crypto transfers)
+    # =================================================================
+    if len(crypto) > 0 and "sub_kind" in crypto.columns:
+        internal = crypto[crypto["sub_kind"] == 1].dropna(
+            subset=["relation_user_id"]).copy()
+        if len(internal) > 0:
+            internal["relation_user_id"] = internal["relation_user_id"].astype(int)
+            rel_pairs = internal[["user_id", "relation_user_id"]].drop_duplicates()
+            rel_pairs["rel_is_bl"] = rel_pairs["relation_user_id"].isin(
+                bl_set).astype(int)
+            rel_bl = rel_pairs.groupby("user_id")["rel_is_bl"].agg(["mean", "sum"])
+            rel_bl.columns = ["relation_blacklist_ratio",
+                              "relation_blacklist_count"]
+            rel_bl.index.name = "user_id"
+            all_uids = all_uids.merge(
+                rel_bl.reset_index(), on="user_id", how="left")
+
+    # =================================================================
+    # 4. Second-order toxicity (neighbor's toxicity via shared wallets)
+    # =================================================================
+    if len(uw) > 0 and "w_tox" in uw.columns:
+        wallet_users = uw.groupby("wallet")["user_id"].apply(set).to_dict()
+        user_wallets = uw.groupby("user_id")["wallet"].apply(set).to_dict()
+        user_max_tox = uw.groupby("user_id")["w_tox"].max().to_dict()
+
+        rows = []
+        for uid in all_uids["user_id"].values:
+            wallets = user_wallets.get(uid, set())
+            neighbors = set()
+            for w in wallets:
+                neighbors.update(wallet_users.get(w, set()))
+            neighbors.discard(uid)
+
+            if not neighbors:
+                rows.append((uid, 0.0, 0.0, 0, 0))
+                continue
+
+            n_tox_vals = np.fromiter(
+                (user_max_tox.get(n, global_bl_rate) for n in neighbors),
+                dtype=np.float64,
+            )
+            toxic_count = int((n_tox_vals > global_bl_rate * 2).sum())
+            rows.append((
+                uid, float(n_tox_vals.mean()), float(n_tox_vals.max()),
+                toxic_count, len(neighbors),
+            ))
+
+        n_tox_df = pd.DataFrame(
+            rows,
+            columns=["user_id", "neighbor_tox_mean", "neighbor_tox_max",
+                     "toxic_neighbor_count", "n_neighbors"],
+        )
+        all_uids = all_uids.merge(n_tox_df, on="user_id", how="left")
+
+    # Fill NaN (users who didn't appear in crypto or IP tables)
+    for c in all_uids.columns:
+        if c != "user_id":
+            all_uids[c] = all_uids[c].fillna(0)
+
+    return all_uids.set_index("user_id")
+
+
+# ─────────────────────────────────────────────
 # 11. 整合所有特徵
 # ─────────────────────────────────────────────
 
@@ -717,6 +951,7 @@ def build_all_features(
     crypto: pd.DataFrame,
     trading: pd.DataFrame,
     swap: pd.DataFrame,
+    train_label: Optional[pd.DataFrame] = None,
 ) -> pd.DataFrame:
     f_user    = build_user_features(user_info)
     f_twd     = build_twd_features(twd)
@@ -741,6 +976,12 @@ def build_all_features(
         .join(f_red,      how="left")
         .join(f_temporal, how="left")
     ).fillna(0)
+
+    if train_label is not None:
+        f_tox = build_toxicity_features(
+            user_info, twd, crypto, trading, train_label,
+        )
+        feat = feat.join(f_tox, how="left").fillna(0)
 
     # 複合風險分數（手工特徵交叉）
     feat["composite_risk_score"] = (

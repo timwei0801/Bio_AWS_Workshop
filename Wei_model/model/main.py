@@ -275,7 +275,11 @@ def main(
     print("[Step 2] 特徵工程")
     print("="*55)
 
-    feat_df  = build_all_features(user_info, twd, crypto, trading, swap)
+    train_label_df = user_info[["user_id", "status"]].copy()
+    feat_df  = build_all_features(
+        user_info, twd, crypto, trading, swap,
+        train_label=train_label_df,
+    )
     labels_s = user_info.set_index("user_id")["status"]
     feat_df  = feat_df.join(labels_s, how="left")
 
@@ -446,7 +450,21 @@ def main(
             print(f"  Predict 用戶: {len(pred_user)}")
             print(f"  特徵工程中 ...")
 
-            pred_feat = build_all_features(pred_user, pred_twd, pred_crypto, pred_trading, pred_swap)
+            # For LOO toxicity on predict users, we need train-user labels to
+            # compute wallet / IP blacklist rates. The graph must also include
+            # train-side edges so shared wallets show up. Merge both sides.
+            merged_user = pd.concat([user_info, pred_user], ignore_index=True)
+            merged_twd = pd.concat([twd, pred_twd], ignore_index=True)
+            merged_crypto = pd.concat([crypto, pred_crypto], ignore_index=True)
+            merged_trading = pd.concat([trading, pred_trading], ignore_index=True)
+            merged_swap = pd.concat([swap, pred_swap], ignore_index=True)
+            all_feat = build_all_features(
+                merged_user, merged_twd, merged_crypto,
+                merged_trading, merged_swap,
+                train_label=train_label_df,
+            )
+            # Slice out just the predict-user rows
+            pred_feat = all_feat.loc[pred_user["user_id"].unique()]
             pred_feat = pred_feat.replace([np.inf, -np.inf], np.nan).fillna(0)
 
             # 對齊欄位：用 train 的篩選後欄位
@@ -796,8 +814,19 @@ def main(
 
         print(f"  Predict 用戶數: {len(pred_user):,}")
 
-        # 特徵工程
-        pred_feat = build_all_features(pred_user, pred_twd, pred_crypto, pred_trading, pred_swap)
+        # 特徵工程 — merge with train-side tables so LOO toxicity can use the
+        # full graph + train-label statistics.
+        merged_user = pd.concat([user_info, pred_user], ignore_index=True)
+        merged_twd = pd.concat([twd, pred_twd], ignore_index=True)
+        merged_crypto = pd.concat([crypto, pred_crypto], ignore_index=True)
+        merged_trading = pd.concat([trading, pred_trading], ignore_index=True)
+        merged_swap = pd.concat([swap, pred_swap], ignore_index=True)
+        all_feat = build_all_features(
+            merged_user, merged_twd, merged_crypto,
+            merged_trading, merged_swap,
+            train_label=train_label_df,
+        )
+        pred_feat = all_feat.loc[pred_user["user_id"].unique()]
         pred_feat = pred_feat.replace([np.inf, -np.inf], np.nan).fillna(0)
 
         # 對齊欄位（用 train 的篩選後欄位）
