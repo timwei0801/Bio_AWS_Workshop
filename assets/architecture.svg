@@ -16,7 +16,7 @@
 
   <!-- Title -->
   <text x="480" y="32" text-anchor="middle" font-size="18" font-weight="700" fill="#2c3e50" letter-spacing="0.5">BitoGuard System Architecture</text>
-  <text x="480" y="50" text-anchor="middle" font-size="10" fill="#7f8c8d">GNN + Stacking Ensemble Hybrid Risk Detection Pipeline</text>
+  <text x="480" y="50" text-anchor="middle" font-size="10" fill="#7f8c8d">LOO Toxicity + Stacking Ensemble Risk Detection Pipeline</text>
 
   <!-- ================================================================ -->
   <!-- ROW 1: DATA LAYER -->
@@ -108,10 +108,14 @@
     <rect x="532" y="260" width="128" height="32" rx="3" fill="#f4ecf7" stroke="#d2b4de" stroke-width="0.6"/>
     <text x="596" y="274" fill="#6c3483" font-weight="600">Composite Risk</text>
     <text x="596" y="286" fill="#a569bd" font-size="7.5">1 feature</text>
+
+    <rect x="670" y="260" width="236" height="32" rx="3" fill="#d5f5e3" stroke="#27ae60" stroke-width="1.0"/>
+    <text x="788" y="274" fill="#1e8449" font-weight="700">LOO Toxicity ⭐</text>
+    <text x="788" y="286" fill="#27ae60" font-size="7.5">14 features (wallet / IP / direct / neighbor)</text>
   </g>
 
   <rect x="118" y="302" width="788" height="24" rx="3" fill="#f9f0fc" stroke="#d2b4de" stroke-width="0.5"/>
-  <text x="512" y="318" text-anchor="middle" font-size="9" fill="#7d3c98" font-weight="500">Output: 81 dimensional feature vector per user  |  10 feature categories</text>
+  <text x="512" y="318" text-anchor="middle" font-size="9" fill="#7d3c98" font-weight="500">Output: 95 dimensional feature vector per user  |  11 feature categories (incl. 14 LOO Toxicity dims)</text>
 
   <!-- Arrow -->
   <line x1="480" y1="340" x2="480" y2="362" stroke="#5b7a9d" stroke-width="1.4" marker-end="url(#a)"/>
@@ -132,15 +136,15 @@
 
     <rect x="380" y="382" width="280" height="34" rx="3" fill="#fef9e7" stroke="#f9e79f" stroke-width="0.6"/>
     <text x="520" y="397" fill="#7d6608" font-weight="600">High-correlation removal (r ≥ 0.95)</text>
-    <text x="520" y="410" fill="#b7950b" font-size="8">13 features removed</text>
+    <text x="520" y="410" fill="#b7950b" font-size="8">14 features removed</text>
 
     <rect x="672" y="382" width="234" height="34" rx="3" fill="#fef9e7" stroke="#f9e79f" stroke-width="0.6"/>
     <text x="789" y="397" fill="#7d6608" font-weight="600">Zero-importance removal</text>
-    <text x="789" y="410" fill="#b7950b" font-size="8">2 features removed</text>
+    <text x="789" y="410" fill="#b7950b" font-size="8">3 features removed</text>
   </g>
 
   <rect x="118" y="424" width="788" height="12" rx="2" fill="#fdebd0"/>
-  <text x="512" y="433" text-anchor="middle" font-size="8" fill="#b7950b" font-weight="500">81 dim → 65 dim  |  Protected attributes removed (is_female, age)</text>
+  <text x="512" y="433" text-anchor="middle" font-size="8" fill="#b7950b" font-weight="500">95 dim → 77 dim → 75 dim  |  Protected attributes removed (is_female, age)</text>
 
   <!-- Arrows branching -->
   <path d="M 320 444 L 320 464 Q 320 472 310 472 L 244 472 Q 236 472 236 480 L 236 492" fill="none" stroke="#27ae60" stroke-width="1.3" marker-end="url(#a)"/>
@@ -149,7 +153,7 @@
   <path d="M 480 444 L 480 680" fill="none" stroke="#2980b9" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#a)"/>
 
   <!-- ================================================================ -->
-  <!-- ROW 4: DUAL BLOCK — AD + GNN -->
+  <!-- ROW 4: DUAL BLOCK — Anomaly Detection + LOO Toxicity -->
   <!-- ================================================================ -->
 
   <!-- Anomaly Detection -->
@@ -183,48 +187,55 @@
   <text x="278" y="605" text-anchor="middle" font-size="9" fill="#1e8449" font-weight="600">Output: 3 anomaly score features</text>
   <text x="278" y="619" text-anchor="middle" font-size="8" fill="#7dcea0">if_score  |  hbos_score  |  lof_score</text>
 
-  <!-- GNN -->
-  <rect x="514" y="498" width="416" height="144" rx="4" fill="#fff" stroke="#bdc3c7" stroke-width="1"/>
-  <rect x="514" y="498" width="72" height="144" rx="4" fill="#8e44ad"/>
-  <rect x="582" y="498" width="4" height="144" fill="#8e44ad"/>
-  <text x="550" y="560" text-anchor="middle" font-size="12" font-weight="700" fill="#fff" letter-spacing="0.3">GNN</text>
+  <!-- LOO Toxicity (breakthrough) -->
+  <rect x="514" y="498" width="416" height="144" rx="4" fill="#fff" stroke="#27ae60" stroke-width="1.4"/>
+  <rect x="514" y="498" width="72" height="144" rx="4" fill="#16a085"/>
+  <rect x="582" y="498" width="4" height="144" fill="#16a085"/>
+  <text x="550" y="556" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" letter-spacing="0.3">LOO</text>
+  <text x="550" y="572" text-anchor="middle" font-size="10" fill="#d1f2eb">Toxicity ⭐</text>
 
   <g text-anchor="middle" font-size="9">
-    <rect x="600" y="512" width="100" height="64" rx="3" fill="#f5eef8" stroke="#d7bde2" stroke-width="0.6"/>
-    <rect x="600" y="512" width="100" height="20" rx="3" fill="#8e44ad"/>
-    <text x="650" y="526" fill="#fff" font-weight="600" font-size="8.5">Graph Build</text>
-    <text x="650" y="548" fill="#6c3483" font-size="8">User ↔ Wallet</text>
-    <text x="650" y="560" fill="#6c3483" font-size="8">bipartite graph</text>
+    <rect x="600" y="512" width="76" height="64" rx="3" fill="#e8f8f5" stroke="#a3e4d7" stroke-width="0.6"/>
+    <rect x="600" y="512" width="76" height="20" rx="3" fill="#16a085"/>
+    <text x="638" y="526" fill="#fff" font-weight="600" font-size="8.5">Wallet LOO</text>
+    <text x="638" y="548" fill="#117864" font-size="7.5">w_tox_max/</text>
+    <text x="638" y="560" fill="#117864" font-size="7.5">mean/std (5)</text>
 
-    <rect x="710" y="512" width="108" height="64" rx="3" fill="#f5eef8" stroke="#d7bde2" stroke-width="0.6"/>
-    <rect x="710" y="512" width="108" height="20" rx="3" fill="#8e44ad"/>
-    <text x="764" y="526" fill="#fff" font-weight="600" font-size="8.5">HeteroSAGE+GAT</text>
-    <text x="764" y="548" fill="#6c3483" font-size="8">Neighbor aggr.</text>
-    <text x="764" y="560" fill="#6c3483" font-size="8">+ attention 80ep</text>
+    <rect x="682" y="512" width="76" height="64" rx="3" fill="#e8f8f5" stroke="#a3e4d7" stroke-width="0.6"/>
+    <rect x="682" y="512" width="76" height="20" rx="3" fill="#16a085"/>
+    <text x="720" y="526" fill="#fff" font-weight="600" font-size="8.5">IP LOO</text>
+    <text x="720" y="548" fill="#117864" font-size="7.5">ip_tox_mean/</text>
+    <text x="720" y="560" fill="#117864" font-size="7.5">max, count (3)</text>
 
-    <rect x="828" y="512" width="92" height="64" rx="3" fill="#f5eef8" stroke="#d7bde2" stroke-width="0.6"/>
-    <rect x="828" y="512" width="92" height="20" rx="3" fill="#8e44ad"/>
-    <text x="874" y="526" fill="#fff" font-weight="600" font-size="8.5">Embedding</text>
-    <text x="874" y="548" fill="#6c3483" font-size="8">64d → PCA 16d</text>
-    <text x="874" y="560" fill="#6c3483" font-size="8">92% variance</text>
+    <rect x="764" y="512" width="76" height="64" rx="3" fill="#e8f8f5" stroke="#a3e4d7" stroke-width="0.6"/>
+    <rect x="764" y="512" width="76" height="20" rx="3" fill="#16a085"/>
+    <text x="802" y="526" fill="#fff" font-weight="600" font-size="8.5">Direct</text>
+    <text x="802" y="548" fill="#117864" font-size="7.5">relation_bl_</text>
+    <text x="802" y="560" fill="#117864" font-size="7.5">ratio/count (2)</text>
+
+    <rect x="846" y="512" width="76" height="64" rx="3" fill="#e8f8f5" stroke="#a3e4d7" stroke-width="0.6"/>
+    <rect x="846" y="512" width="76" height="20" rx="3" fill="#16a085"/>
+    <text x="884" y="526" fill="#fff" font-weight="600" font-size="8.5">Neighbor</text>
+    <text x="884" y="548" fill="#117864" font-size="7.5">2-hop tox +</text>
+    <text x="884" y="560" fill="#117864" font-size="7.5">n_neighbors (4)</text>
   </g>
 
-  <rect x="600" y="588" width="320" height="40" rx="3" fill="#f5eef8" stroke="#d7bde2" stroke-width="0.5"/>
-  <text x="760" y="605" text-anchor="middle" font-size="9" fill="#6c3483" font-weight="600">Output: 16-dim node embeddings</text>
-  <text x="760" y="619" text-anchor="middle" font-size="8" fill="#a569bd">~10K user nodes  |  ~16K wallet nodes</text>
+  <rect x="600" y="588" width="320" height="40" rx="3" fill="#e8f8f5" stroke="#a3e4d7" stroke-width="0.5"/>
+  <text x="760" y="603" text-anchor="middle" font-size="9" fill="#117864" font-weight="700">Output: 14 LOO Toxicity features</text>
+  <text x="760" y="617" text-anchor="middle" font-size="7.5" fill="#16a085">Leave-One-Out prevents target leakage  |  Ported from gttthuang/Bito</text>
 
   <!-- Merge arrows into Ensemble -->
   <path d="M 278 642 L 278 660 Q 278 668 290 668 L 410 668 Q 418 668 418 676 L 418 686" fill="none" stroke="#27ae60" stroke-width="1.3" marker-end="url(#a)"/>
   <rect x="308" y="656" width="88" height="14" rx="2" fill="#eafaf1" stroke="#a9dfbf" stroke-width="0.4"/>
   <text x="352" y="666" text-anchor="middle" font-size="7" fill="#1e8449" font-weight="600">anomaly scores</text>
 
-  <path d="M 760 642 L 760 660 Q 760 668 748 668 L 610 668 Q 602 668 602 676 L 602 686" fill="none" stroke="#8e44ad" stroke-width="1.3" marker-end="url(#a)"/>
-  <rect x="638" y="656" width="88" height="14" rx="2" fill="#f5eef8" stroke="#d7bde2" stroke-width="0.4"/>
-  <text x="682" y="666" text-anchor="middle" font-size="7" fill="#6c3483" font-weight="600">embeddings</text>
+  <path d="M 760 642 L 760 660 Q 760 668 748 668 L 610 668 Q 602 668 602 676 L 602 686" fill="none" stroke="#16a085" stroke-width="1.3" marker-end="url(#a)"/>
+  <rect x="634" y="656" width="96" height="14" rx="2" fill="#e8f8f5" stroke="#a3e4d7" stroke-width="0.4"/>
+  <text x="682" y="666" text-anchor="middle" font-size="7" fill="#117864" font-weight="600">14 LOO features</text>
 
   <!-- Center label -->
   <rect x="448" y="584" width="68" height="14" rx="2" fill="#d6eaf8" stroke="#85c1e9" stroke-width="0.4"/>
-  <text x="482" y="594" text-anchor="middle" font-size="7" fill="#2471a3" font-weight="600">63 features</text>
+  <text x="482" y="594" text-anchor="middle" font-size="7" fill="#2471a3" font-weight="600">75 features</text>
 
   <!-- ================================================================ -->
   <!-- ROW 5: STACKING ENSEMBLE -->
@@ -275,7 +286,7 @@
 
   <!-- Threshold bar -->
   <rect x="118" y="818" width="788" height="28" rx="3" fill="#fdedec" stroke="#f5b7b1" stroke-width="0.5"/>
-  <text x="512" y="836" text-anchor="middle" font-size="9" fill="#922b21" font-weight="500">Threshold Optimization: PR-Curve F-beta scan  |  OOF: 0.857  |  Test: 0.868</text>
+  <text x="512" y="836" text-anchor="middle" font-size="9" fill="#922b21" font-weight="500">Threshold Optimization: F-beta / cost-sensitive scan  |  Test F1: 0.8277  |  AUC-PR: 0.8600</text>
 
   <!-- Arrow -->
   <line x1="480" y1="860" x2="480" y2="884" stroke="#5b7a9d" stroke-width="1.4" marker-end="url(#a)"/>
@@ -321,5 +332,5 @@
 
   <!-- Footer -->
   <text x="480" y="1040" text-anchor="middle" font-size="9" fill="#95a5a6">BitoGuard  |  BitoGroup x AWS Blacklist User Detection Competition</text>
-  <text x="480" y="1056" text-anchor="middle" font-size="8.5" fill="#95a5a6">AUC-ROC 0.8612  |  AUC-PR 0.3071  |  F1 0.9720  |  Precision 0.2906  |  Recall 0.4634</text>
+  <text x="480" y="1056" text-anchor="middle" font-size="8.5" fill="#95a5a6">AUC-ROC 0.9778  |  AUC-PR 0.8600  |  F1 0.8277  |  Precision 0.9280  |  Recall 0.7470</text>
 </svg>
