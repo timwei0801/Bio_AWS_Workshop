@@ -18,9 +18,12 @@ interface Kpi {
   accessor: (d: ConfusionMatrixData | null) => string;
 }
 
+// AUC-ROC / AUC-PR can't be derived from a single confusion matrix; they
+// are reported from the test-set evaluation of the LOO-enabled ensemble
+// (Wei_model/output/baseline_loo/metrics.json).
 const KPIS: Kpi[] = [
-  { i18nPrefix: 'auc_roc',  color: 'sky',     accessor: () => '0.8612' },
-  { i18nPrefix: 'auc_pr',   color: 'violet',  accessor: () => '0.3071' },
+  { i18nPrefix: 'auc_roc',  color: 'sky',     accessor: () => '0.9778' },
+  { i18nPrefix: 'auc_pr',   color: 'violet',  accessor: () => '0.8600' },
   { i18nPrefix: 'recall',   color: 'emerald', accessor: d => d ? `${(d.recall * 100).toFixed(1)}%` : '—' },
   { i18nPrefix: 'precision',color: 'amber',   accessor: d => d ? `${(d.precision * 100).toFixed(1)}%` : '—' },
   { i18nPrefix: 'f1',       color: 'cyan',    accessor: d => d ? d.f1Weighted.toFixed(4) : '—' },

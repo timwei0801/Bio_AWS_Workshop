@@ -28,7 +28,7 @@
   "overview": {
     "heroTitle": "偵測總覽",
     "heroSubtitle": "模型效能、風險分佈、公平性檢測一頁掌握。",
-    "architecture": "異構 GNN（HeteroSAGE + GAT）+ XGBoost / LightGBM / CatBoost 堆疊集成 — 82 維特徵",
+    "architecture": "LOO 毒性特徵 + 異常偵測分數 + XGBoost / LightGBM (Focal) / CatBoost 堆疊集成 — 78 維特徵",
     "tickerUsers":     "總用戶",
     "tickerFraud":     "黑名單",
     "tickerFraudPct":  "詐騙比例",
@@ -231,7 +231,7 @@
   },
   "features": {
     "heroTitle": "模型特徵說明",
-    "heroBody": "特徵工程產出 <strong>81 個基礎特徵</strong>，經零方差移除（−1）、高相關去重 >0.95（−13）、LightGBM 零重要性篩選（−2）後剩 <strong>65 個</strong>，再加入異常偵測分數（+3）與 GNN 嵌入（+16），移除受保護屬性 is_female、age（−2），最終以 <strong>82 維特徵</strong>輸入 XGBoost / LightGBM / CatBoost Stacking 集成。",
+    "heroBody": "特徵工程產出 <strong>95 個基礎特徵</strong>（81 個行為特徵 + 移植自第一名 BitoGuard 的 14 個 LOO 毒性特徵）。經零方差移除（−1）、高相關去重 >0.95（−14）、LightGBM 零重要性篩選（−3）後剩 <strong>77 個</strong>。移除受保護屬性 is_female、age（−2）並加入異常偵測分數（+3），最終以 <strong>78 維特徵</strong>輸入 XGBoost / LightGBM (Focal Loss) / CatBoost Stacking 集成。",
     "stats": {
       "categories": "特徵類別",
       "baseCount":  "基礎特徵數",
@@ -271,14 +271,14 @@
     },
     "pipeline": {
       "title": "模型訓練流程",
-      "step1": "特徵工程 (81)",
-      "step2": "篩選 81→65",
-      "step3": "異常偵測 (+3)",
-      "step4": "GNN 嵌入 (+16)",
-      "step5": "移除受保護屬性 (−2)",
-      "step6": "最終 82 維",
-      "step7": "Stacking 集成",
-      "step8": "SHAP 解釋"
+      "step1": "特徵工程 (81) + LOO 毒性 (14) = 95",
+      "step2": "篩選 95 → 77",
+      "step3": "移除受保護屬性 (−2)",
+      "step4": "異常偵測分數 (+3)",
+      "step5": "最終 78 維",
+      "step6": "Stacking 集成",
+      "step7": "SHAP 解釋",
+      "step8": ""
     }
   },
   "relation": {

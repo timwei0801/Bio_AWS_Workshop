@@ -28,7 +28,7 @@
   "overview": {
     "heroTitle": "Detection Overview",
     "heroSubtitle": "Model performance, risk distribution, and fairness audit at a glance.",
-    "architecture": "Heterogeneous GNN (HeteroSAGE + GAT) + XGBoost / LightGBM / CatBoost stacking — 82 feature dimensions",
+    "architecture": "LOO Toxicity + anomaly scores + XGBoost / LightGBM (Focal) / CatBoost stacking — 78 feature dimensions",
     "tickerUsers":     "Users",
     "tickerFraud":     "Blacklist",
     "tickerFraudPct":  "Fraud ratio",
@@ -231,7 +231,7 @@
   },
   "features": {
     "heroTitle": "Model Feature Reference",
-    "heroBody": "Feature engineering produced <strong>81 base features</strong>. After removing zero-variance (−1), highly-correlated >0.95 (−13), and LightGBM zero-importance (−2) we kept <strong>65</strong>. Adding anomaly-score features (+3) and GNN embeddings (+16), then dropping protected attributes is_female, age (−2), we feed <strong>82 dimensions</strong> into the XGBoost / LightGBM / CatBoost stacking ensemble.",
+    "heroBody": "Feature engineering produced <strong>95 base features</strong> (81 behavioral + 14 LOO toxicity ported from the 1st-place BitoGuard repo). After removing zero-variance (−1), highly-correlated >0.95 (−14), and LightGBM zero-importance (−3), we kept <strong>77</strong>. Dropping protected attributes is_female, age (−2) and adding anomaly-score features (+3), we feed <strong>78 dimensions</strong> into the XGBoost / LightGBM (Focal Loss) / CatBoost stacking ensemble.",
     "stats": {
       "categories": "Feature categories",
       "baseCount":  "Base features",
@@ -271,14 +271,14 @@
     },
     "pipeline": {
       "title": "Training Pipeline",
-      "step1": "Feature engineering (81)",
-      "step2": "Filtering 81 → 65",
-      "step3": "Anomaly scores (+3)",
-      "step4": "GNN embeddings (+16)",
-      "step5": "Drop protected attrs (−2)",
-      "step6": "Final 82-dim",
-      "step7": "Stacking ensemble",
-      "step8": "SHAP explanation"
+      "step1": "Feature engineering (81) + LOO toxicity (14) = 95",
+      "step2": "Filtering 95 → 77",
+      "step3": "Drop protected attrs (−2)",
+      "step4": "Anomaly scores (+3)",
+      "step5": "Final 78-dim",
+      "step6": "Stacking ensemble",
+      "step7": "SHAP explanation",
+      "step8": ""
     }
   },
   "relation": {

@@ -86,6 +86,10 @@ def build_all_user_risk_scores(
         ignore_index=True,
     )
     merged = merged.sort_values("risk_score", ascending=False)
+    # Cast true_label to clean int strings — the frontend compares against
+    # "0" / "1" string literals, not "0.0" / "1.0".
+    merged["true_label"] = merged["true_label"].map(
+        lambda x: "" if pd.isna(x) else str(int(float(x))))
     merged.to_csv(output_path, index=False)
     print(f"  ✓ {output_path}  {len(merged):,} rows")
 

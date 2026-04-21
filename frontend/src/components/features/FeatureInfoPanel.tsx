@@ -261,10 +261,10 @@ export function FeatureInfoPanel() {
 
           <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-2">
             {[
-              { labelKey: 'features.stats.categories', value: 10, unitKey: 'features.unit.category' },
-              { labelKey: 'features.stats.baseCount',  value: 81, unitKey: 'features.unit.dim' },
-              { labelKey: 'features.stats.afterFilter',value: 65, unitKey: 'features.unit.dim' },
-              { labelKey: 'features.stats.finalDim',   value: 82, unitKey: 'features.unit.dim' },
+              { labelKey: 'features.stats.categories', value: 11, unitKey: 'features.unit.category' },
+              { labelKey: 'features.stats.baseCount',  value: 95, unitKey: 'features.unit.dim' },
+              { labelKey: 'features.stats.afterFilter',value: 77, unitKey: 'features.unit.dim' },
+              { labelKey: 'features.stats.finalDim',   value: 78, unitKey: 'features.unit.dim' },
             ].map(({ labelKey, value, unitKey }) => (
               <div key={labelKey} className="bg-slate-900/60 rounded-lg p-3 text-center">
                 <div className="text-lg font-bold text-white">{value}<span className="text-xs text-slate-400 ml-0.5">{t(unitKey)}</span></div>
