@@ -95,6 +95,36 @@ LOO Toxicity 直接把**關聯資訊寫死成公式**，不用學習，GBDT 秒�
 | CatBoost | ~0.23 | **0.8419** |
 | Stacking OOF | ~0.29 | **0.8557** |
 
+### 6.4 SHAP 特徵重要性（Top 10）
+
+| 排名 | 特徵 | SHAP % | 類型 |
+|------|------|--------|------|
+| 1 | **w_tox_max** | **25.4%** | 🟢 LOO |
+| 2 | **w_tox_mean** | **9.2%** | 🟢 LOO |
+| 3 | **neighbor_tox_mean** | **8.5%** | 🟢 LOO |
+| 4 | tx_interval_median | 3.0% | 行為 |
+| 5 | twd_net_flow | 2.9% | 行為 |
+| 6 | weekend_tx_ratio | 2.7% | 行為 |
+| 7 | if_score | 2.4% | 異常 |
+| 8 | career_freq | 2.3% | 用戶 |
+| 9 | account_age_days | 2.2% | 用戶 |
+| 10 | swap_sum | 2.1% | 行為 |
+
+**LOO 特徵合計約 48% 的重要性**，確認了「關聯比行為強」的假說。
+
+### 6.5 Predict 提交檔案（12,753 人）
+
+| Submission | 閾值 | 判黑名單數 | 佔比 |
+|-----------|------|-----------|------|
+| submission.csv（max_f1）| 0.9784 | 71 | 0.56% |
+| submission_max_f2.csv | 0.8670 | 244 | 1.91% |
+| submission_min_cost.csv | 0.8601 | 252 | 1.98% |
+| submission_top200.csv | — | 200 | 1.57% |
+| submission_top500.csv | — | 500 | 3.92% |
+| submission_top1000.csv | — | 1,000 | 7.84% |
+
+`max_f1` 版本最保守（0.56%）因為 Precision 0.928 需要極高閾值。如果比賽實際正例率接近 train 的 3.21%，`top500` 或 `max_f2` 可能更貼近答案。建議先提交 `max_f1` 看真實分數，再用 `top500` / `max_f2` 當備援。
+
 ---
 
 ## 7. 致謝
