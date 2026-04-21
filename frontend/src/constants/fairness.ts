@@ -9,9 +9,9 @@
  * project_fairness_audit_results.md).
  */
 export const FAIRNESS_SOURCE = {
-  notebook: 'notebooks/fairness_audit.ipynb',
-  runDate:  '2026-04-18',
-  split:    'holdout',
+  notebook: 'Wei_model/output/baseline_loo/fairness_summary.json',
+  runDate:  '2026-04-21',
+  split:    'test',
 };
 
 
@@ -30,15 +30,20 @@ export interface FairnessCheck {
   summaryKey: string;
 }
 
+// Numbers below are from the LOO-enabled model's test-set audit
+// (2026-04-21). With the new model's Precision=0.928 the FPR scale is
+// an order of magnitude lower than the baseline model; gender/age
+// DIR now fail the 0.8 threshold because the model is so selective
+// that rare-class exposure becomes very uneven by demographic group.
 export const FAIRNESS_CHECKS: FairnessCheck[] = [
   {
     id: 'gender',
     attributeKey: 'fairness.attr.gender',
     status: 'FAIL',
-    disparateImpact: 0.71,
+    disparateImpact: 0.285,
     groups: [
-      { key: 'female', labelKey: 'fairness.group.female', fpr: 0.078, fnr: 0.512, count: 23104 },
-      { key: 'male',   labelKey: 'fairness.group.male',   fpr: 0.110, fnr: 0.464, count: 27913 },
+      { key: 'female', labelKey: 'fairness.group.female', fpr: 0.0043, fnr: 0.235, count: 2721 },
+      { key: 'male',   labelKey: 'fairness.group.male',   fpr: 0.0011, fnr: 0.275, count: 7483 },
     ],
     summaryKey: 'fairness.summary.gender',
   },
@@ -46,34 +51,33 @@ export const FAIRNESS_CHECKS: FairnessCheck[] = [
     id: 'age',
     attributeKey: 'fairness.attr.age',
     status: 'FAIL',
-    disparateImpact: 0.62,
+    disparateImpact: 0.343,
     groups: [
-      { key: 'under30',  labelKey: 'fairness.group.under30', fpr: 0.148, fnr: 0.421, count: 18650 },
-      { key: 'age30_50', labelKey: 'fairness.group.age30_50', fpr: 0.092, fnr: 0.488, count: 22480 },
-      { key: 'over50',   labelKey: 'fairness.group.over50',   fpr: 0.091, fnr: 0.544, count: 9887 },
+      { key: 'under30',  labelKey: 'fairness.group.under30',  fpr: 0.0016, fnr: 0.209, count: 3761 },
+      { key: 'age30_50', labelKey: 'fairness.group.age30_50', fpr: 0.0016, fnr: 0.262, count: 5217 },
+      { key: 'over50',   labelKey: 'fairness.group.over50',   fpr: 0.0043, fnr: 0.271, count: 1226 },
     ],
     summaryKey: 'fairness.summary.age',
   },
   {
     id: 'career',
     attributeKey: 'fairness.attr.career',
-    status: 'WARNING',
-    disparateImpact: 0.84,
+    status: 'FAIL',
+    disparateImpact: 0.729,
     groups: [
-      { key: 'low_risk',  labelKey: 'fairness.group.career_low',  fpr: 0.095, fnr: 0.476, count: 38240 },
-      { key: 'high_risk', labelKey: 'fairness.group.career_high', fpr: 0.113, fnr: 0.431, count: 12777 },
+      { key: 'low_risk',  labelKey: 'fairness.group.career_low',  fpr: 0.0018, fnr: 0.268, count: 9090 },
+      { key: 'high_risk', labelKey: 'fairness.group.career_high', fpr: 0.0028, fnr: 0.146, count: 1114 },
     ],
     summaryKey: 'fairness.summary.career',
   },
   {
     id: 'income',
     attributeKey: 'fairness.attr.income',
-    status: 'PASS',
-    disparateImpact: 0.92,
+    status: 'FAIL',
+    disparateImpact: 0.557,
     groups: [
-      { key: 'low',    labelKey: 'fairness.group.income_low',    fpr: 0.097, fnr: 0.472, count: 21050 },
-      { key: 'medium', labelKey: 'fairness.group.income_medium', fpr: 0.094, fnr: 0.489, count: 22410 },
-      { key: 'high',   labelKey: 'fairness.group.income_high',   fpr: 0.103, fnr: 0.458, count: 7557 },
+      { key: 'low',    labelKey: 'fairness.group.income_low',    fpr: 0.0020, fnr: 0.238, count: 9400 },
+      { key: 'high',   labelKey: 'fairness.group.income_high',   fpr: 0.0013, fnr: 0.476, count: 804 },
     ],
     summaryKey: 'fairness.summary.income',
   },

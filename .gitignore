@@ -47,3 +47,5 @@ anonymize_data.py
 # Frontend build output (built by GitHub Actions on deploy)
 frontend/dist/
 frontend/node_modules/
+
+.playwright-mcp/

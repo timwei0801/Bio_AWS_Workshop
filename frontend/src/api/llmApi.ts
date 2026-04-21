@@ -61,7 +61,7 @@ function buildUserPrompt(req: LLMAnalysisRequest, locale: 'en' | 'zh'): string {
 
 - **用戶 ID**：${req.userId}
 - **誤判類型**：${modeLabel}
-- **模型風險分數**：${req.riskScore.toFixed(4)}（閾值 0.8415）
+- **模型風險分數**：${req.riskScore.toFixed(4)}（閾值 0.9784）
 - **SHAP 基準值（群體平均）**：${req.baseValue.toFixed(4)}
 - **加總後預測值**：${finalScore.toFixed(4)}
 
@@ -89,7 +89,7 @@ ${featureRows}
 
 - **User ID**: ${req.userId}
 - **Misclassification type**: ${modeLabel}
-- **Model risk score**: ${req.riskScore.toFixed(4)} (decision threshold 0.8415)
+- **Model risk score**: ${req.riskScore.toFixed(4)} (decision threshold 0.9784)
 - **SHAP base value (group average)**: ${req.baseValue.toFixed(4)}
 - **Sum predicted score**: ${finalScore.toFixed(4)}
 
