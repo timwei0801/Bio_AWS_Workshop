@@ -764,7 +764,12 @@ def main(
         for idx, wid in idx_to_wallet.items():
             node_rows.append({"node_id": f"wallet_{wid}", "node_type": "wallet",
                               "risk_score": None, "label": None})
-        pd.DataFrame(node_rows).to_csv(
+        node_df = pd.DataFrame(node_rows)
+        node_df.to_csv(
+            os.path.join(output_dir, "graph_node_list.csv"), index=False)
+        # Back-compat alias for Yu_model/trace_back and any other consumer
+        # still on the legacy name. Same content.
+        node_df.to_csv(
             os.path.join(output_dir, "gnn_node_list.csv"), index=False)
 
         # edge list
@@ -794,10 +799,15 @@ def main(
                     edge_rows.append({"source": src_id, "target": dst_id,
                                       "source_raw": src_raw, "target_raw": dst_raw,
                                       "edge_type": et_name})
-        pd.DataFrame(edge_rows).to_csv(
+        edge_df = pd.DataFrame(edge_rows)
+        edge_df.to_csv(
+            os.path.join(output_dir, "graph_edge_list.csv"), index=False)
+        edge_df.to_csv(
             os.path.join(output_dir, "gnn_edge_list.csv"), index=False)
-        print(f"    gnn_node_list.csv: {len(node_rows):,} 筆")
-        print(f"    gnn_edge_list.csv: {len(edge_rows):,} 筆")
+        print(f"    graph_node_list.csv: {len(node_rows):,} 筆 "
+              f"(+ gnn_node_list.csv back-compat alias)")
+        print(f"    graph_edge_list.csv: {len(edge_rows):,} 筆 "
+              f"(+ gnn_edge_list.csv back-compat alias)")
 
     # ── Step 10：Predict 資料預測 → 提交 CSV ─────
     print("\n" + "="*55)

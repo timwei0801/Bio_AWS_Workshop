@@ -2,8 +2,10 @@
  * graphDataStore – loads and indexes all CSV data from /output/.
  *
  * CSV files (served by Vite plugin at /output/<file>.csv):
- *   gnn_node_list.csv   → node_id, node_type, risk_score, label
- *   gnn_edge_list.csv   → source, target, source_raw, target_raw, edge_type
+ *   graph_node_list.csv → node_id, node_type, risk_score, label
+ *   graph_edge_list.csv → source, target, source_raw, target_raw, edge_type
+ *   (these are plain user↔wallet graph exports — despite the legacy name,
+ *    they are NOT the output of a GNN model)
  *   blacklist_analysis.csv → user_id, risk_score  (confirmed blacklist, 黑名單 sheet, 328 rows)
  *   black_to_white.csv  → user_id, risk_score  (FP: 白預測成黑, 286 rows)
  *   white_to_black.csv  → user_id, risk_score  (FN: 黑預測成白, 193 rows)
@@ -221,8 +223,8 @@ async function loadGraphData(): Promise<void> {
   if (nodeMap !== null) return; // already loaded
 
   const [nodeText, edgeText] = await Promise.all([
-    fetchCsv('/output/gnn_node_list.csv'),
-    fetchCsv('/output/gnn_edge_list.csv'),
+    fetchCsv('/output/graph_node_list.csv'),
+    fetchCsv('/output/graph_edge_list.csv'),
   ]);
 
   // Build node map

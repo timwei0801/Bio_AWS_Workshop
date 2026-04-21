@@ -140,7 +140,7 @@
     "placeholder": "Select a node to load its relation graph",
     "placeholderHint": "1-hop and 2-hop neighbours supported",
     "empty": "No graph data for this node",
-    "emptyHint": "This user id is not part of the GNN graph (missing in gnn_node_list / gnn_edge_list). Pick a node marked with ● to load its graph.",
+    "emptyHint": "This user id is not part of the relation graph (missing in graph_node_list / graph_edge_list). Pick a node marked with ● to load its graph.",
     "downgraded": "Graph exceeds 200 nodes — downgraded to 1-hop view",
     "controls": {
       "zoomIn":  "Zoom in",
