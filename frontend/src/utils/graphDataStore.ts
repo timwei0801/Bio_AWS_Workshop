@@ -975,23 +975,6 @@ export async function getShapTop20Blacklist(): Promise<ShapTop20Entry[]> {
   return shapTop20BlacklistCache;
 }
 
-let shapTop10FPCache: ShapTop20Entry[] | null = null;
-let shapTop10FNCache: ShapTop20Entry[] | null = null;
-
-export async function getShapTop10FP(): Promise<ShapTop20Entry[]> {
-  if (shapTop10FPCache) return shapTop10FPCache;
-  const text = await fetchCsv('/output/shap_top10_fp.csv');
-  shapTop10FPCache = parseShapTop20(text);
-  return shapTop10FPCache;
-}
-
-export async function getShapTop10FN(): Promise<ShapTop20Entry[]> {
-  if (shapTop10FNCache) return shapTop10FNCache;
-  const text = await fetchCsv('/output/shap_top10_fn.csv');
-  shapTop10FNCache = parseShapTop20(text);
-  return shapTop10FNCache;
-}
-
 export interface FeatureImportanceEntry {
   feature_name: string;       // 英文欄位名
   label: string;              // 中文名稱
