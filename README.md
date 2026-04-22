@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <a href="https://timwei0801.github.io/Bio_AWS_Workshop/"><img src="https://img.shields.io/badge/Live_Demo-GitHub_Pages-blue?logo=github" alt="Live Demo"></a>
+  <a href="https://ws97109.github.io/Bio_AWS_Workshop/"><img src="https://img.shields.io/badge/Live_Demo-GitHub_Pages-blue?logo=github" alt="Live Demo"></a>
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
   <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/Python-3.9+-blue.svg?logo=python" alt="Python"></a>
   <a href="https://xgboost.ai/"><img src="https://img.shields.io/badge/Stacking-XGB%2FLGB%2FCat-orange.svg" alt="Stacking Ensemble"></a>
@@ -445,11 +445,11 @@ This project is licensed under the MIT License - see [LICENSE](LICENSE) for deta
 ---
 
 <p align="center">
-  <a href="https://github.com/timwei0801/Bio_AWS_Workshop">
-    <img src="https://img.shields.io/github/stars/timwei0801/Bio_AWS_Workshop.svg?style=social" alt="GitHub Stars">
+  <a href="https://github.com/ws97109/Bio_AWS_Workshop">
+    <img src="https://img.shields.io/github/stars/ws97109/Bio_AWS_Workshop.svg?style=social" alt="GitHub Stars">
   </a>
-  <a href="https://github.com/timwei0801/Bio_AWS_Workshop/fork">
-    <img src="https://img.shields.io/github/forks/timwei0801/Bio_AWS_Workshop.svg?style=social" alt="GitHub Forks">
+  <a href="https://github.com/ws97109/Bio_AWS_Workshop/fork">
+    <img src="https://img.shields.io/github/forks/ws97109/Bio_AWS_Workshop.svg?style=social" alt="GitHub Forks">
   </a>
 </p>
 
