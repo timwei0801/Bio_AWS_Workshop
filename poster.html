@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>生成式 AI 融入課程教學成果展 — 高速公路智慧交通衝擊波預警系統</title>
+
+<!-- 霞鶩文楷 TC：手寫書法圓潤感的中文內文字體 -->
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-tc-webfont@1.7.0/style.css" rel="stylesheet">
+<!-- 備援：Noto Serif TC 作為襯線標題 fallback -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   A1 橫式海報 (841 × 594 mm)  ──  雜誌風 / 馬卡龍配色 / 雙字體
+   列印：Chrome → ⌘P → A1 橫向 → 邊界「無」→ 勾「背景圖形」→ 儲存 PDF
+   ============================================================ */
+@page { size: 841mm 594mm; margin: 0; }
+
+:root {
+  /* ── 紙感底色與墨色 ───────────────────────── */
+  --bg:        #fdfaf7;   /* 奶白紙感 */
+  --bg-soft:   #f7f1ec;   /* 區塊淡底 */
+  --bg-card:   #ffffff;   /* 卡片底 */
+  --ink:       #2e2a26;   /* 主文(近黑但暖) */
+  --ink-soft:  #5c554d;   /* 內文 */
+  --ink-dim:   #948b80;   /* 次要/說明 */
+  --line:      #e5dcd1;   /* 分隔線 */
+
+  /* ── 馬卡龍點綴五色 ───────────────────────── */
+  --pink:      #e89bb4;   --pink-d:  #cf6f8e;
+  --mint:      #7fc9af;   --mint-d:  #4fa888;
+  --gold:      #e6bd6a;   --gold-d:  #c79a3e;
+  --lilac:     #b69bd6;   --lilac-d: #9072b8;
+  --sky:       #8fc4e3;   --sky-d:   #5b9bc4;
+
+  /* ── 字體變數 ─────────────────────────────── */
+  --serif: "Iowan Old Style", "Apple Garamond", "Garamond",
+           "Noto Serif TC", "Songti TC", "PingFang TC", serif;
+  --body:  "LXGW WenKai TC", "霞鶩文楷 TC",
+           "Iowan Old Style", "PingFang TC",
+           "Noto Sans TC", sans-serif;
+  --mono:  "SF Mono", "Menlo", "Consolas", monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 841mm;
+  height: 594mm;
+  font-family: var(--body);
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  font-feature-settings: "palt";
+}
+
+/* ============ 海報容器 ============ */
+.poster {
+  width: 841mm;
+  height: 594mm;
+  padding: 10mm 14mm;
+  display: grid;
+  grid-template-rows: 48mm 1fr 60mm;
+  grid-template-columns: 1fr;
+  gap: 6mm;
+  background:
+    radial-gradient(circle at 0% 0%,   rgba(232,155,180,0.10), transparent 30%),
+    radial-gradient(circle at 100% 0%, rgba(143,196,227,0.10), transparent 30%),
+    radial-gradient(circle at 50% 100%, rgba(230,189,106,0.08), transparent 35%),
+    var(--bg);
+}
+
+/* ============ 頂部標頭 ============ */
+.header {
+  display: grid;
+  grid-template-columns: 250mm 1fr 210mm;
+  align-items: center;
+  gap: 8mm;
+  border-bottom: 1mm solid var(--ink);
+  padding-bottom: 5mm;
+  position: relative;
+}
+.header::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2.4mm;
+  height: 0.3mm;
+  background: var(--ink);
+}
+
+.school-block {
+  display: flex;
+  align-items: center;
+  gap: 5mm;
+}
+.school-logos {
+  display: flex;
+  align-items: center;
+  gap: 3mm;
+  flex-shrink: 0;
+}
+.school-logo {
+  width: 32mm; height: 32mm;
+  border-radius: 50%;
+  background: white;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.school-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: transparent;
+}
+.school-logo.dept { width: 28mm; height: 28mm; }
+.school-text { white-space: nowrap; }
+.school-text {
+  font-family: var(--body);
+  font-size: 10pt;
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+.school-text strong {
+  font-family: var(--serif);
+  color: var(--ink);
+  font-size: 12pt;
+  font-weight: 700;
+  letter-spacing: 0.3mm;
+}
+
+.title-block { text-align: center; }
+.event-tag {
+  display: inline-block;
+  background: var(--ink);
+  color: var(--bg);
+  padding: 1.2mm 6mm;
+  border-radius: 0.8mm;
+  font-family: var(--body);
+  font-size: 10.5pt;
+  font-weight: 700;
+  letter-spacing: 1.2mm;
+  margin-bottom: 3mm;
+}
+.poster-title {
+  font-family: var(--serif);
+  font-size: 32pt;
+  font-weight: 900;
+  color: var(--ink);
+  line-height: 1.15;
+  letter-spacing: 0.2mm;
+}
+.poster-subtitle {
+  font-family: var(--body);
+  font-size: 12.5pt;
+  color: var(--ink-soft);
+  margin-top: 2.5mm;
+  font-weight: 400;
+  letter-spacing: 0.5mm;
+}
+
+.authors-block {
+  text-align: right;
+  font-family: var(--body);
+  font-size: 10pt;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+.authors-block .label {
+  font-family: var(--serif);
+  color: var(--ink-dim);
+  font-size: 8.5pt;
+  font-weight: 700;
+  letter-spacing: 1mm;
+  text-transform: uppercase;
+}
+.authors-block .authors {
+  font-family: var(--serif);
+  font-size: 13pt;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 1mm 0;
+  letter-spacing: 0.3mm;
+}
+.authors-block .dept { font-size: 9.5pt; color: var(--ink-soft); }
+.badges {
+  margin-top: 3mm;
+  display: flex;
+  gap: 2mm;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+.badge {
+  font-family: var(--body);
+  font-size: 8.5pt;
+  padding: 1mm 3mm;
+  border-radius: 6mm;
+  font-weight: 700;
+  border: 0.3mm solid;
+}
+.badge.gold  { color: var(--gold-d);  border-color: var(--gold);  background: #fdf6e3; }
+.badge.sky   { color: var(--sky-d);   border-color: var(--sky);   background: #eaf4fa; }
+.badge.mint  { color: var(--mint-d);  border-color: var(--mint);  background: #e8f5ee; }
+
+/* ============ 主內容三欄 ============ */
+.main {
+  display: grid;
+  grid-template-columns: 168mm 290mm 1fr;
+  gap: 6mm;
+  min-height: 0;
+}
+
+.column {
+  display: grid;
+  gap: 4mm;
+  min-height: 0;
+}
+
+/* 左欄：研究背景卡(含架構圖)較大、挑戰卡縮小、AI 工具卡放得下 Claude logo */
+.column.left  { grid-template-rows: 1.6fr 0.8fr 1.05fr; }
+/* 右欄：架構與效能表自然，截圖卡吃剩餘空間（截圖大才看得清） */
+.column.right { grid-template-rows: auto auto 1fr; }
+/* 左欄卡：內容貼頂，stats / list 等視覺重點貼底 */
+.column.left .card { justify-content: flex-start; }
+.column.left .card .stats-row { margin-top: auto; }
+
+.card {
+  background: var(--bg-card);
+  border: 0.3mm solid var(--line);
+  border-radius: 2mm;
+  padding: 4mm 5mm;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.card > *:last-child { margin-bottom: 0; }
+.card.tint-pink   { background: linear-gradient(180deg, #fff 0%, #fdf2f6 100%); border-color: var(--pink); }
+.card.tint-mint   { background: linear-gradient(180deg, #fff 0%, #f0f9f4 100%); border-color: var(--mint); }
+.card.tint-gold   { background: linear-gradient(180deg, #fff 0%, #fbf5e6 100%); border-color: var(--gold); }
+.card.tint-lilac  { background: linear-gradient(180deg, #fff 0%, #f5f0fa 100%); border-color: var(--lilac); }
+.card.tint-sky    { background: linear-gradient(180deg, #fff 0%, #eef6fb 100%); border-color: var(--sky); }
+
+.card-title {
+  font-family: var(--serif);
+  font-size: 14pt;
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 3mm;
+  display: flex;
+  align-items: center;
+  gap: 2.5mm;
+  letter-spacing: 0.3mm;
+  padding-bottom: 2mm;
+  border-bottom: 0.3mm dashed var(--line);
+}
+.card-title .dot {
+  display: inline-block;
+  width: 3.5mm; height: 3.5mm;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.dot.pink  { background: var(--pink); }
+.dot.mint  { background: var(--mint); }
+.dot.gold  { background: var(--gold); }
+.dot.lilac { background: var(--lilac); }
+.dot.sky   { background: var(--sky); }
+
+.card p, .card li {
+  font-family: var(--body);
+  font-size: 9.5pt;
+  line-height: 1.7;
+  color: var(--ink-soft);
+}
+.card ul { padding-left: 4mm; list-style: none; }
+.card li {
+  margin-bottom: 1.8mm;
+  padding-left: 4mm;
+  position: relative;
+}
+/* 左欄挑戰卡的 list 用更寬鬆行距填滿空間 */
+.column.left .card.tint-gold li {
+  margin-bottom: 1.5mm;
+  padding: 2mm 0 2mm 4mm;
+  border-bottom: 0.2mm dashed var(--line);
+}
+.column.left .card.tint-gold li:last-child { border-bottom: none; }
+.card li::before {
+  content: "·";
+  position: absolute;
+  left: 0;
+  color: var(--pink-d);
+  font-weight: 900;
+  font-size: 14pt;
+  line-height: 1;
+  top: 0.5mm;
+}
+.card li strong { color: var(--ink); font-weight: 700; }
+.card p strong { color: var(--ink); font-weight: 700; }
+
+/* ============ 左欄：背景數字 ============ */
+.stats-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2.5mm;
+  margin-top: 2.5mm;
+}
+.stat-box {
+  text-align: center;
+  background: var(--bg-soft);
+  border-radius: 1.5mm;
+  padding: 2.5mm 1mm;
+}
+.stat-num {
+  font-family: var(--serif);
+  font-size: 18pt;
+  font-weight: 900;
+  color: var(--pink-d);
+  line-height: 1;
+}
+.stat-lbl {
+  font-family: var(--body);
+  font-size: 8pt;
+  color: var(--ink-dim);
+  margin-top: 1.2mm;
+  font-weight: 600;
+  letter-spacing: 0.3mm;
+}
+
+.tools-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2mm;
+  margin-top: 2mm;
+}
+.tool-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 1mm;
+  font-family: var(--body);
+  font-size: 8.5pt;
+  padding: 1mm 3mm;
+  background: var(--bg-soft);
+  border: 0.3mm solid var(--line);
+  border-radius: 5mm;
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+.tool-chip.primary {
+  background: var(--lilac);
+  color: white;
+  border-color: var(--lilac-d);
+}
+
+/* ============ 中欄：AI 工作流（主角） ============ */
+.column.center {
+  grid-template-rows: 0.5fr;
+}
+.workflow-card {
+  background: var(--bg-card);
+  border: 0.3mm solid var(--line);
+  border-radius: 2mm;
+  padding: 4mm 5mm;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.workflow-intro {
+  background: var(--ink);
+  color: var(--bg);
+  padding: 4mm 5mm;
+  border-radius: 1.5mm;
+  margin-bottom: 4mm;
+  font-family: var(--body);
+  font-size: 10pt;
+  line-height: 1.75;
+  letter-spacing: 0.2mm;
+}
+.workflow-intro strong {
+  font-family: var(--serif);
+  color: var(--gold);
+  font-weight: 800;
+}
+
+.workflow-steps {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-rows: 1fr;
+  gap: 3.5mm;
+  flex: 1;
+  min-height: 0;
+}
+
+.step {
+  background: var(--bg-soft);
+  border-radius: 1.5mm;
+  padding: 2.5mm 3.5mm;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  min-height: 0;
+}
+.step::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 1.2mm;
+}
+.step.s1::before { background: var(--pink); }
+.step.s2::before { background: var(--sky); }
+.step.s3::before { background: var(--mint); }
+.step.s4::before { background: var(--lilac); }
+.step.s5::before { background: var(--gold); }
+.step.s6::before { background: var(--pink-d); }
+
+.step-header {
+  display: flex;
+  align-items: center;
+  gap: 2.5mm;
+  margin-bottom: 1.8mm;
+}
+.step-num {
+  font-family: var(--serif);
+  font-size: 15pt;
+  font-weight: 900;
+  line-height: 1;
+  flex-shrink: 0;
+  width: 8mm;
+}
+.s1 .step-num { color: var(--pink-d); }
+.s2 .step-num { color: var(--sky-d); }
+.s3 .step-num { color: var(--mint-d); }
+.s4 .step-num { color: var(--lilac-d); }
+.s5 .step-num { color: var(--gold-d); }
+.s6 .step-num { color: var(--pink-d); }
+
+.step-title {
+  font-family: var(--serif);
+  font-size: 12pt;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: 0.3mm;
+}
+.step-desc {
+  font-family: var(--body);
+  font-size: 9.5pt;
+  line-height: 1.85;
+  color: var(--ink-soft);
+  margin-bottom: 2mm;
+}
+.step-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2mm;
+  margin-top: auto;
+  padding-top: 2mm;
+}
+.tag {
+  font-family: var(--body);
+  font-size: 7.5pt;
+  padding: 0.6mm 2mm;
+  border-radius: 0.8mm;
+  font-weight: 700;
+  letter-spacing: 0.2mm;
+}
+.tag.human  { background: #fbf5e6; color: var(--gold-d); }
+.tag.ai     { background: #eef6fb; color: var(--sky-d); }
+.tag.output { background: #e8f5ee; color: var(--mint-d); }
+
+/* ============ 右欄 ============ */
+.metric-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--body);
+  font-size: 8.5pt;
+  margin-top: 1mm;
+}
+.metric-table th, .metric-table td {
+  padding: 1.4mm 1.5mm;
+  text-align: center;
+  border-bottom: 0.2mm solid var(--line);
+  color: var(--ink-soft);
+}
+.metric-table th {
+  font-family: var(--serif);
+  background: var(--ink);
+  color: var(--bg);
+  font-weight: 700;
+  font-size: 8.5pt;
+  letter-spacing: 0.3mm;
+}
+.metric-table tr.highlight td {
+  background: #fdf2f6;
+  font-weight: 800;
+  color: var(--pink-d);
+}
+.metric-table tr.highlight td:first-child {
+  text-align: left;
+  font-family: var(--serif);
+}
+
+.screenshot-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3mm;
+  margin-top: 1mm;
+  flex: 1;
+  min-height: 0;
+}
+.screenshot {
+  background: var(--bg-soft);
+  border-radius: 1.5mm;
+  overflow: hidden;
+  border: 0.3mm solid var(--line);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.screenshot img {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  object-fit: cover;
+  display: block;
+}
+.screenshot .caption {
+  padding: 1.2mm 2.5mm;
+  font-family: var(--body);
+  font-size: 7.5pt;
+  color: var(--ink-soft);
+  font-weight: 600;
+  background: white;
+  border-top: 0.2mm solid var(--line);
+  letter-spacing: 0.2mm;
+}
+
+.arch-img {
+  width: 100%;
+  height: 44mm;
+  object-fit: contain;
+  margin: 1mm 0;
+  border-radius: 1mm;
+  background: var(--bg-soft);
+}
+
+/* ============ 底部：成效 ============ */
+.footer {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 56mm;
+  gap: 5mm;
+  background: var(--ink);
+  color: var(--bg);
+  padding: 6mm 8mm;
+  border-radius: 2mm;
+  position: relative;
+}
+.footer::before {
+  content: "學 習 成 效  ×  就 業 競 爭 力";
+  position: absolute;
+  top: -3.5mm; left: 8mm;
+  background: var(--gold);
+  color: var(--ink);
+  padding: 1mm 4mm;
+  border-radius: 0.8mm;
+  font-family: var(--serif);
+  font-size: 10pt;
+  font-weight: 800;
+  letter-spacing: 0.5mm;
+}
+
+.outcome {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5mm;
+}
+.outcome-num {
+  font-family: var(--serif);
+  font-size: 22pt;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 1mm;
+}
+.outcome.o1 .outcome-num { color: var(--pink); }
+.outcome.o2 .outcome-num { color: var(--mint); }
+.outcome.o3 .outcome-num { color: var(--sky); }
+.outcome.o4 .outcome-num { color: var(--gold); }
+
+.outcome-title {
+  font-family: var(--serif);
+  font-size: 12.5pt;
+  font-weight: 800;
+  color: var(--bg);
+  letter-spacing: 0.5mm;
+  margin-bottom: 1mm;
+  border-bottom: 0.2mm solid rgba(253,250,247,0.2);
+  padding-bottom: 1.5mm;
+}
+.outcome-list {
+  list-style: none;
+  font-family: var(--body);
+  font-size: 8.5pt;
+  line-height: 1.65;
+}
+.outcome-list li {
+  padding-left: 3.5mm;
+  position: relative;
+  margin-bottom: 0.8mm;
+  color: rgba(253,250,247,0.85);
+}
+.outcome-list li::before {
+  content: "—";
+  position: absolute; left: 0;
+  color: var(--gold);
+  font-weight: 700;
+}
+.outcome-list li strong { color: var(--bg); font-weight: 700; }
+
+.qr-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  border-radius: 1.5mm;
+  padding: 3mm;
+}
+.qr-placeholder {
+  width: 36mm; height: 36mm;
+  background:
+    repeating-linear-gradient(0deg,  var(--ink) 0 0.8mm, transparent 0.8mm 1.6mm),
+    repeating-linear-gradient(90deg, var(--ink) 0 0.8mm, transparent 0.8mm 1.6mm);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono);
+  font-size: 7pt;
+  color: var(--ink);
+  font-weight: 700;
+}
+.qr-label {
+  font-family: var(--serif);
+  font-size: 9pt;
+  color: var(--ink);
+  margin-top: 2mm;
+  font-weight: 700;
+  letter-spacing: 0.5mm;
+}
+
+img { background: transparent; color: transparent; }
+
+/* 研究背景卡內的研究架構圖 */
+.bg-figure {
+  width: 100%;
+  height: auto;
+  margin: 3mm 0;
+  border-radius: 1.5mm;
+  background: white;
+  border: 0.2mm solid var(--line);
+  display: block;
+}
+
+/* AI 工具卡底部的 Claude 品牌標記 */
+.brand-mark {
+  margin-top: auto;
+  padding-top: 4mm;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5mm;
+  border-top: 0.3mm dashed var(--line);
+}
+.brand-logo {
+  height: 9mm;
+  width: auto;
+  object-fit: contain;
+}
+.brand-caption {
+  font-family: var(--serif);
+  font-size: 8pt;
+  color: var(--ink-dim);
+  letter-spacing: 0.5mm;
+  font-style: italic;
+}
+</style>
+</head>
+<body>
+<div class="poster">
+
+  <!-- ===================== 標頭 ===================== -->
+  <header class="header">
+    <div class="school-block">
+      <div class="school-logos">
+        <div class="school-logo"><img src="assets/淡江校徽.png" alt="淡江大學"></div>
+        <div class="school-logo dept"><img src="assets/淡江統計系徽.png" alt="統計與資料科學學系"></div>
+      </div>
+      <div class="school-text">
+        <strong>淡江大學</strong><br>
+        統計與資料科學學系<br>
+        指導老師：李百靈教授 · 高君豪教授 · 陳俊穎教授
+      </div>
+    </div>
+
+    <div class="title-block">
+      <span class="event-tag">生成式 AI 融入課程教學成果展</span>
+      <div class="poster-title">高速公路智慧交通衝擊波預警決策支援系統</div>
+      <div class="poster-subtitle">融合深度學習、物理理論與生成式 AI 的跨領域研究實踐</div>
+    </div>
+
+    <div class="authors-block">
+      <div class="label">Student  Authors</div>
+      <div class="authors">[ 魏祺紘 ] · [ 李昇峰 ] · [ 施宇鴻 ]· [ 盧品蓉 ]</div>
+      <div class="dept">[ 統計與資料科學學系碩士班 ]</div>
+      <div class="badges">
+        <span class="badge gold">全國亞軍</span>
+        <span class="badge sky">2025 運輸學會發表</span>
+        <span class="badge mint">系統已上線</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== 主內容三欄 ===================== -->
+  <main class="main">
+
+    <!-- ----------- 左欄 ----------- -->
+    <section class="column left">
+
+      <div class="card tint-pink">
+        <div class="card-title"><span class="dot pink"></span>研究背景</div>
+        <p>
+          台灣高速公路日承載超過 <strong>300 萬車次</strong>，現行被動式管理在突發事件下缺乏精確的壅塞傳播預測能力。
+        </p>
+        <p style="margin-top: 2.5mm;">
+          本團隊發現<strong>交通壅塞傳播與地震震波具有高度相似性</strong> ── 兩者皆為「波動傳播」現象，因此提出結合
+          <strong>物理理論 (LWR / Rankine-Hugoniot)</strong> 與 <strong>深度學習 (圖神經網路)</strong> 的混合預測系統，
+          能在事件發生後 5 秒內發出衝擊波警報。
+        </p>
+        <img src="assets/圖1.png" alt="研究架構示意圖" class="bg-figure">
+        <div class="stats-row">
+          <div class="stat-box">
+            <div class="stat-num">62</div>
+            <div class="stat-lbl">ETC 偵測點</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">10–60</div>
+            <div class="stat-lbl">分鐘提前預測</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">91%</div>
+            <div class="stat-lbl">R² 準確度</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card tint-gold">
+        <div class="card-title"><span class="dot gold"></span>學生面臨的挑戰</div>
+        <p style="margin-bottom: 2.5mm;">
+          作為研究生團隊，我們同時面對 <strong>5 大難題</strong>，任何一項都足以拖延數個月：
+        </p>
+        <ul>
+          <li><strong>跨領域整合</strong>：交通工程 × 深度學習 × 物理理論</li>
+          <li><strong>陌生技術棧</strong>：圖神經網路、Next.js、FastAPI、RAG</li>
+          <li><strong>論文重現</strong>：理解並重現英文 SCI 期刊論文 (MT-STNet)</li>
+          <li><strong>真實資料</strong>：清理 TDX / TISC 大規模時序資料含缺失與雜訊</li>
+          <li><strong>從研究到產品</strong>：交付對外可訪問的網頁系統而非實驗室原型</li>
+        </ul>
+      </div>
+
+      <div class="card tint-lilac">
+        <div class="card-title"><span class="dot lilac"></span>使用的生成式 AI 工具</div>
+        <div class="tools-row">
+          <span class="tool-chip primary">★ Claude Code</span>
+          <span class="tool-chip">Claude Web</span>
+          <span class="tool-chip">ChatGPT</span>
+          <span class="tool-chip">Cursor</span>
+          <span class="tool-chip">NotebookLM</span>
+        </div>
+        <p style="margin-top: 3mm;">
+          以 <strong>Claude Code</strong> 作為核心協作 IDE，貫穿從文獻探索、模型重現、資料處理、全端開發
+          到論文與本海報撰寫的完整研究生命週期。
+        </p>
+        <ul style="margin-top: 3mm;">
+          <li><strong>Claude Code</strong>：主力 IDE，負責程式碼生成、重構、除錯與部署</li>
+          <li><strong>Claude Web</strong>：論文摘要、跨領域知識補強、長文件分析</li>
+          <li><strong>ChatGPT</strong>：英文論文潤飾、快速腦力激盪</li>
+          <li><strong>Cursor</strong>：IDE 內即時程式碼補全</li>
+          <li><strong>NotebookLM</strong>：多篇論文的知識整合與問答</li>
+        </ul>
+        <div class="brand-mark">
+          <img src="assets/claudebigicon.png" alt="Claude" class="brand-logo">
+          <span class="brand-caption">本研究核心協作工具 · by Anthropic</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ----------- 中欄：AI 工作流（主角） ----------- -->
+    <section class="column center">
+      <div class="workflow-card">
+        <div class="card-title">
+          <span class="dot pink"></span>
+          生成式 AI 協作工作流 ── 從零到上線的 6 階段
+        </div>
+
+        <div class="workflow-intro">
+          <strong>核心理念 ——</strong> AI 不是「代寫工具」，而是<strong>研究夥伴</strong>。
+          學生負責「提問、判斷、驗證」；AI 負責「探索、提案、加速產出」。
+          每個階段都明確區分人類與 AI 的角色，學會<strong>批判性協作</strong>。
+        </div>
+
+        <div class="workflow-steps">
+
+          <div class="step s1">
+            <div class="step-header">
+              <div class="step-num">01</div>
+              <div class="step-title">文獻探索與研究設計</div>
+            </div>
+            <div class="step-desc">
+              將 20+ 篇 SCI 論文丟給 Claude 進行摘要、比較、找研究缺口，並提出可行的方法論假設。
+              學生負責閱讀關鍵段落、判斷可信度、決定研究方向。
+            </div>
+            <div class="step-tags">
+              <span class="tag human">人 · 提問篩選</span>
+              <span class="tag ai">AI · 摘要對比</span>
+              <span class="tag output">產 · 研究方向</span>
+            </div>
+          </div>
+
+          <div class="step s2">
+            <div class="step-header">
+              <div class="step-num">02</div>
+              <div class="step-title">GitHub 程式碼理解</div>
+            </div>
+            <div class="step-desc">
+              用 Claude Code 直接「閱讀」原作者 MT-STNet 的 PyTorch 倉庫，逐檔追蹤資料流、
+              模型結構與訓練流程，產出中文化技術筆記。
+            </div>
+            <div class="step-tags">
+              <span class="tag human">人 · 驗證邏輯</span>
+              <span class="tag ai">AI · 程式導讀</span>
+              <span class="tag output">產 · 技術筆記</span>
+            </div>
+          </div>
+
+          <div class="step s3">
+            <div class="step-header">
+              <div class="step-num">03</div>
+              <div class="step-title">資料整理與清洗</div>
+            </div>
+            <div class="step-desc">
+              TDX/TISC 原始資料含缺失與雜訊。讓 Claude 產出 Pandas 清洗腳本、PCU 標準化公式，
+              並協助建立 62×62 鄰接矩陣與圖結構嵌入。
+            </div>
+            <div class="step-tags">
+              <span class="tag human">人 · 制定規則</span>
+              <span class="tag ai">AI · 腳本生成</span>
+              <span class="tag output">產 · 乾淨資料集</span>
+            </div>
+          </div>
+
+          <div class="step s4">
+            <div class="step-header">
+              <div class="step-num">04</div>
+              <div class="step-title">模型建構與微調</div>
+            </div>
+            <div class="step-desc">
+              在原 MT-STNet 基礎上，與 AI 共同設計改良版 <strong>MT-SWNet</strong>，
+              加入 ST-Physical Block、衝擊波物理約束，調整超參數並做 ablation。
+            </div>
+            <div class="step-tags">
+              <span class="tag human">人 · 設計決策</span>
+              <span class="tag ai">AI · 程式實作</span>
+              <span class="tag output">產 · SOTA 模型</span>
+            </div>
+          </div>
+
+          <div class="step s5">
+            <div class="step-header">
+              <div class="step-num">05</div>
+              <div class="step-title">全端網頁開發</div>
+            </div>
+            <div class="step-desc">
+              用 Claude Code 從零搭建 <strong>Next.js + FastAPI</strong> 全端架構，整合
+              MT-SWNet 推論、衝擊波偵測、RAG AI 助理，部署到 Vercel + Railway。
+            </div>
+            <div class="step-tags">
+              <span class="tag human">人 · 規格定義</span>
+              <span class="tag ai">AI · 程式部署</span>
+              <span class="tag output">產 · 上線網站</span>
+            </div>
+          </div>
+
+          <div class="step s6">
+            <div class="step-header">
+              <div class="step-num">06</div>
+              <div class="step-title">論文 / 簡報 / 海報</div>
+            </div>
+            <div class="step-desc">
+              SCI 期刊論文初稿、競賽簡報、學會發表稿、本份海報 — 皆透過 AI 協助結構規劃、
+              語言潤飾與圖表生成，學生負責內容真實性與專業判斷。
+            </div>
+            <div class="step-tags">
+              <span class="tag human">人 · 內容把關</span>
+              <span class="tag ai">AI · 結構潤飾</span>
+              <span class="tag output">產 · 投稿演講</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ----------- 右欄 ----------- -->
+    <section class="column right">
+
+      <div class="card tint-sky">
+        <div class="card-title"><span class="dot sky"></span>MT-SWNet 模型架構</div>
+        <img src="../images/mt-swnet-architecture.png" alt="MT-SWNet 架構" class="arch-img">
+        <p style="font-size: 8.2pt; color: var(--ink-dim); text-align: center; margin-top: 1mm;">
+          編碼器：雙層 ST-Physical Block　·　解碼器：Masked ST-Physical Block　·　多任務輸出
+        </p>
+      </div>
+
+      <div class="card tint-pink">
+        <div class="card-title"><span class="dot pink"></span>模型效能 vs 六大基準</div>
+        <table class="metric-table">
+          <thead>
+            <tr>
+              <th>模型</th><th>MAE</th><th>RMSE</th><th>MAPE%</th><th>R²</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="highlight">
+              <td>MT-SWNet (本研究)</td>
+              <td>12.3</td><td>18.7</td><td>8.5</td><td>0.912</td>
+            </tr>
+            <tr><td>Graph-WaveNet</td><td>13.2</td><td>19.8</td><td>8.9</td><td>0.903</td></tr>
+            <tr><td>AGCRN</td><td>13.8</td><td>21.2</td><td>9.3</td><td>0.895</td></tr>
+            <tr><td>DCRNN</td><td>14.5</td><td>22.1</td><td>9.8</td><td>0.887</td></tr>
+            <tr><td>LSTM</td><td>18.9</td><td>28.7</td><td>13.5</td><td>0.798</td></tr>
+            <tr><td>ARIMA</td><td>21.3</td><td>32.1</td><td>15.7</td><td>0.721</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card tint-mint">
+        <div class="card-title"><span class="dot mint"></span>線上系統實際畫面</div>
+        <div class="screenshot-grid">
+          <div class="screenshot">
+            <img src="../images/driver-dashboard.png" alt="駕駛者儀表板">
+            <div class="caption">駕駛者　·　即時衝擊波雷達</div>
+          </div>
+          <div class="screenshot">
+            <img src="../images/admin-dashboard.png" alt="管理者控制中心">
+            <div class="caption">管理者　·　MT-SWNet + RAG</div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ===================== 底部：學習成效 ===================== -->
+  <footer class="footer">
+
+    <div class="outcome o1">
+      <div class="outcome-num">01</div>
+      <div class="outcome-title">具體成果</div>
+      <ul class="outcome-list">
+        <li><strong>全國國道智慧交通管理創意競賽亞軍</strong>（冠軍從缺）</li>
+        <li><strong>2025 中華民國運輸學會</strong>受邀發表</li>
+        <li>SCI 期刊論文（MT-SWNet）審稿中</li>
+        <li>系統部署 Vercel + Railway 對外可訪問</li>
+        <li>GitHub 開源，含完整中英文 README</li>
+      </ul>
+    </div>
+
+    <div class="outcome o2">
+      <div class="outcome-num">02</div>
+      <div class="outcome-title">技術能力提升</div>
+      <ul class="outcome-list">
+        <li>深度學習：<strong>GNN / Attention / 多任務學習</strong></li>
+        <li>全端開發：Next.js · React · FastAPI</li>
+        <li>系統部署：Vercel · Railway · Docker</li>
+        <li>RAG / LLM 應用整合（Ollama）</li>
+        <li>SCI 論文撰寫與國際投稿流程</li>
+      </ul>
+    </div>
+
+    <div class="outcome o3">
+      <div class="outcome-num">03</div>
+      <div class="outcome-title">AI 協作能力</div>
+      <ul class="outcome-list">
+        <li>掌握<strong>結構化 Prompt 設計</strong>與多輪迭代</li>
+        <li>建立可重複的「人類 ↔ AI」分工流程</li>
+        <li>批判性檢視 AI 產出，防止 hallucination</li>
+        <li>用 AI 加速陌生領域的學習曲線</li>
+        <li>將 AI 整合進個人研究 SOP</li>
+      </ul>
+    </div>
+
+    <div class="outcome o4">
+      <div class="outcome-num">04</div>
+      <div class="outcome-title">研究效率倍增</div>
+      <ul class="outcome-list">
+        <li>論文重現：3 個月 → <strong>3 週</strong></li>
+        <li>全端網頁：2 個月 → <strong>2 週 MVP</strong></li>
+        <li>論文撰寫：英文潤飾效率 <strong>×3</strong></li>
+        <li>陌生技術上手時間 ↓ <strong>70%</strong></li>
+        <li>累積可帶入職場的真實作品集</li>
+      </ul>
+    </div>
+
+    <div class="qr-block">
+      <div class="qr-placeholder">[ QR ]</div>
+      <div class="qr-label">線上 Demo</div>
+    </div>
+
+  </footer>
+
+</div>
+</body>
+</html>
