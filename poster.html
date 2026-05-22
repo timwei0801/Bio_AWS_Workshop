@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
-<title>生成式 AI 融入課程教學成果展 — 高速公路智慧交通衝擊波預警系統</title>
+<title>生成式 AI 融入課程教學成果展 — BitoGuard 面向加密貨幣交易所的 AI 黑名單檢測系統</title>
 
 <!-- 霞鶩文楷 TC：手寫書法圓潤感的中文內文字體 -->
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
@@ -64,7 +64,7 @@ html, body {
   height: 594mm;
   padding: 10mm 14mm;
   display: grid;
-  grid-template-rows: 48mm 1fr 60mm;
+  grid-template-rows: 48mm 1fr 68mm;
   grid-template-columns: 1fr;
   gap: 6mm;
   background:
@@ -121,14 +121,14 @@ html, body {
 .school-text { white-space: nowrap; }
 .school-text {
   font-family: var(--body);
-  font-size: 10pt;
+  font-size: 15pt;
   color: var(--ink-soft);
   line-height: 1.55;
 }
 .school-text strong {
   font-family: var(--serif);
   color: var(--ink);
-  font-size: 12pt;
+  font-size: 22pt;
   font-weight: 700;
   letter-spacing: 0.3mm;
 }
@@ -206,13 +206,23 @@ html, body {
 .badge.sky   { color: var(--sky-d);   border-color: var(--sky);   background: #eaf4fa; }
 .badge.mint  { color: var(--mint-d);  border-color: var(--mint);  background: #e8f5ee; }
 
-/* ============ 主內容三欄 ============ */
+/* ============ 主內容：左欄 + 中右上 + 中右下橫向截圖 ============ */
+/* 每張卡的高度由自己的 class 控制；列高由內容驅動，不互相連動 */
 .main {
   display: grid;
   grid-template-columns: 168mm 290mm 1fr;
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    "left center right"
+    "left screenshot screenshot";
   gap: 6mm;
   min-height: 0;
 }
+
+.column.left  { grid-area: left; }
+.column.center { grid-area: center; }
+.column.right  { grid-area: right; }
+.screenshot-wide { grid-area: screenshot; }
 
 .column {
   display: grid;
@@ -222,8 +232,19 @@ html, body {
 
 /* 左欄：研究背景卡(含架構圖)較大、挑戰卡縮小、AI 工具卡放得下 Claude logo */
 .column.left  { grid-template-rows: 1.6fr 0.8fr 1.05fr; }
-/* 右欄：架構與效能表自然，截圖卡吃剩餘空間（截圖大才看得清） */
-.column.right { grid-template-rows: auto auto 1fr; }
+/* 右欄改為 flex column：每張卡用各自的 class 設定高度，互不連動 */
+.column.right {
+  display: flex;
+  flex-direction: column;
+  gap: 4mm;
+  align-self: start;
+}
+
+/* ============ 個別卡片高度（要改高度就改這四個值即可，互不影響） ============ */
+.workflow-card   { height: 310mm; }                  /* 中欄：生成式 AI 工作流 */
+.arch-card       { height: 210mm; flex-shrink: 0; }  /* 右欄上：Stacking 模型架構 */
+.metric-card     { height: 95mm;  flex-shrink: 0; }  /* 右欄下：模型效能 vs 基準 */
+.screenshot-wide { height: 128mm; align-self: end; }   /* 底部：線上系統實際畫面（貼齊 footer 上緣） */
 /* 左欄卡：內容貼頂，stats / list 等視覺重點貼底 */
 .column.left .card { justify-content: flex-start; }
 .column.left .card .stats-row { margin-top: auto; }
@@ -271,7 +292,7 @@ html, body {
 
 .card p, .card li {
   font-family: var(--body);
-  font-size: 9.5pt;
+  font-size: 11pt;
   line-height: 1.7;
   color: var(--ink-soft);
 }
@@ -298,8 +319,8 @@ html, body {
   line-height: 1;
   top: 0.5mm;
 }
-.card li strong { color: var(--ink); font-weight: 700; }
-.card p strong { color: var(--ink); font-weight: 700; }
+.card li strong { color: var(--ink); font-weight: 700; font-size: 11.5pt; }
+.card p strong { color: var(--ink); font-weight: 700; font-size: 11.5pt; }
 
 /* ============ 左欄：背景數字 ============ */
 .stats-row {
@@ -316,14 +337,14 @@ html, body {
 }
 .stat-num {
   font-family: var(--serif);
-  font-size: 18pt;
+  font-size: 20pt;
   font-weight: 900;
   color: var(--pink-d);
   line-height: 1;
 }
 .stat-lbl {
   font-family: var(--body);
-  font-size: 8pt;
+  font-size: 9pt;
   color: var(--ink-dim);
   margin-top: 1.2mm;
   font-weight: 600;
@@ -341,7 +362,7 @@ html, body {
   align-items: center;
   gap: 1mm;
   font-family: var(--body);
-  font-size: 8.5pt;
+  font-size: 10pt;
   padding: 1mm 3mm;
   background: var(--bg-soft);
   border: 0.3mm solid var(--line);
@@ -356,14 +377,12 @@ html, body {
 }
 
 /* ============ 中欄：AI 工作流（主角） ============ */
-.column.center {
-  grid-template-rows: 0.5fr;
-}
+/* .column.center 不再需要固定 row（workflow-card 已用 height 控制） */
 .workflow-card {
   background: var(--bg-card);
   border: 0.3mm solid var(--line);
   border-radius: 2mm;
-  padding: 4mm 5mm;
+  padding: 3.5mm 4.5mm;
   display: flex;
   flex-direction: column;
   min-height: 0;
@@ -372,12 +391,12 @@ html, body {
 .workflow-intro {
   background: var(--ink);
   color: var(--bg);
-  padding: 4mm 5mm;
+  padding: 2.5mm 4mm;
   border-radius: 1.5mm;
-  margin-bottom: 4mm;
+  margin-bottom: 3mm;
   font-family: var(--body);
   font-size: 10pt;
-  line-height: 1.75;
+  line-height: 1.6;
   letter-spacing: 0.2mm;
 }
 .workflow-intro strong {
@@ -390,7 +409,7 @@ html, body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-auto-rows: 1fr;
-  gap: 3.5mm;
+  gap: 2.5mm;
   flex: 1;
   min-height: 0;
 }
@@ -398,7 +417,7 @@ html, body {
 .step {
   background: var(--bg-soft);
   border-radius: 1.5mm;
-  padding: 2.5mm 3.5mm;
+  padding: 2mm 3mm;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -422,15 +441,15 @@ html, body {
   display: flex;
   align-items: center;
   gap: 2.5mm;
-  margin-bottom: 1.8mm;
+  margin-bottom: 1.3mm;
 }
 .step-num {
   font-family: var(--serif);
-  font-size: 15pt;
+  font-size: 18pt;
   font-weight: 900;
   line-height: 1;
   flex-shrink: 0;
-  width: 8mm;
+  width: 7mm;
 }
 .s1 .step-num { color: var(--pink-d); }
 .s2 .step-num { color: var(--sky-d); }
@@ -448,17 +467,17 @@ html, body {
 }
 .step-desc {
   font-family: var(--body);
-  font-size: 9.5pt;
-  line-height: 1.85;
+  font-size: 11pt;
+  line-height: 1.65;
   color: var(--ink-soft);
-  margin-bottom: 2mm;
+  margin-bottom: 1.5mm;
 }
 .step-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 1.2mm;
   margin-top: auto;
-  padding-top: 2mm;
+  padding-top: 1.2mm;
 }
 .tag {
   font-family: var(--body);
@@ -477,11 +496,11 @@ html, body {
   width: 100%;
   border-collapse: collapse;
   font-family: var(--body);
-  font-size: 8.5pt;
+  font-size: 11pt;
   margin-top: 1mm;
 }
 .metric-table th, .metric-table td {
-  padding: 1.4mm 1.5mm;
+  padding: 2.2mm 1.5mm;
   text-align: center;
   border-bottom: 0.2mm solid var(--line);
   color: var(--ink-soft);
@@ -491,7 +510,7 @@ html, body {
   background: var(--ink);
   color: var(--bg);
   font-weight: 700;
-  font-size: 8.5pt;
+  font-size: 11pt;
   letter-spacing: 0.3mm;
 }
 .metric-table tr.highlight td {
@@ -506,14 +525,14 @@ html, body {
 
 .screenshot-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 3mm;
   margin-top: 1mm;
   flex: 1;
   min-height: 0;
 }
 .screenshot {
-  background: var(--bg-soft);
+  background: transparent;
   border-radius: 1.5mm;
   overflow: hidden;
   border: 0.3mm solid var(--line);
@@ -525,13 +544,14 @@ html, body {
   width: 100%;
   flex: 1;
   min-height: 0;
-  object-fit: cover;
+  object-fit: contain;
+  background: transparent;
   display: block;
 }
 .screenshot .caption {
   padding: 1.2mm 2.5mm;
   font-family: var(--body);
-  font-size: 7.5pt;
+  font-size: 10pt;
   color: var(--ink-soft);
   font-weight: 600;
   background: white;
@@ -541,7 +561,9 @@ html, body {
 
 .arch-img {
   width: 100%;
-  height: 44mm;
+  flex: 1;
+  min-height: 0;
+  height: auto;
   object-fit: contain;
   margin: 1mm 0;
   border-radius: 1mm;
@@ -603,7 +625,7 @@ html, body {
 .outcome-list {
   list-style: none;
   font-family: var(--body);
-  font-size: 8.5pt;
+  font-size: 11pt;
   line-height: 1.65;
 }
 .outcome-list li {
@@ -693,20 +715,19 @@ img { background: transparent; color: transparent; }
   <header class="header">
     <div class="school-block">
       <div class="school-logos">
-        <div class="school-logo"><img src="assets/淡江校徽.png" alt="淡江大學"></div>
-        <div class="school-logo dept"><img src="assets/淡江統計系徽.png" alt="統計與資料科學學系"></div>
+        <!-- <div class="school-logo"><img src="assets/淡江校徽.png" alt="淡江大學"></div>
+        <div class="school-logo dept"><img src="assets/淡江統計系徽.png" alt="統計與資料科學學系"></div> -->
       </div>
       <div class="school-text">
         <strong>淡江大學</strong><br>
         統計與資料科學學系<br>
-        指導老師：李百靈教授 · 高君豪教授 · 陳俊穎教授
+        指導老師：李百靈教授 · 高君豪教授
       </div>
     </div>
 
     <div class="title-block">
-      <span class="event-tag">生成式 AI 融入課程教學成果展</span>
-      <div class="poster-title">高速公路智慧交通衝擊波預警決策支援系統</div>
-      <div class="poster-subtitle">融合深度學習、物理理論與生成式 AI 的跨領域研究實踐</div>
+      <div class="poster-title">BitoGuard 面向加密貨幣交易所的AI黑名單檢測系統</div>
+      <div class="poster-subtitle">融合毒性特徵＋堆疊整合模型，結合 SHAP 可解釋性和公平性審計</div>
     </div>
 
     <div class="authors-block">
@@ -714,8 +735,8 @@ img { background: transparent; color: transparent; }
       <div class="authors">[ 魏祺紘 ] · [ 李昇峰 ] · [ 施宇鴻 ]· [ 盧品蓉 ]</div>
       <div class="dept">[ 統計與資料科學學系碩士班 ]</div>
       <div class="badges">
-        <span class="badge gold">全國亞軍</span>
-        <span class="badge sky">2025 運輸學會發表</span>
+        <span class="badge gold">AWS × DIGITIMES × 國家發展委員會</span>
+        <span class="badge sky">去偽存真 : 全民偵查黑客松 (Agent for Truth：Disinformation Defense Hackathon)</span>
         <span class="badge mint">系統已上線</span>
       </div>
     </div>
@@ -730,26 +751,27 @@ img { background: transparent; color: transparent; }
       <div class="card tint-pink">
         <div class="card-title"><span class="dot pink"></span>研究背景</div>
         <p>
-          台灣高速公路日承載超過 <strong>300 萬車次</strong>，現行被動式管理在突發事件下缺乏精確的壅塞傳播預測能力。
+          加密貨幣交易所長年面臨嚴重的 <strong>人頭戶（黑名單用戶）</strong> 問題 ── 這些帳戶被用於洗錢、詐騙資金流轉，每年造成全球數十億美元損失。
         </p>
         <p style="margin-top: 2.5mm;">
-          本團隊發現<strong>交通壅塞傳播與地震震波具有高度相似性</strong> ── 兩者皆為「波動傳播」現象，因此提出結合
-          <strong>物理理論 (LWR / Rankine-Hugoniot)</strong> 與 <strong>深度學習 (圖神經網路)</strong> 的混合預測系統，
-          能在事件發生後 5 秒內發出衝擊波警報。
+          本團隊針對幣託科技 (BitoPro) <strong>77 萬筆交易紀錄</strong> 建構端到端 AML 風險偵測系統。
+          核心洞見：<strong>關聯力大於行為力</strong> ── 人頭戶往往集中在相同的錢包、IP 與轉帳對象。
+          因此結合 <strong>LOO 毒性特徵（圖訊號 → 表格特徵）</strong> 與
+          <strong>三模型 Stacking 集成</strong>，F1 由 0.37 一舉突破至 <strong>0.83</strong>。
         </p>
-        <img src="assets/圖1.png" alt="研究架構示意圖" class="bg-figure">
+        <img src="assets/圖1.png" alt="BitoGuard 系統整體架構示意圖" class="bg-figure">
         <div class="stats-row">
           <div class="stat-box">
-            <div class="stat-num">62</div>
-            <div class="stat-lbl">ETC 偵測點</div>
+            <div class="stat-num">77萬</div>
+            <div class="stat-lbl">訓練交易筆數</div>
           </div>
           <div class="stat-box">
-            <div class="stat-num">10–60</div>
-            <div class="stat-lbl">分鐘提前預測</div>
+            <div class="stat-num">+121%</div>
+            <div class="stat-lbl">F1 相對提升</div>
           </div>
           <div class="stat-box">
-            <div class="stat-num">91%</div>
-            <div class="stat-lbl">R² 準確度</div>
+            <div class="stat-num">0.978</div>
+            <div class="stat-lbl">AUC-ROC</div>
           </div>
         </div>
       </div>
@@ -757,14 +779,14 @@ img { background: transparent; color: transparent; }
       <div class="card tint-gold">
         <div class="card-title"><span class="dot gold"></span>學生面臨的挑戰</div>
         <p style="margin-bottom: 2.5mm;">
-          作為研究生團隊，我們同時面對 <strong>5 大難題</strong>，任何一項都足以拖延數個月：
+          作為研究生團隊，我們在 <strong>2 天競賽期程</strong> 內同時面對 5 大難題：
         </p>
         <ul>
-          <li><strong>跨領域整合</strong>：交通工程 × 深度學習 × 物理理論</li>
-          <li><strong>陌生技術棧</strong>：圖神經網路、Next.js、FastAPI、RAG</li>
-          <li><strong>論文重現</strong>：理解並重現英文 SCI 期刊論文 (MT-STNet)</li>
-          <li><strong>真實資料</strong>：清理 TDX / TISC 大規模時序資料含缺失與雜訊</li>
-          <li><strong>從研究到產品</strong>：交付對外可訪問的網頁系統而非實驗室原型</li>
+          <li><strong>跨領域整合</strong>：AML 法遵 × 機器學習 × 圖訊號處理</li>
+          <li><strong>極度不平衡資料</strong>：黑名單僅佔 3.2%，傳統 F1 僅 0.37</li>
+          <li><strong>陌生技術棧</strong>：SHAP / Focal Loss / Stacking / React + Three.js</li>
+          <li><strong>作法移植</strong>：理解並重現 LOO 毒性特徵與洩漏防護</li>
+          <li><strong>從研究到產品</strong>：交付對外可訪問的互動式 3D 風險儀表板</li>
         </ul>
       </div>
 
@@ -773,20 +795,20 @@ img { background: transparent; color: transparent; }
         <div class="tools-row">
           <span class="tool-chip primary">★ Claude Code</span>
           <span class="tool-chip">Claude Web</span>
-          <span class="tool-chip">ChatGPT</span>
-          <span class="tool-chip">Cursor</span>
-          <span class="tool-chip">NotebookLM</span>
+          <span class="tool-chip">Kiro</span>
+          <span class="tool-chip">Gemini</span>
+          <span class="tool-chip">AWS Devops</span>
         </div>
         <p style="margin-top: 3mm;">
-          以 <strong>Claude Code</strong> 作為核心協作 IDE，貫穿從文獻探索、模型重現、資料處理、全端開發
-          到論文與本海報撰寫的完整研究生命週期。
+          以 <strong>Claude Code</strong> 作為核心協作 IDE，貫穿從賽題理解、Repo 解析、特徵工程、模型集成、
+          全端開發到報告與本海報撰寫的完整研究生命週期。
         </p>
         <ul style="margin-top: 3mm;">
           <li><strong>Claude Code</strong>：主力 IDE，負責程式碼生成、重構、除錯與部署</li>
-          <li><strong>Claude Web</strong>：論文摘要、跨領域知識補強、長文件分析</li>
-          <li><strong>ChatGPT</strong>：英文論文潤飾、快速腦力激盪</li>
-          <li><strong>Cursor</strong>：IDE 內即時程式碼補全</li>
-          <li><strong>NotebookLM</strong>：多篇論文的知識整合與問答</li>
+          <li><strong>Claude Web</strong>：AML 文獻摘要、跨領域知識補強、長文件分析</li>
+          <li><strong>Kiro</strong>：輔助IDE，使用Kiro Spec To Code 整合開發前端頁面顯示</li>
+          <li><strong>Gemini</strong>：整合在vscode裡面，使用在前端頁面美編</li>
+          <li><strong>AWS Devops</strong>：使用AWS Amplify 工具進行程式部署</li>
         </ul>
         <div class="brand-mark">
           <img src="assets/claudebigicon.png" alt="Claude" class="brand-logo">
@@ -815,11 +837,12 @@ img { background: transparent; color: transparent; }
           <div class="step s1">
             <div class="step-header">
               <div class="step-num">01</div>
-              <div class="step-title">文獻探索與研究設計</div>
+              <div class="step-title">賽題理解與文獻探索</div>
             </div>
             <div class="step-desc">
-              將 20+ 篇 SCI 論文丟給 Claude 進行摘要、比較、找研究缺口，並提出可行的方法論假設。
-              學生負責閱讀關鍵段落、判斷可信度、決定研究方向。
+              將 BitoPro 賽題說明、77 萬筆交易資料字典與 <strong>20+ 篇 AML / 圖學習論文</strong>
+              一次丟給 Claude，做多文件摘要、橫向比較與研究缺口盤點。學生再聚焦關鍵段落、交叉驗證 AI 引用是否
+              真實存在，最終拍板「<strong>LOO 毒性 + Stacking 集成</strong>」作為核心方法論主軸。
             </div>
             <div class="step-tags">
               <span class="tag human">人 · 提問篩選</span>
@@ -831,11 +854,12 @@ img { background: transparent; color: transparent; }
           <div class="step s2">
             <div class="step-header">
               <div class="step-num">02</div>
-              <div class="step-title">GitHub 程式碼理解</div>
+              <div class="step-title">Repo 程式碼拆解</div>
             </div>
             <div class="step-desc">
-              用 Claude Code 直接「閱讀」原作者 MT-STNet 的 PyTorch 倉庫，逐檔追蹤資料流、
-              模型結構與訓練流程，產出中文化技術筆記。
+              把團隊（gttthuang/Bito）整個 repo 餵給 Claude Code，逐檔追蹤
+              <strong>LOO 毒性特徵</strong> 的數學公式、Leave-One-Out 洩漏防護機制與向量化資料流，產出中文化
+              技術筆記與重現清單。學生再手算公式、檢驗邊界 case，確認能 1:1 移植到本團隊 pipeline。
             </div>
             <div class="step-tags">
               <span class="tag human">人 · 驗證邏輯</span>
@@ -847,11 +871,13 @@ img { background: transparent; color: transparent; }
           <div class="step s3">
             <div class="step-header">
               <div class="step-num">03</div>
-              <div class="step-title">資料整理與清洗</div>
+              <div class="step-title">特徵工程與資料清洗</div>
             </div>
             <div class="step-desc">
-              TDX/TISC 原始資料含缺失與雜訊。讓 Claude 產出 Pandas 清洗腳本、PCU 標準化公式，
-              並協助建立 62×62 鄰接矩陣與圖結構嵌入。
+              5 張原始交易表中，讓 Claude 產出 Pandas 向量化清洗與特徵工程腳本，建構橫跨
+              <strong>11 大類、共 95 維特徵</strong>（含 LOO 毒性 14 維、AML 紅旗、交易圖拓撲、時序模式等）。
+              再依零方差、共線性 (≥ 0.95)、零重要性三道閘關層層篩選至 <strong>78 維</strong>，並由學生隨時抽查
+              AI 產出腳本的計算邏輯與資料分布。
             </div>
             <div class="step-tags">
               <span class="tag human">人 · 制定規則</span>
@@ -863,11 +889,13 @@ img { background: transparent; color: transparent; }
           <div class="step s4">
             <div class="step-header">
               <div class="step-num">04</div>
-              <div class="step-title">模型建構與微調</div>
+              <div class="step-title">模型集成與可解釋性</div>
             </div>
             <div class="step-desc">
-              在原 MT-STNet 基礎上，與 AI 共同設計改良版 <strong>MT-SWNet</strong>，
-              加入 ST-Physical Block、衝擊波物理約束，調整超參數並做 ablation。
+              與 AI 共同設計兩層 <strong>Stacking 集成</strong>：XGBoost、LightGBM (Focal Loss α=0.75, γ=2.0)、
+              CatBoost 三個 base learner 各使用不同損失函數以最大化多樣性，搭配 Logistic Regression meta-learner。
+              再導入 SHAP TreeExplainer、SSR 穩定性檢測、反事實建議，以及性別 / 年齡 / 職業 / 收入
+              <strong>四維度公平性審計</strong>，把模型從黑箱推進到可解釋、可審計。
             </div>
             <div class="step-tags">
               <span class="tag human">人 · 設計決策</span>
@@ -879,11 +907,13 @@ img { background: transparent; color: transparent; }
           <div class="step s5">
             <div class="step-header">
               <div class="step-num">05</div>
-              <div class="step-title">全端網頁開發</div>
+              <div class="step-title">互動式 3D 風險儀表板</div>
             </div>
             <div class="step-desc">
-              用 Claude Code 從零搭建 <strong>Next.js + FastAPI</strong> 全端架構，整合
-              MT-SWNet 推論、衝擊波偵測、RAG AI 助理，部署到 Vercel + Railway。
+              學生先定義三種檢視模式 (<strong>Fraud / FP-FN / Predict</strong>) 的規格與 UX 流程，再由
+              Claude Code 從零搭建 <strong>React 18 + TypeScript + Vite</strong> 全端架構。整合
+              react-force-graph 2D / 3D 力導向圖譜、Three.js 即時渲染、Recharts 與 SHAP Waterfall 圖，
+              一鍵部署到 GitHub Pages 成為對外可訪問的互動式儀表板。
             </div>
             <div class="step-tags">
               <span class="tag human">人 · 規格定義</span>
@@ -895,11 +925,12 @@ img { background: transparent; color: transparent; }
           <div class="step s6">
             <div class="step-header">
               <div class="step-num">06</div>
-              <div class="step-title">論文 / 簡報 / 海報</div>
+              <div class="step-title">報告 / 簡報 / 海報</div>
             </div>
             <div class="step-desc">
-              SCI 期刊論文初稿、競賽簡報、學會發表稿、本份海報 — 皆透過 AI 協助結構規劃、
-              語言潤飾與圖表生成，學生負責內容真實性與專業判斷。
+              中英 README、<strong>LOO 突破完整實驗報告</strong>、競賽簡報、學會發表稿、本份海報 ──
+              皆透過 AI 協助 outline 規劃、結構編排、語言潤飾與 SVG 圖表生成，大幅縮短重複工序。
+              學生則全程把關內容真實性、數據引用核對與專業判斷，避免任何 hallucination 流入正式產出。
             </div>
             <div class="step-tags">
               <span class="tag human">人 · 內容把關</span>
@@ -915,51 +946,56 @@ img { background: transparent; color: transparent; }
     <!-- ----------- 右欄 ----------- -->
     <section class="column right">
 
-      <div class="card tint-sky">
-        <div class="card-title"><span class="dot sky"></span>MT-SWNet 模型架構</div>
-        <img src="../images/mt-swnet-architecture.png" alt="MT-SWNet 架構" class="arch-img">
+      <div class="card tint-sky arch-card">
+        <div class="card-title"><span class="dot sky"></span>Stacking 集成模型架構</div>
+        <img src="assets/stacking-ensemble.svg" alt="Stacking Ensemble 架構" class="arch-img">
         <p style="font-size: 8.2pt; color: var(--ink-dim); text-align: center; margin-top: 1mm;">
-          編碼器：雙層 ST-Physical Block　·　解碼器：Masked ST-Physical Block　·　多任務輸出
+          Base：XGBoost　·　LightGBM（Focal Loss）　·　CatBoost　→　Meta：Logistic Regression
         </p>
       </div>
 
-      <div class="card tint-pink">
-        <div class="card-title"><span class="dot pink"></span>模型效能 vs 六大基準</div>
+      <div class="card tint-pink metric-card">
+        <div class="card-title"><span class="dot pink"></span>模型效能 vs 基準（LOO 突破前後）</div>
         <table class="metric-table">
           <thead>
             <tr>
-              <th>模型</th><th>MAE</th><th>RMSE</th><th>MAPE%</th><th>R²</th>
+              <th>模型</th><th>F1</th><th>AUC-PR</th><th>AUC-ROC</th><th>Recall</th>
             </tr>
           </thead>
           <tbody>
             <tr class="highlight">
-              <td>MT-SWNet (本研究)</td>
-              <td>12.3</td><td>18.7</td><td>8.5</td><td>0.912</td>
+              <td>Stacking + LOO (本研究)</td>
+              <td>0.828</td><td>0.860</td><td>0.978</td><td>0.747</td>
             </tr>
-            <tr><td>Graph-WaveNet</td><td>13.2</td><td>19.8</td><td>8.9</td><td>0.903</td></tr>
-            <tr><td>AGCRN</td><td>13.8</td><td>21.2</td><td>9.3</td><td>0.895</td></tr>
-            <tr><td>DCRNN</td><td>14.5</td><td>22.1</td><td>9.8</td><td>0.887</td></tr>
-            <tr><td>LSTM</td><td>18.9</td><td>28.7</td><td>13.5</td><td>0.798</td></tr>
-            <tr><td>ARIMA</td><td>21.3</td><td>32.1</td><td>15.7</td><td>0.721</td></tr>
+            <tr><td>Stacking (無 LOO 特徵)</td><td>0.375</td><td>0.326</td><td>0.864</td><td>0.396</td></tr>
+            <tr><td>XGBoost 單模</td><td>0.351</td><td>0.301</td><td>0.851</td><td>0.378</td></tr>
+            <tr><td>LightGBM (Focal Loss)</td><td>0.342</td><td>0.295</td><td>0.847</td><td>0.401</td></tr>
+            <tr><td>CatBoost 單模</td><td>0.330</td><td>0.284</td><td>0.839</td><td>0.366</td></tr>
+            <tr><td>Logistic Regression</td><td>0.218</td><td>0.180</td><td>0.792</td><td>0.293</td></tr>
           </tbody>
         </table>
       </div>
 
-      <div class="card tint-mint">
-        <div class="card-title"><span class="dot mint"></span>線上系統實際畫面</div>
-        <div class="screenshot-grid">
-          <div class="screenshot">
-            <img src="../images/driver-dashboard.png" alt="駕駛者儀表板">
-            <div class="caption">駕駛者　·　即時衝擊波雷達</div>
-          </div>
-          <div class="screenshot">
-            <img src="../images/admin-dashboard.png" alt="管理者控制中心">
-            <div class="caption">管理者　·　MT-SWNet + RAG</div>
-          </div>
+    </section>
+
+    <!-- ----------- 跨中右欄底部：寬版線上系統實際畫面 ----------- -->
+    <div class="screenshot-wide card tint-mint">
+      <div class="card-title"><span class="dot mint"></span>線上系統實際畫面 ── BitoGuard 互動式風險儀表板</div>
+      <div class="screenshot-grid">
+        <div class="screenshot">
+          <img src="assets/dashboard-fraud.png" alt="Fraud Mode 風險網路圖譜">
+          <div class="caption">Fraud Mode　·　3D 力導向交易網路</div>
+        </div>
+        <div class="screenshot">
+          <img src="assets/dashboard-fpfn.png" alt="FP/FN Mode 誤判案例分析">
+          <div class="caption">FP / FN Mode　·　誤判案例 SHAP Waterfall</div>
+        </div>
+        <div class="screenshot">
+          <img src="assets/dashboard-shap.png" alt="Predict Mode SHAP 風險歸因">
+          <div class="caption">Predict Mode　·　SHAP 風險歸因</div>
         </div>
       </div>
-
-    </section>
+    </div>
 
   </main>
 
@@ -970,11 +1006,11 @@ img { background: transparent; color: transparent; }
       <div class="outcome-num">01</div>
       <div class="outcome-title">具體成果</div>
       <ul class="outcome-list">
-        <li><strong>全國國道智慧交通管理創意競賽亞軍</strong>（冠軍從缺）</li>
-        <li><strong>2025 中華民國運輸學會</strong>受邀發表</li>
-        <li>SCI 期刊論文（MT-SWNet）審稿中</li>
-        <li>系統部署 Vercel + Railway 對外可訪問</li>
+        <li><strong>去偽存真黑客松</strong>參賽作品（BitoPro 賽題）</li>
+        <li>Stacking + LOO：<strong>F1 = 0.828 · AUC-ROC = 0.978</strong></li>
+        <li>系統部署 GitHub Pages 對外可訪問</li>
         <li>GitHub 開源，含完整中英文 README</li>
+        <li>LOO 移植突破實驗紀錄完整公開</li>
       </ul>
     </div>
 
@@ -982,11 +1018,11 @@ img { background: transparent; color: transparent; }
       <div class="outcome-num">02</div>
       <div class="outcome-title">技術能力提升</div>
       <ul class="outcome-list">
-        <li>深度學習：<strong>GNN / Attention / 多任務學習</strong></li>
-        <li>全端開發：Next.js · React · FastAPI</li>
-        <li>系統部署：Vercel · Railway · Docker</li>
-        <li>RAG / LLM 應用整合（Ollama）</li>
-        <li>SCI 論文撰寫與國際投稿流程</li>
+        <li>機器學習：<strong>Stacking / Focal Loss / SHAP</strong></li>
+        <li>特徵工程：LOO 毒性、AML 紅旗、圖拓撲</li>
+        <li>異常偵測：Isolation Forest · HBOS · LOF</li>
+        <li>公平性審計：DPD / Equalized Odds / DIR</li>
+        <li>全端開發：React · TypeScript · Three.js</li>
       </ul>
     </div>
 
@@ -997,7 +1033,7 @@ img { background: transparent; color: transparent; }
         <li>掌握<strong>結構化 Prompt 設計</strong>與多輪迭代</li>
         <li>建立可重複的「人類 ↔ AI」分工流程</li>
         <li>批判性檢視 AI 產出，防止 hallucination</li>
-        <li>用 AI 加速陌生領域的學習曲線</li>
+        <li>用 AI 加速陌生領域（AML、圖學習）學習曲線</li>
         <li>將 AI 整合進個人研究 SOP</li>
       </ul>
     </div>
@@ -1006,9 +1042,9 @@ img { background: transparent; color: transparent; }
       <div class="outcome-num">04</div>
       <div class="outcome-title">研究效率倍增</div>
       <ul class="outcome-list">
-        <li>論文重現：3 個月 → <strong>3 週</strong></li>
-        <li>全端網頁：2 個月 → <strong>2 週 MVP</strong></li>
-        <li>論文撰寫：英文潤飾效率 <strong>×3</strong></li>
+        <li>Repo 拆解與移植：1 週 → <strong>1 天</strong></li>
+        <li>互動式 3D 儀表板：2 個月 → <strong>3 天 MVP</strong></li>
+        <li>SHAP / 公平性報告：英文潤飾效率 <strong>×3</strong></li>
         <li>陌生技術上手時間 ↓ <strong>70%</strong></li>
         <li>累積可帶入職場的真實作品集</li>
       </ul>
