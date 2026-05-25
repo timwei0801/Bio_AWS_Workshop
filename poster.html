@@ -4,13 +4,13 @@
 <meta charset="UTF-8">
 <title>生成式 AI 融入課程教學成果展 — BitoGuard 面向加密貨幣交易所的 AI 黑名單檢測系統</title>
 
-<!-- 霞鶩文楷 TC：手寫書法圓潤感的中文內文字體 -->
+<!-- LXGW WenKai TC：保留中文內文圓潤書法字體（與 Inter 混排） -->
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-tc-webfont@1.7.0/style.css" rel="stylesheet">
-<!-- 備援：Noto Serif TC 作為襯線標題 fallback -->
+<!-- Premium Fintech Dark 主題字體組合：Playfair Display 標題 + Inter 內文 + JetBrains Mono 數據 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800;900&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Noto+Serif+TC:wght@500;700;900&display=swap" rel="stylesheet">
 
 <style>
 /* ============================================================
@@ -20,29 +20,39 @@
 @page { size: 841mm 594mm; margin: 0; }
 
 :root {
-  /* ── 紙感底色與墨色 ───────────────────────── */
-  --bg:        #fdfaf7;   /* 奶白紙感 */
-  --bg-soft:   #f7f1ec;   /* 區塊淡底 */
-  --bg-card:   #ffffff;   /* 卡片底 */
-  --ink:       #2e2a26;   /* 主文(近黑但暖) */
-  --ink-soft:  #5c554d;   /* 內文 */
-  --ink-dim:   #948b80;   /* 次要/說明 */
-  --line:      #e5dcd1;   /* 分隔線 */
+  /* ── 深色金融底色（Bloomberg / Binance Pro 風） ─────────────── */
+  --bg:        #0a0f1c;   /* 海報主底（深海軍） */
+  --bg-soft:   #111827;   /* 區塊淡底 */
+  --bg-card:   #151e2f;   /* 卡片底（比 bg 稍亮，營造層次） */
+  --bg-deep:   #060b16;   /* 最深層（footer / 表頭 / 對比強調） */
 
-  /* ── 馬卡龍點綴五色 ───────────────────────── */
-  --pink:      #e89bb4;   --pink-d:  #cf6f8e;
-  --mint:      #7fc9af;   --mint-d:  #4fa888;
-  --gold:      #e6bd6a;   --gold-d:  #c79a3e;
-  --lilac:     #b69bd6;   --lilac-d: #9072b8;
-  --sky:       #8fc4e3;   --sky-d:   #5b9bc4;
+  /* ── 文字色（亮對深） ───────────────────────────────────── */
+  --ink:       #e8eaed;   /* 主文（柔和白） */
+  --ink-soft:  #e8eaed;   /* 次內文 */
+  --ink-dim:   #e8eaed;   /* 說明 / 標籤 */
+  --line:      #2a3447;   /* 分隔線（深灰藍） */
 
-  /* ── 字體變數 ─────────────────────────────── */
-  --serif: "Iowan Old Style", "Apple Garamond", "Garamond",
+  /* ── 強調色：金為主、銀為輔 + 漲跌綠紅 + 資料藍紫 ────────── */
+  --gold:      #d4af37;   --gold-d:  #b8941f;   /* 香檳金（主強調） */
+  --gold-hi:   #f4d03f;                          /* 亮金（數字高亮） */
+  --silver:    #c0c8d4;                          /* 銀色（次要 metric） */
+  --emerald:   #34d399;   --emerald-d: #10b981;  /* 漲幅綠 */
+  --coral:     #ff6b8b;   --coral-d:   #e84561;  /* 警示紅 */
+  --steel:     #60a5fa;   --steel-d:   #3b82f6;  /* 資料藍 */
+  --lavender:  #a78bfa;   --lavender-d: #8b5cf6; /* 紫 */
+
+  /* ── 舊變數別名（避免改散落各處的 .tint-pink 等 class） ──── */
+  --pink:  var(--coral);     --pink-d:  var(--coral-d);
+  --mint:  var(--emerald);   --mint-d:  var(--emerald-d);
+  --lilac: var(--lavender);  --lilac-d: var(--lavender-d);
+  --sky:   var(--steel);     --sky-d:   var(--steel-d);
+
+  /* ── 字體變數（Playfair 標題 + Inter 內文 + Mono 數據） ───── */
+  --serif: "Playfair Display", "Iowan Old Style",
            "Noto Serif TC", "Songti TC", "PingFang TC", serif;
-  --body:  "LXGW WenKai TC", "霞鶩文楷 TC",
-           "Iowan Old Style", "PingFang TC",
-           "Noto Sans TC", sans-serif;
-  --mono:  "SF Mono", "Menlo", "Consolas", monospace;
+  --body:  "Inter", "LXGW WenKai TC", "霞鶩文楷 TC",
+           "PingFang TC", "Noto Sans TC", sans-serif;
+  --mono:  "JetBrains Mono", "SF Mono", "Menlo", "Consolas", monospace;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -68,10 +78,10 @@ html, body {
   grid-template-columns: 1fr;
   gap: 6mm;
   background:
-    radial-gradient(circle at 0% 0%,   rgba(232,155,180,0.10), transparent 30%),
-    radial-gradient(circle at 100% 0%, rgba(143,196,227,0.10), transparent 30%),
-    radial-gradient(circle at 50% 100%, rgba(230,189,106,0.08), transparent 35%),
-    var(--bg);
+    radial-gradient(circle at 0% 0%,   rgba(212,175,55,0.08),  transparent 35%),
+    radial-gradient(circle at 100% 0%, rgba(96,165,250,0.06),  transparent 35%),
+    radial-gradient(circle at 50% 100%, rgba(212,175,55,0.05), transparent 40%),
+    linear-gradient(180deg, var(--bg) 0%, var(--bg-deep) 100%);
 }
 
 /* ============ 頂部標頭 ============ */
@@ -80,7 +90,7 @@ html, body {
   grid-template-columns: 250mm 1fr 210mm;
   align-items: center;
   gap: 8mm;
-  border-bottom: 1mm solid var(--ink);
+  border-bottom: 1mm solid var(--gold);
   padding-bottom: 5mm;
   position: relative;
 }
@@ -89,7 +99,8 @@ html, body {
   position: absolute;
   left: 0; right: 0; bottom: -2.4mm;
   height: 0.3mm;
-  background: var(--ink);
+  background: var(--gold);
+  opacity: 0.5;
 }
 
 .school-block {
@@ -106,7 +117,8 @@ html, body {
 .school-logo {
   width: 32mm; height: 32mm;
   border-radius: 50%;
-  background: white;
+  background: #ffffff;
+  border: 0.3mm solid var(--gold);
   display: flex; align-items: center; justify-content: center;
   overflow: hidden;
   flex-shrink: 0;
@@ -127,7 +139,7 @@ html, body {
 }
 .school-text strong {
   font-family: var(--serif);
-  color: var(--ink);
+  color: var(--gold-hi);
   font-size: 22pt;
   font-weight: 700;
   letter-spacing: 0.3mm;
@@ -136,8 +148,8 @@ html, body {
 .title-block { text-align: center; }
 .event-tag {
   display: inline-block;
-  background: var(--ink);
-  color: var(--bg);
+  background: linear-gradient(135deg, var(--gold-d), var(--gold-hi));
+  color: var(--bg-deep);
   padding: 1.2mm 6mm;
   border-radius: 0.8mm;
   font-family: var(--body);
@@ -172,7 +184,7 @@ html, body {
 }
 .authors-block .label {
   font-family: var(--serif);
-  color: var(--ink-dim);
+  color: var(--gold);
   font-size: 8.5pt;
   font-weight: 700;
   letter-spacing: 1mm;
@@ -182,7 +194,7 @@ html, body {
   font-family: var(--serif);
   font-size: 13pt;
   font-weight: 700;
-  color: var(--ink);
+  color: var(--gold);
   margin: 1mm 0;
   letter-spacing: 0.3mm;
 }
@@ -202,9 +214,9 @@ html, body {
   font-weight: 700;
   border: 0.3mm solid;
 }
-.badge.gold  { color: var(--gold-d);  border-color: var(--gold);  background: #fdf6e3; }
-.badge.sky   { color: var(--sky-d);   border-color: var(--sky);   background: #eaf4fa; }
-.badge.mint  { color: var(--mint-d);  border-color: var(--mint);  background: #e8f5ee; }
+.badge.gold  { color: var(--gold-hi);  border-color: var(--gold);     background: rgba(212,175,55,0.10); }
+.badge.sky   { color: var(--steel);    border-color: var(--steel);    background: rgba(96,165,250,0.10); }
+.badge.mint  { color: var(--emerald);  border-color: var(--emerald);  background: rgba(52,211,153,0.10); }
 
 /* ============ 主內容：左欄 + 中右上 + 中右下橫向截圖 ============ */
 /* 每張卡的高度由自己的 class 控制；列高由內容驅動，不互相連動 */
@@ -249,34 +261,43 @@ html, body {
 .column.left .card { justify-content: flex-start; }
 .column.left .card .stats-row { margin-top: auto; }
 
+/* 卡片基底：深底 + 細線邊框 + 上方品牌色光條（Fintech panel 風） */
 .card {
-  background: var(--bg-card);
+  background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-soft) 100%);
   border: 0.3mm solid var(--line);
+  border-top-width: 0.8mm;
   border-radius: 2mm;
   padding: 4mm 5mm;
   display: flex;
   flex-direction: column;
   min-height: 0;
+  box-shadow: 0 0.8mm 2mm rgba(0,0,0,0.35);
 }
 .card > *:last-child { margin-bottom: 0; }
-.card.tint-pink   { background: linear-gradient(180deg, #fff 0%, #fdf2f6 100%); border-color: var(--pink); }
-.card.tint-mint   { background: linear-gradient(180deg, #fff 0%, #f0f9f4 100%); border-color: var(--mint); }
-.card.tint-gold   { background: linear-gradient(180deg, #fff 0%, #fbf5e6 100%); border-color: var(--gold); }
-.card.tint-lilac  { background: linear-gradient(180deg, #fff 0%, #f5f0fa 100%); border-color: var(--lilac); }
-.card.tint-sky    { background: linear-gradient(180deg, #fff 0%, #eef6fb 100%); border-color: var(--sky); }
+/* tint：上方光條顏色 + 微弱顏色暈染 */
+.card.tint-pink   { border-top-color: var(--coral);
+  background: radial-gradient(ellipse at top, rgba(255,107,139,0.10), transparent 50%), linear-gradient(180deg, var(--bg-card), var(--bg-soft)); }
+.card.tint-mint   { border-top-color: var(--emerald);
+  background: radial-gradient(ellipse at top, rgba(52,211,153,0.10), transparent 50%), linear-gradient(180deg, var(--bg-card), var(--bg-soft)); }
+.card.tint-gold   { border-top-color: var(--gold);
+  background: radial-gradient(ellipse at top, rgba(212,175,55,0.12), transparent 50%), linear-gradient(180deg, var(--bg-card), var(--bg-soft)); }
+.card.tint-lilac  { border-top-color: var(--lavender);
+  background: radial-gradient(ellipse at top, rgba(167,139,250,0.10), transparent 50%), linear-gradient(180deg, var(--bg-card), var(--bg-soft)); }
+.card.tint-sky    { border-top-color: var(--steel);
+  background: radial-gradient(ellipse at top, rgba(96,165,250,0.10), transparent 50%), linear-gradient(180deg, var(--bg-card), var(--bg-soft)); }
 
 .card-title {
   font-family: var(--serif);
   font-size: 14pt;
   font-weight: 800;
-  color: var(--ink);
+  color: var(--gold-hi);
   margin-bottom: 3mm;
   display: flex;
   align-items: center;
   gap: 2.5mm;
   letter-spacing: 0.3mm;
   padding-bottom: 2mm;
-  border-bottom: 0.3mm dashed var(--line);
+  border-bottom: 0.3mm solid rgba(212,175,55,0.25);
 }
 .card-title .dot {
   display: inline-block;
@@ -310,17 +331,30 @@ html, body {
 }
 .column.left .card.tint-gold li:last-child { border-bottom: none; }
 .card li::before {
-  content: "·";
+  content: "▸";
   position: absolute;
   left: 0;
-  color: var(--pink-d);
+  color: var(--gold);
   font-weight: 900;
-  font-size: 14pt;
+  font-size: 11pt;
   line-height: 1;
   top: 0.5mm;
 }
 .card li strong { color: var(--ink); font-weight: 700; font-size: 11.5pt; }
 .card p strong { color: var(--ink); font-weight: 700; font-size: 11.5pt; }
+
+/* ── 左欄三張卡：內文放大到 14pt + 純白字 + 取消 <strong> 的特殊樣式 ── */
+.column.left .card p,
+.column.left .card li {
+  font-size: 14pt;
+  color: #ffffff;
+}
+.column.left .card p strong,
+.column.left .card li strong {
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+}
 
 /* ============ 左欄：背景數字 ============ */
 .stats-row {
@@ -331,24 +365,27 @@ html, body {
 }
 .stat-box {
   text-align: center;
-  background: var(--bg-soft);
+  background: linear-gradient(180deg, rgba(212,175,55,0.06), rgba(212,175,55,0.02));
+  border: 0.3mm solid rgba(212,175,55,0.25);
   border-radius: 1.5mm;
   padding: 2.5mm 1mm;
 }
 .stat-num {
-  font-family: var(--serif);
+  font-family: var(--mono);
   font-size: 20pt;
-  font-weight: 900;
-  color: var(--pink-d);
+  font-weight: 700;
+  color: var(--gold-hi);
   line-height: 1;
+  letter-spacing: -0.2mm;
 }
 .stat-lbl {
   font-family: var(--body);
   font-size: 9pt;
-  color: var(--ink-dim);
+  color: var(--silver);
   margin-top: 1.2mm;
   font-weight: 600;
   letter-spacing: 0.3mm;
+  text-transform: uppercase;
 }
 
 .tools-row {
@@ -364,34 +401,38 @@ html, body {
   font-family: var(--body);
   font-size: 10pt;
   padding: 1mm 3mm;
-  background: var(--bg-soft);
+  background: rgba(255,255,255,0.03);
   border: 0.3mm solid var(--line);
   border-radius: 5mm;
-  color: var(--ink-soft);
+  color: var(--silver);
   font-weight: 600;
 }
 .tool-chip.primary {
-  background: var(--lilac);
-  color: white;
-  border-color: var(--lilac-d);
+  background: linear-gradient(135deg, var(--gold-d), var(--gold-hi));
+  color: var(--bg-deep);
+  border-color: var(--gold);
+  font-weight: 700;
 }
 
 /* ============ 中欄：AI 工作流（主角） ============ */
 /* .column.center 不再需要固定 row（workflow-card 已用 height 控制） */
 .workflow-card {
-  background: var(--bg-card);
+  background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-soft) 100%);
   border: 0.3mm solid var(--line);
+  border-top: 0.8mm solid var(--gold);
   border-radius: 2mm;
   padding: 3.5mm 4.5mm;
   display: flex;
   flex-direction: column;
   min-height: 0;
+  box-shadow: 0 0.8mm 2.5mm rgba(0,0,0,0.4);
 }
 
 .workflow-intro {
-  background: var(--ink);
-  color: var(--bg);
+  background: linear-gradient(135deg, rgba(212,175,55,0.12), rgba(167,139,250,0.06));
+  color: var(--ink);
   padding: 2.5mm 4mm;
+  border-left: 0.8mm solid var(--gold);
   border-radius: 1.5mm;
   margin-bottom: 3mm;
   font-family: var(--body);
@@ -401,7 +442,7 @@ html, body {
 }
 .workflow-intro strong {
   font-family: var(--serif);
-  color: var(--gold);
+  color: var(--gold-hi);
   font-weight: 800;
 }
 
@@ -415,7 +456,8 @@ html, body {
 }
 
 .step {
-  background: var(--bg-soft);
+  background: linear-gradient(180deg, rgba(255,255,255,0.025), rgba(255,255,255,0.01));
+  border: 0.3mm solid var(--line);
   border-radius: 1.5mm;
   padding: 2mm 3mm;
   display: flex;
@@ -460,14 +502,14 @@ html, body {
 
 .step-title {
   font-family: var(--serif);
-  font-size: 12pt;
+  font-size: 14pt;
   font-weight: 800;
   color: var(--ink);
   letter-spacing: 0.3mm;
 }
 .step-desc {
   font-family: var(--body);
-  font-size: 11pt;
+  font-size: 14pt;
   line-height: 1.65;
   color: var(--ink-soft);
   margin-bottom: 1.5mm;
@@ -487,9 +529,9 @@ html, body {
   font-weight: 700;
   letter-spacing: 0.2mm;
 }
-.tag.human  { background: #fbf5e6; color: var(--gold-d); }
-.tag.ai     { background: #eef6fb; color: var(--sky-d); }
-.tag.output { background: #e8f5ee; color: var(--mint-d); }
+.tag.human  { background: rgba(212,175,55,0.18); color: var(--gold-hi); border: 0.2mm solid rgba(212,175,55,0.35); }
+.tag.ai     { background: rgba(96,165,250,0.18); color: var(--steel); border: 0.2mm solid rgba(96,165,250,0.35); }
+.tag.output { background: rgba(52,211,153,0.18); color: var(--emerald); border: 0.2mm solid rgba(52,211,153,0.35); }
 
 /* ============ 右欄 ============ */
 .metric-table {
@@ -503,20 +545,23 @@ html, body {
   padding: 2.2mm 1.5mm;
   text-align: center;
   border-bottom: 0.2mm solid var(--line);
-  color: var(--ink-soft);
+  color: var(--silver);
+  font-family: var(--mono);
 }
 .metric-table th {
   font-family: var(--serif);
-  background: var(--ink);
-  color: var(--bg);
+  background: linear-gradient(180deg, var(--bg-deep), var(--bg-soft));
+  color: var(--gold);
   font-weight: 700;
   font-size: 11pt;
   letter-spacing: 0.3mm;
+  border-bottom: 0.3mm solid var(--gold);
 }
 .metric-table tr.highlight td {
-  background: #fdf2f6;
+  background: linear-gradient(90deg, rgba(212,175,55,0.18), rgba(212,175,55,0.08));
   font-weight: 800;
-  color: var(--pink-d);
+  color: var(--gold-hi);
+  border-bottom-color: var(--gold);
 }
 .metric-table tr.highlight td:first-child {
   text-align: left;
@@ -532,10 +577,10 @@ html, body {
   min-height: 0;
 }
 .screenshot {
-  background: transparent;
+  background: rgba(255,255,255,0.02);
   border-radius: 1.5mm;
   overflow: hidden;
-  border: 0.3mm solid var(--line);
+  border: 0.3mm solid rgba(52,211,153,0.35);
   display: flex;
   flex-direction: column;
   min-height: 0;
@@ -550,12 +595,12 @@ html, body {
 }
 .screenshot .caption {
   padding: 1.2mm 2.5mm;
-  font-family: var(--body);
+  font-family: var(--mono);
   font-size: 10pt;
-  color: var(--ink-soft);
+  color: var(--emerald);
   font-weight: 600;
-  background: white;
-  border-top: 0.2mm solid var(--line);
+  background: var(--bg-deep);
+  border-top: 0.2mm solid rgba(52,211,153,0.30);
   letter-spacing: 0.2mm;
 }
 
@@ -567,7 +612,9 @@ html, body {
   object-fit: contain;
   margin: 1mm 0;
   border-radius: 1mm;
-  background: var(--bg-soft);
+  background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,255,255,0.92));
+  padding: 2mm;
+  border: 0.3mm solid rgba(96,165,250,0.30);
 }
 
 /* ============ 底部：成效 ============ */
@@ -575,24 +622,27 @@ html, body {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 56mm;
   gap: 5mm;
-  background: var(--ink);
-  color: var(--bg);
+  background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-deep) 100%);
+  color: var(--ink);
   padding: 6mm 8mm;
   border-radius: 2mm;
   position: relative;
+  border: 0.3mm solid var(--gold);
+  box-shadow: 0 0 4mm rgba(212,175,55,0.10);
 }
 .footer::before {
   content: "學 習 成 效  ×  就 業 競 爭 力";
   position: absolute;
   top: -3.5mm; left: 8mm;
-  background: var(--gold);
-  color: var(--ink);
+  background: linear-gradient(135deg, var(--gold-d), var(--gold-hi));
+  color: var(--bg-deep);
   padding: 1mm 4mm;
   border-radius: 0.8mm;
   font-family: var(--serif);
   font-size: 10pt;
   font-weight: 800;
   letter-spacing: 0.5mm;
+  box-shadow: 0 0.5mm 1.5mm rgba(0,0,0,0.4);
 }
 
 .outcome {
@@ -601,25 +651,26 @@ html, body {
   gap: 1.5mm;
 }
 .outcome-num {
-  font-family: var(--serif);
+  font-family: var(--mono);
   font-size: 22pt;
-  font-weight: 900;
+  font-weight: 700;
   line-height: 1;
   margin-bottom: 1mm;
+  letter-spacing: -0.3mm;
 }
-.outcome.o1 .outcome-num { color: var(--pink); }
-.outcome.o2 .outcome-num { color: var(--mint); }
-.outcome.o3 .outcome-num { color: var(--sky); }
-.outcome.o4 .outcome-num { color: var(--gold); }
+.outcome.o1 .outcome-num { color: var(--coral); }
+.outcome.o2 .outcome-num { color: var(--emerald); }
+.outcome.o3 .outcome-num { color: var(--steel); }
+.outcome.o4 .outcome-num { color: var(--gold-hi); }
 
 .outcome-title {
   font-family: var(--serif);
   font-size: 12.5pt;
   font-weight: 800;
-  color: var(--bg);
+  color: var(--gold-hi);
   letter-spacing: 0.5mm;
   margin-bottom: 1mm;
-  border-bottom: 0.2mm solid rgba(253,250,247,0.2);
+  border-bottom: 0.2mm solid rgba(212,175,55,0.30);
   padding-bottom: 1.5mm;
 }
 .outcome-list {
@@ -632,40 +683,42 @@ html, body {
   padding-left: 3.5mm;
   position: relative;
   margin-bottom: 0.8mm;
-  color: rgba(253,250,247,0.85);
+  color: var(--ink-soft);
 }
 .outcome-list li::before {
-  content: "—";
+  content: "▸";
   position: absolute; left: 0;
   color: var(--gold);
   font-weight: 700;
 }
-.outcome-list li strong { color: var(--bg); font-weight: 700; }
+.outcome-list li strong { color: var(--ink-soft); font-weight: 700; }
 
 .qr-block {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: var(--bg);
+  background: #ffffff;
   border-radius: 1.5mm;
   padding: 3mm;
+  border: 0.4mm solid var(--gold);
+  box-shadow: 0 0 3mm rgba(212,175,55,0.25);
 }
 .qr-placeholder {
   width: 36mm; height: 36mm;
   background:
-    repeating-linear-gradient(0deg,  var(--ink) 0 0.8mm, transparent 0.8mm 1.6mm),
-    repeating-linear-gradient(90deg, var(--ink) 0 0.8mm, transparent 0.8mm 1.6mm);
+    repeating-linear-gradient(0deg,  #0a0f1c 0 0.8mm, transparent 0.8mm 1.6mm),
+    repeating-linear-gradient(90deg, #0a0f1c 0 0.8mm, transparent 0.8mm 1.6mm);
   display: flex; align-items: center; justify-content: center;
   font-family: var(--mono);
   font-size: 7pt;
-  color: var(--ink);
+  color: #0a0f1c;
   font-weight: 700;
 }
 .qr-label {
   font-family: var(--serif);
   font-size: 9pt;
-  color: var(--ink);
+  color: #0a0f1c;
   margin-top: 2mm;
   font-weight: 700;
   letter-spacing: 0.5mm;
@@ -679,30 +732,36 @@ img { background: transparent; color: transparent; }
   height: auto;
   margin: 3mm 0;
   border-radius: 1.5mm;
-  background: white;
-  border: 0.2mm solid var(--line);
+  background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,255,255,0.92));
+  padding: 2mm;
+  border: 0.3mm solid rgba(255,107,139,0.30);
   display: block;
 }
 
-/* AI 工具卡底部的 Claude 品牌標記 */
+/* AI 工具卡底部的 Claude 品牌標記（白底區塊保留 logo 原色） */
 .brand-mark {
   margin-top: auto;
-  padding-top: 4mm;
+  align-self: center;
+  width: fit-content;
+  padding: 2mm 5mm 1.8mm;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5mm;
-  border-top: 0.3mm dashed var(--line);
+  gap: 1mm;
+  background: #ffffff;
+  border-radius: 1.5mm;
+  border: 0.3mm solid var(--gold);
+  box-shadow: 0 0 2mm rgba(212,175,55,0.15);
 }
 .brand-logo {
-  height: 9mm;
+  height: 7mm;
   width: auto;
   object-fit: contain;
 }
 .brand-caption {
   font-family: var(--serif);
   font-size: 8pt;
-  color: var(--ink-dim);
+  color: #2e2a26;
   letter-spacing: 0.5mm;
   font-style: italic;
 }
@@ -1051,7 +1110,9 @@ img { background: transparent; color: transparent; }
     </div>
 
     <div class="qr-block">
-      <div class="qr-placeholder">[ QR ]</div>
+      <div class="qr-placeholder">
+        <img src="assets/QR-Code.png" alt="QR Code">
+      </div>
       <div class="qr-label">線上 Demo</div>
     </div>
 
